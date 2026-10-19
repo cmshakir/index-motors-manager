@@ -135,10 +135,25 @@ export const fetchCloudTable = async (tableName) => {
   }
 };
 
+// Active Realtime Channel and Local Broadcast Channel
+let activeRealtimeChannel = null;
+export const localBroadcast = typeof window !== 'undefined' && 'BroadcastChannel' in window 
+  ? new BroadcastChannel('index_motors_local_sync') 
+  : null;
+
 /**
- * Upsert a record to Supabase cloud table with status reporting.
+ * Upsert a record to Supabase cloud table with status reporting and instant broadcast.
  */
 export const upsertCloudRecord = async (tableName, id, record) => {
+  // Broadcast locally to any other open tabs/windows immediately
+  if (localBroadcast) {
+    try {
+      localBroadcast.postMessage({ table: tableName, id: String(id), data: record, eventType: 'UPSERT', time: Date.now() });
+    } catch (e) {
+      // ignore
+    }
+  }
+
   if (!supabase) {
     return { success: false, notConfigured: true, error: 'Database not connected on this device' };
   }
@@ -153,6 +168,20 @@ export const upsertCloudRecord = async (tableName, id, record) => {
       console.warn(`Supabase upsert failed for ${tableName}:`, error.message);
       return { success: false, error: error.message };
     }
+
+    // Instant WebSocket broadcast to other devices connected to Supabase
+    if (activeRealtimeChannel) {
+      try {
+        activeRealtimeChannel.send({
+          type: 'broadcast',
+          event: 'data_changed',
+          payload: { table: tableName, id: String(id), data: record, eventType: 'INSERT', time: Date.now() }
+        });
+      } catch (e) {
+        // ignore
+      }
+    }
+
     return { success: true };
   } catch (err) {
     console.warn(`Supabase error saving to ${tableName}:`, err);
@@ -161,9 +190,17 @@ export const upsertCloudRecord = async (tableName, id, record) => {
 };
 
 /**
- * Delete a record from Supabase cloud table.
+ * Delete a record from Supabase cloud table with instant broadcast.
  */
 export const deleteCloudRecord = async (tableName, id) => {
+  if (localBroadcast) {
+    try {
+      localBroadcast.postMessage({ table: tableName, id: String(id), eventType: 'DELETE', time: Date.now() });
+    } catch (e) {
+      // ignore
+    }
+  }
+
   if (!supabase) return { success: false, notConfigured: true };
   try {
     const { error } = await supabase.from(tableName).delete().eq('id', String(id));
@@ -171,6 +208,19 @@ export const deleteCloudRecord = async (tableName, id) => {
       console.warn(`Supabase delete failed for ${tableName}:`, error.message);
       return { success: false, error: error.message };
     }
+
+    if (activeRealtimeChannel) {
+      try {
+        activeRealtimeChannel.send({
+          type: 'broadcast',
+          event: 'data_changed',
+          payload: { table: tableName, id: String(id), eventType: 'DELETE', time: Date.now() }
+        });
+      } catch (e) {
+        // ignore
+      }
+    }
+
     return { success: true };
   } catch (err) {
     console.warn(`Supabase error deleting from ${tableName}:`, err);
@@ -180,25 +230,65 @@ export const deleteCloudRecord = async (tableName, id) => {
 
 /**
  * Real-time listener: Subscribe to database changes across all other devices.
+ * Uses both PostgreSQL replication changes and instant WebSocket broadcasts across all 9 tables.
  */
 export const subscribeToCloudChanges = (onDataChange) => {
+  // Listen to local cross-tab broadcast
+  if (localBroadcast) {
+    localBroadcast.onmessage = (event) => {
+      if (event?.data) {
+        onDataChange(event.data);
+      }
+    };
+  }
+
   if (!supabase) return () => {};
 
-  const channel = supabase
-    .channel('index-motors-realtime-channel')
-    .on(
+  const tables = ['tasks', 'invoices', 'sales', 'expenses', 'trucks', 'customers', 'technicians', 'profile', 'users'];
+  
+  let channel = supabase.channel('index-motors-realtime-hub', {
+    config: {
+      broadcast: { self: false }
+    }
+  });
+
+  // 1. Listen for instant broadcasts from other devices
+  channel = channel.on('broadcast', { event: 'data_changed' }, (payload) => {
+    console.log('[Realtime Broadcast] Instant change received:', payload);
+    if (payload?.payload) {
+      onDataChange(payload.payload);
+    }
+  });
+
+  // 2. Listen for PostgreSQL replication changes on each table
+  for (const tbl of tables) {
+    channel = channel.on(
       'postgres_changes',
-      { event: '*', schema: 'public' },
+      { event: '*', schema: 'public', table: tbl },
       (payload) => {
-        console.log(`[Realtime Sync] Change in ${payload.table}:`, payload);
-        onDataChange(payload);
+        console.log(`[Realtime Postgres] Change in ${tbl}:`, payload);
+        onDataChange({
+          table: tbl,
+          eventType: payload.eventType,
+          new: payload.new,
+          old: payload.old
+        });
       }
-    )
-    .subscribe();
+    );
+  }
+
+  channel.subscribe((status) => {
+    console.log(`[Realtime Subscription Status]: ${status}`);
+  });
+
+  activeRealtimeChannel = channel;
 
   return () => {
     try {
-      supabase.removeChannel(channel);
+      if (activeRealtimeChannel) {
+        supabase.removeChannel(activeRealtimeChannel);
+        activeRealtimeChannel = null;
+      }
     } catch (e) {
       // ignore
     }

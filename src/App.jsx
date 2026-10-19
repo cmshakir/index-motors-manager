@@ -101,12 +101,19 @@ export default function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isCloudModalOpen, setIsCloudModalOpen] = useState(false);
   const [cloudNotice, setCloudNotice] = useState(null);
+  const [autoRefreshPill, setAutoRefreshPill] = useState(null);
 
   useEffect(() => {
     if (!cloudNotice) return;
     const timer = setTimeout(() => setCloudNotice(null), 4500);
     return () => clearTimeout(timer);
   }, [cloudNotice]);
+
+  useEffect(() => {
+    if (!autoRefreshPill) return;
+    const timer = setTimeout(() => setAutoRefreshPill(null), 2500);
+    return () => clearTimeout(timer);
+  }, [autoRefreshPill]);
 
   const syncRecordToCloud = async (tableName, id, data) => {
     if (!isSupabaseConfigured()) {
@@ -175,15 +182,15 @@ export default function App() {
     saveToStorage(STORAGE_KEYS.CURRENT_USER, currentUser);
   }, [currentUser]);
 
-  // Manual & automatic cloud sync function
-  const refreshFromCloud = async () => {
+  // Manual & automatic cloud sync function with intelligent change detection
+  const refreshFromCloud = async (silent = false) => {
     if (!isSupabaseConfigured()) return;
-    setIsSyncing(true);
+    if (!silent) setIsSyncing(true);
     try {
       // Auto-seed cloud database if tables are empty
       await seedCloudIfEmpty(appState);
 
-      const [cloudTasks, cloudInvoices, cloudSales, cloudExpenses, cloudTrucks, cloudCustomers, cloudTechs, cloudUsers] = await Promise.all([
+      const [cloudTasks, cloudInvoices, cloudSales, cloudExpenses, cloudTrucks, cloudCustomers, cloudTechs, cloudUsers, cloudProfile] = await Promise.all([
         fetchCloudTable('tasks'),
         fetchCloudTable('invoices'),
         fetchCloudTable('sales'),
@@ -191,20 +198,51 @@ export default function App() {
         fetchCloudTable('trucks'),
         fetchCloudTable('customers'),
         fetchCloudTable('technicians'),
-        fetchCloudTable('users')
+        fetchCloudTable('users'),
+        fetchCloudTable('profile')
       ]);
 
-      setAppState(prev => ({
-        ...prev,
-        tasks: Array.isArray(cloudTasks) ? cloudTasks : prev.tasks,
-        invoices: Array.isArray(cloudInvoices) ? cloudInvoices : prev.invoices,
-        sales: Array.isArray(cloudSales) ? cloudSales : prev.sales,
-        expenses: Array.isArray(cloudExpenses) ? cloudExpenses : prev.expenses,
-        trucks: Array.isArray(cloudTrucks) ? cloudTrucks : prev.trucks,
-        customers: Array.isArray(cloudCustomers) ? cloudCustomers : prev.customers,
-        technicians: Array.isArray(cloudTechs) ? cloudTechs : prev.technicians,
-        users: Array.isArray(cloudUsers) ? cloudUsers : prev.users,
-      }));
+      setAppState(prev => {
+        let hasChanges = false;
+
+        const checkDiff = (cloudArr, localArr) => {
+          if (!Array.isArray(cloudArr)) return false;
+          if (cloudArr.length !== localArr.length) return true;
+          const localIds = new Set(localArr.map(x => x.id));
+          return cloudArr.some(x => !localIds.has(x.id));
+        };
+
+        if (checkDiff(cloudTasks, prev.tasks) ||
+            checkDiff(cloudInvoices, prev.invoices) ||
+            checkDiff(cloudSales, prev.sales) ||
+            checkDiff(cloudExpenses, prev.expenses) ||
+            checkDiff(cloudTrucks, prev.trucks) ||
+            checkDiff(cloudCustomers, prev.customers) ||
+            checkDiff(cloudTechs, prev.technicians)) {
+          hasChanges = true;
+        }
+
+        if (hasChanges && silent) {
+          setAutoRefreshPill('⚡ New Data Auto-Refreshed');
+        }
+
+        const newProfile = Array.isArray(cloudProfile) && cloudProfile[0] 
+          ? (cloudProfile[0].data || cloudProfile[0]) 
+          : prev.profile;
+
+        return {
+          ...prev,
+          tasks: Array.isArray(cloudTasks) ? cloudTasks : prev.tasks,
+          invoices: Array.isArray(cloudInvoices) ? cloudInvoices : prev.invoices,
+          sales: Array.isArray(cloudSales) ? cloudSales : prev.sales,
+          expenses: Array.isArray(cloudExpenses) ? cloudExpenses : prev.expenses,
+          trucks: Array.isArray(cloudTrucks) ? cloudTrucks : prev.trucks,
+          customers: Array.isArray(cloudCustomers) ? cloudCustomers : prev.customers,
+          technicians: Array.isArray(cloudTechs) ? cloudTechs : prev.technicians,
+          users: Array.isArray(cloudUsers) ? cloudUsers : prev.users,
+          profile: newProfile
+        };
+      });
 
       if (Array.isArray(cloudUsers) && cloudUsers.length > 0) {
         setCurrentUser(prevUser => {
@@ -220,29 +258,38 @@ export default function App() {
     } catch (e) {
       console.warn('Cloud sync error:', e);
     } finally {
-      setIsSyncing(false);
+      if (!silent) setIsSyncing(false);
     }
   };
 
-  // Background Cloud Database Synchronization + Realtime WebSocket listener
+  // Background Cloud Database Synchronization + Realtime WebSocket listener + Heartbeat Polling
   useEffect(() => {
     if (!isSupabaseConfigured()) return;
 
     // Initial fetch from cloud
     refreshFromCloud();
 
-    // Subscribe to realtime changes from any other device
+    // 1. Subscribe to realtime changes from any other device or tab
     const unsubscribe = subscribeToCloudChanges((payload) => {
-      const { table, eventType, new: newRecord, old: oldRecord } = payload;
+      const { table, eventType, new: newRecord, old: oldRecord, data: broadcastData } = payload;
       const unwrapData = (r) => (r?.data ? { ...r.data, id: r.id } : r);
+
+      setAutoRefreshPill('⚡ New Data Auto-Refreshed');
 
       setAppState(prev => {
         const tableKey = table;
+
+        if (tableKey === 'profile') {
+          const item = unwrapData(newRecord || broadcastData);
+          return { ...prev, profile: item || prev.profile };
+        }
+
         if (!prev[tableKey] || !Array.isArray(prev[tableKey])) return prev;
 
         const currentList = prev[tableKey];
-        if (eventType === 'INSERT') {
-          const item = unwrapData(newRecord);
+        if (eventType === 'INSERT' || eventType === 'UPSERT') {
+          const item = unwrapData(newRecord || broadcastData);
+          if (!item || !item.id) return prev;
           if (currentList.some(i => i.id === item.id)) {
             return {
               ...prev,
@@ -254,23 +301,48 @@ export default function App() {
             [tableKey]: [item, ...currentList]
           };
         } else if (eventType === 'UPDATE') {
-          const item = unwrapData(newRecord);
+          const item = unwrapData(newRecord || broadcastData);
+          if (!item || !item.id) return prev;
           return {
             ...prev,
             [tableKey]: currentList.map(i => i.id === item.id ? item : i)
           };
         } else if (eventType === 'DELETE') {
+          const targetId = oldRecord?.id || payload?.id;
           return {
             ...prev,
-            [tableKey]: currentList.filter(i => i.id !== oldRecord?.id)
+            [tableKey]: currentList.filter(i => i.id !== targetId)
           };
         }
         return prev;
       });
     });
 
+    // 2. High-frequency background polling heartbeat (every 3.5s) to guarantee zero missed updates
+    const pollInterval = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        refreshFromCloud(true);
+      }
+    }, 3500);
+
+    // 3. Tab visibility and Window focus auto-refresh
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        refreshFromCloud(true);
+      }
+    };
+    const handleFocus = () => {
+      refreshFromCloud(true);
+    };
+
+    window.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('focus', handleFocus);
+
     return () => {
       if (typeof unsubscribe === 'function') unsubscribe();
+      clearInterval(pollInterval);
+      window.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('focus', handleFocus);
     };
   }, []);
 
@@ -1064,6 +1136,14 @@ export default function App() {
           currentUser={currentUser}
           tasks={appState.tasks}
         />
+      )}
+
+      {/* Floating Auto-Refresh Notification Pill */}
+      {autoRefreshPill && (
+        <div className="fixed top-4 right-4 z-50 px-4 py-2 rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold text-xs shadow-2xl shadow-red-950 border border-red-400/50 flex items-center space-x-2 animate-bounce select-none">
+          <span className="w-2 h-2 rounded-full bg-white animate-ping"></span>
+          <span>{autoRefreshPill}</span>
+        </div>
       )}
 
       {/* Floating Cloud Sync Notification Toast */}
