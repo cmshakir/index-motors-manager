@@ -22,11 +22,11 @@ export default function LoginScreen({ users = [], onLogin, profile }) {
   const primaryUser = users[0] || {
     id: "USR-ADMIN",
     username: "admin",
-    name: "Shakir CM",
-    email: "shakir@indexmotors.online",
+    name: "Index Motor",
+    email: "admin@indexmotors.online",
     password: "Sha@2026",
     role: "Dealership Owner & Managing Director",
-    avatar: "SC"
+    avatar: "IM"
   };
 
   const handleSubmit = (e) => {
@@ -41,7 +41,7 @@ export default function LoginScreen({ users = [], onLogin, profile }) {
     const foundUser = users.find(u => {
       const matchEmail = u.email && u.email.toLowerCase() === inputId;
       const matchUsername = u.username && u.username.toLowerCase() === inputId;
-      const matchAdmin = inputId === 'admin' || inputId === 'shakir';
+      const matchAdmin = inputId === 'admin' || inputId === 'indexmotor' || inputId === 'shakir';
       const matchPass = u.password === inputPass || (inputPass === 'Sha@2026');
       return (matchEmail || matchUsername || matchAdmin) && matchPass;
     });
@@ -50,7 +50,7 @@ export default function LoginScreen({ users = [], onLogin, profile }) {
       setLoading(false);
       if (foundUser) {
         onLogin(foundUser);
-      } else if ((inputId === 'admin' || inputId === 'shakir' || inputId === (primaryUser.email || '').toLowerCase()) && (inputPass === 'Sha@2026' || inputPass === primaryUser.password)) {
+      } else if ((inputId === 'admin' || inputId === 'indexmotor' || inputId === 'shakir' || inputId === (primaryUser.email || '').toLowerCase()) && (inputPass === 'Sha@2026' || inputPass === primaryUser.password)) {
         onLogin(primaryUser);
       } else {
         setError('Invalid username or password. Please verify your credentials and try again.');

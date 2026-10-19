@@ -54,7 +54,16 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState(() => {
     try {
       const saved = sessionStorage.getItem('index_motors_session_user');
-      return saved ? JSON.parse(saved) : null;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.name === 'Shakir CM' || !parsed.name) {
+          parsed.name = 'Index Motor';
+          parsed.avatar = 'IM';
+          sessionStorage.setItem('index_motors_session_user', JSON.stringify(parsed));
+        }
+        return parsed;
+      }
+      return null;
     } catch (e) {
       return null;
     }
@@ -196,6 +205,18 @@ export default function App() {
         technicians: Array.isArray(cloudTechs) ? cloudTechs : prev.technicians,
         users: Array.isArray(cloudUsers) ? cloudUsers : prev.users,
       }));
+
+      if (Array.isArray(cloudUsers) && cloudUsers.length > 0) {
+        setCurrentUser(prevUser => {
+          if (!prevUser) return null;
+          const matched = cloudUsers.find(u => u.id === prevUser.id || u.username === prevUser.username);
+          if (matched) {
+            sessionStorage.setItem('index_motors_session_user', JSON.stringify(matched));
+            return matched;
+          }
+          return prevUser;
+        });
+      }
     } catch (e) {
       console.warn('Cloud sync error:', e);
     } finally {

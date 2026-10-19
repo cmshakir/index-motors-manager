@@ -44,12 +44,12 @@ export const initialUsers = [
   {
     id: "USR-ADMIN",
     username: "admin",
-    name: "Shakir CM",
-    email: "shakir@indexmotors.online",
+    name: "Index Motor",
+    email: "admin@indexmotors.online",
     password: "Sha@2026",
     role: "Dealership Owner & Managing Director",
     permissions: ["all"],
-    avatar: "SC",
+    avatar: "IM",
     phone: "+91 88485 55675"
   }
 ];
