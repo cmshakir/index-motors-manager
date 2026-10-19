@@ -251,7 +251,7 @@ export default function ExpenseModal({
           {!expenseToEdit && (
             <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
               <div className="flex items-center space-x-1.5 text-slate-300 font-bold">
-                <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+                <Sparkles className="h-3.5 w-3.5 text-red-500" />
                 <span className="text-[11px] uppercase tracking-wider">
                   Fast {isIncome ? 'Income' : 'Expense'} Presets
                 </span>
@@ -348,7 +348,7 @@ export default function ExpenseModal({
                 required
                 value={formData.date}
                 onChange={e => setFormData({ ...formData, date: e.target.value })}
-                className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-amber-500 transition text-xs"
+                className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-red-500 transition text-xs"
               />
             </div>
 
@@ -357,7 +357,7 @@ export default function ExpenseModal({
               <select
                 value={formData.paymentMethod}
                 onChange={e => setFormData({ ...formData, paymentMethod: e.target.value })}
-                className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-amber-500 transition text-xs"
+                className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-red-500 transition text-xs"
               >
                 {PAYMENT_METHODS.map(m => (
                   <option key={m} value={m}>{m}</option>
@@ -377,7 +377,7 @@ export default function ExpenseModal({
                 placeholder={isIncome ? 'e.g. Nilgiri Scrap Recyclers or Chola Finance' : 'e.g. SML Isuzu Regional Parts Depot'}
                 value={formData.payee}
                 onChange={e => setFormData({ ...formData, payee: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition text-xs"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-red-500 transition text-xs"
               />
             </div>
 
@@ -388,7 +388,7 @@ export default function ExpenseModal({
                 placeholder="e.g. REC-8921 or UTR-902189"
                 value={formData.referenceNo}
                 onChange={e => setFormData({ ...formData, referenceNo: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition text-xs"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-red-500 transition text-xs"
               />
             </div>
           </div>
@@ -409,7 +409,7 @@ export default function ExpenseModal({
                       taxAmount: checked ? Math.round((Number(prev.amount) || 0) * 0.18 / 1.18) : 0
                     }));
                   }}
-                  className="rounded bg-slate-950 border-slate-700 text-amber-500 focus:ring-amber-500"
+                  className="rounded bg-slate-950 border-slate-700 text-red-600 focus:ring-red-500"
                 />
                 <label htmlFor="taxIncluded" className="text-slate-300 font-semibold cursor-pointer">
                   {isIncome ? 'Subject to 18% GST Output' : 'Includes 18% GST Input Credit'}
@@ -427,7 +427,7 @@ export default function ExpenseModal({
               <select
                 value={formData.linkedTaskOrTruck}
                 onChange={e => setFormData({ ...formData, linkedTaskOrTruck: e.target.value })}
-                className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-amber-500 transition text-xs"
+                className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-red-500 transition text-xs"
               >
                 <option value="">-- General Dealership Balance --</option>
                 {tasks.map(t => (
@@ -447,7 +447,7 @@ export default function ExpenseModal({
               placeholder="e.g. Approved and recorded in cash book by dealership accounts."
               value={formData.notes}
               onChange={e => setFormData({ ...formData, notes: e.target.value })}
-              className="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition text-xs"
+              className="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-red-500 transition text-xs"
             />
           </div>
 

@@ -83,7 +83,7 @@ export default function SettingsModal({
         {/* Header */}
         <div className="px-6 py-4 bg-slate-950/90 border-b border-slate-800 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="h-10 w-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-amber-400">
+            <div className="h-10 w-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-red-500">
               <Settings className="h-5 w-5" />
             </div>
             <div>
@@ -105,7 +105,7 @@ export default function SettingsModal({
           {/* Dealership Info */}
           <div className="space-y-3">
             <h4 className="font-black text-white uppercase tracking-wider text-xs flex items-center space-x-1.5">
-              <Building2 className="h-4 w-4 text-amber-400" />
+              <Building2 className="h-4 w-4 text-red-500" />
               <span>Dealership Profile & Legal Details</span>
             </h4>
 
@@ -278,11 +278,11 @@ export default function SettingsModal({
           <div className="space-y-3 pt-3 border-t border-slate-800">
             <div className="flex items-center justify-between">
               <h4 className="font-black text-white uppercase tracking-wider text-xs flex items-center space-x-1.5">
-                <Cloud className="h-4 w-4 text-amber-400" />
+                <Cloud className="h-4 w-4 text-red-500" />
                 <span>Cloud Database & Multi-Device Sync</span>
               </h4>
               <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
-                isCloudConnected ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                isCloudConnected ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'
               }`}>
                 {isCloudConnected ? 'Cloud Active' : 'Offline / Local'}
               </span>
@@ -299,7 +299,7 @@ export default function SettingsModal({
                   onClose();
                   if (onOpenCloudModal) onOpenCloudModal();
                 }}
-                className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition shadow-md shadow-amber-500/20"
+                className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-bold transition shadow-md shadow-red-600/20"
               >
                 <Cloud className="h-3.5 w-3.5" />
                 <span>Configure Cloud Sync</span>
@@ -383,7 +383,7 @@ export default function SettingsModal({
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black"
+              className="px-5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black shadow-lg shadow-red-600/25"
             >
               Save Configuration
             </button>

@@ -11,15 +11,7 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { formatCurrency } from '../../utils/formatters';
-
-const SWARAJ_MAZDA_CATALOG = [
-  { model: "Swaraj Mazda BH Series 32-Seater Passenger Bus", type: "Bus", basePrice: 2280000, rtoEstimate: 165000 },
-  { model: "Swaraj Mazda Super GS Commercial Lorry", type: "Lorry", basePrice: 1650000, rtoEstimate: 145000 },
-  { model: "Swaraj Mazda Mini Bus (20-Seater School Bus)", type: "Bus", basePrice: 1820000, rtoEstimate: 120000 },
-  { model: "Swaraj Mazda Samrat HD 6-Wheeler Tipper Lorry", type: "Lorry", basePrice: 1780000, rtoEstimate: 155000 },
-  { model: "Swaraj Mazda Sartaj 5252 XM Cargo Truck", type: "Lorry", basePrice: 1350000, rtoEstimate: 110000 },
-  { model: "Swaraj Mazda Executive Luxury Tourist Coach", type: "Bus", basePrice: 2650000, rtoEstimate: 190000 },
-];
+import { SWARAJ_MAZDA_CATALOG } from '../../data/initialData';
 
 export default function DealModal({
   isOpen,
@@ -151,25 +143,25 @@ export default function DealModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-4xl shadow-2xl overflow-hidden flex flex-col max-h-[94vh]">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-4xl shadow-2xl overflow-hidden flex flex-col max-h-[94vh]">
         
         {/* Header */}
-        <div className="px-6 py-4 bg-slate-950/90 border-b border-slate-800 flex items-center justify-between">
+        <div className="px-6 py-4 bg-zinc-950 border-b border-zinc-800 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="h-10 w-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-red-600 via-red-700 to-black border border-red-500/30 flex items-center justify-center text-white shadow-md shadow-red-600/20">
               <Truck className="h-5 w-5" />
             </div>
             <div>
               <h3 className="text-base font-black text-white">
                 {dealToEdit ? `Edit Commercial Vehicle Deal: ${formData.id}` : 'Create Commercial Vehicle Sales Deal / Lead'}
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-red-400 font-medium">
                 Index Motors • Swaraj Mazda Sales & Finance Department
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white">
+          <button onClick={onClose} className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -180,22 +172,22 @@ export default function DealModal({
           {/* Top Deal Title & Stage */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="md:col-span-2 space-y-1">
-              <label className="font-bold text-slate-300">Sales Deal Title / Summary *</label>
+              <label className="font-bold text-zinc-300">Sales Deal Title / Summary *</label>
               <input
                 type="text"
                 required
                 value={formData.title}
                 onChange={e => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white font-medium"
+                className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white font-medium focus:border-red-500"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="font-bold text-slate-300">Pipeline Stage</label>
+              <label className="font-bold text-zinc-300">Pipeline Stage</label>
               <select
                 value={formData.stage}
                 onChange={e => setFormData({ ...formData, stage: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white font-bold text-amber-400"
+                className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white font-bold text-red-400 focus:border-red-500"
               >
                 <option value="New Enquiry">New Enquiry / Lead</option>
                 <option value="Quotation Sent">Quotation & Proposal Sent</option>
@@ -207,7 +199,7 @@ export default function DealModal({
           </div>
 
           {/* Customer Selection */}
-          <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-3">
+          <div className="p-4 rounded-xl bg-zinc-950/80 border border-zinc-800 space-y-3">
             <div className="flex items-center justify-between">
               <span className="font-bold text-blue-400 uppercase tracking-wide flex items-center space-x-1.5">
                 <User className="h-4 w-4" />
@@ -266,22 +258,22 @@ export default function DealModal({
           </div>
 
           {/* Vehicle Selection & Pricing */}
-          <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-3">
-            <span className="font-bold text-amber-400 uppercase tracking-wide flex items-center space-x-1.5">
+          <div className="p-4 rounded-xl bg-zinc-950/80 border border-zinc-800 space-y-3">
+            <span className="font-bold text-red-500 uppercase tracking-wide flex items-center space-x-1.5">
               <Truck className="h-4 w-4" />
               <span>Swaraj Mazda Commercial Vehicle Selection</span>
             </span>
 
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
               <div className="sm:col-span-2 space-y-1">
-                <label className="text-slate-400">Select Vehicle Model</label>
+                <label className="text-zinc-400">Select Vehicle Model</label>
                 <select
                   value={formData.vehicleModel}
                   onChange={handleVehicleSelect}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white font-semibold"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white font-semibold focus:border-red-500"
                 >
                   {SWARAJ_MAZDA_CATALOG.map(v => (
-                    <option key={v.model} value={v.model}>
+                    <option key={v.id || v.model} value={v.model}>
                       [{v.type}] {v.model} — {formatCurrency(v.basePrice, currency)}
                     </option>
                   ))}
@@ -289,7 +281,7 @@ export default function DealModal({
               </div>
 
               <div className="space-y-1">
-                <label className="text-slate-400">Quantity (Units)</label>
+                <label className="text-zinc-400">Quantity (Units)</label>
                 <input
                   type="number"
                   min="1"
@@ -300,12 +292,12 @@ export default function DealModal({
                     const total = calculateTotal(u, formData.unitPrice, formData.rtoAndInsurance);
                     setFormData({ ...formData, unitCount: u, totalDealValue: total });
                   }}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white font-mono font-bold"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white font-mono font-bold focus:border-red-500"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-slate-400">Unit Price ({currency})</label>
+                <label className="text-zinc-400">Unit Price ({currency})</label>
                 <input
                   type="number"
                   value={formData.unitPrice}
@@ -314,14 +306,14 @@ export default function DealModal({
                     const total = calculateTotal(formData.unitCount, p, formData.rtoAndInsurance);
                     setFormData({ ...formData, unitPrice: p, totalDealValue: total });
                   }}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white font-mono"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white font-mono focus:border-red-500"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-slate-800/60">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-zinc-800">
               <div className="space-y-1">
-                <label className="text-slate-400">RTO, Road Tax & Insurance ({currency})</label>
+                <label className="text-zinc-400">RTO, Road Tax & Insurance ({currency})</label>
                 <input
                   type="number"
                   value={formData.rtoAndInsurance}
@@ -330,23 +322,23 @@ export default function DealModal({
                     const total = calculateTotal(formData.unitCount, formData.unitPrice, r);
                     setFormData({ ...formData, rtoAndInsurance: r, totalDealValue: total });
                   }}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white font-mono"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white font-mono focus:border-red-500"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-slate-400">Advance Token / Downpayment ({currency})</label>
+                <label className="text-zinc-400">Advance Token / Downpayment ({currency})</label>
                 <input
                   type="number"
                   value={formData.downpaymentReceived}
                   onChange={e => setFormData({ ...formData, downpaymentReceived: Number(e.target.value) })}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white font-mono font-bold text-emerald-400"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white font-mono font-bold text-emerald-400 focus:border-red-500"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-slate-400">Total On-Road Deal Value</label>
-                <div className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-amber-400 font-mono font-black text-sm">
+                <label className="text-zinc-400">Total On-Road Deal Value</label>
+                <div className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-red-400 font-mono font-black text-sm">
                   {formatCurrency(formData.totalDealValue, currency)}
                 </div>
               </div>
@@ -354,7 +346,7 @@ export default function DealModal({
           </div>
 
           {/* Financing & EMI Calculator Module */}
-          <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-3">
+          <div className="p-4 rounded-xl bg-zinc-950/80 border border-zinc-800 space-y-3">
             <span className="font-bold text-emerald-400 uppercase tracking-wide flex items-center space-x-1.5">
               <Calculator className="h-4 w-4" />
               <span>Commercial Vehicle Financing & EMI Estimator</span>
@@ -450,22 +442,22 @@ export default function DealModal({
               placeholder="Financing status, customized body building requirements, route permits, accessories..."
               value={formData.notes}
               onChange={e => setFormData({ ...formData, notes: e.target.value })}
-              className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white"
+              className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white focus:border-red-500"
             />
           </div>
 
           {/* Footer Save */}
-          <div className="pt-4 border-t border-slate-800 flex items-center justify-end space-x-2">
+          <div className="pt-4 border-t border-zinc-800 flex items-center justify-end space-x-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold"
+              className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black shadow-lg shadow-amber-500/25 transition active:scale-95"
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black shadow-lg shadow-red-600/30 transition active:scale-95 cursor-pointer"
             >
               {dealToEdit ? 'Save Deal Updates' : 'Create Sales Deal'}
             </button>

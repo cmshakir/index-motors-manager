@@ -63,7 +63,7 @@ export default function TechniciansView({
 
         <button
           onClick={handleOpenAdd}
-          className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/25 transition active:scale-95 w-fit"
+          className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black text-xs sm:text-sm shadow-lg shadow-red-600/25 transition active:scale-95 w-fit"
         >
           <Plus className="h-4 w-4 stroke-[3]" />
           <span>+ Add Technician</span>
@@ -81,12 +81,12 @@ export default function TechniciansView({
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <div className="h-10 w-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 font-bold text-sm">
+                    <div className="h-10 w-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 font-bold text-sm">
                       {tech.name.split(' ').map(n => n[0]).join('')}
                     </div>
                     <div>
                       <h3 className="text-base font-black text-white">{tech.name}</h3>
-                      <p className="text-xs text-amber-400 font-medium">{tech.role}</p>
+                      <p className="text-xs text-red-400 font-medium">{tech.role}</p>
                     </div>
                   </div>
                   <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
@@ -118,7 +118,7 @@ export default function TechniciansView({
                     assignedJobs.map(j => (
                       <div key={j.id} className="p-2 rounded-lg bg-slate-950/50 border border-slate-800 text-xs flex items-center justify-between">
                         <span className="font-semibold text-white truncate max-w-[160px]">{j.truckModel}</span>
-                        <span className="font-mono text-amber-400 text-[10px]">{j.bay}</span>
+                        <span className="font-mono text-red-400 text-[10px]">{j.bay}</span>
                       </div>
                     ))
                   )}
@@ -209,7 +209,7 @@ export default function TechniciansView({
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-amber-500 text-slate-950 font-black"
+                  className="px-5 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black shadow-lg shadow-red-600/25"
                 >
                   Save
                 </button>

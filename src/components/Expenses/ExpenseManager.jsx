@@ -137,7 +137,7 @@ export default function ExpenseManager({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2.5">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center">
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-red-600/20 to-zinc-900 text-red-500 border border-red-500/30 flex items-center justify-center">
               <Wallet className="h-5 w-5 stroke-[2.5]" />
             </div>
             <div>
@@ -280,7 +280,7 @@ export default function ExpenseManager({
               placeholder="Search by title, source, payee, ref no, or job card..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-amber-500 transition"
+              className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-red-500 transition"
             />
           </div>
 
@@ -289,7 +289,7 @@ export default function ExpenseManager({
             <select
               value={selectedPaymentMethod}
               onChange={e => setSelectedPaymentMethod(e.target.value)}
-              className="px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-amber-500 transition"
+              className="px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-red-500 transition"
             >
               <option value="All">All Payment Modes</option>
               <option value="Bank Transfer (NEFT/RTGS)">Bank Transfer</option>
@@ -303,7 +303,7 @@ export default function ExpenseManager({
             <select
               value={dateFilter}
               onChange={e => setDateFilter(e.target.value)}
-              className="px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-amber-500 transition"
+              className="px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-red-500 transition"
             >
               <option value="all">All Dates</option>
               <option value="this_month">This Month</option>
@@ -321,7 +321,7 @@ export default function ExpenseManager({
               onClick={() => setTypeFilter('all')}
               className={`px-3 py-1 rounded-lg font-bold transition ${
                 typeFilter === 'all' 
-                  ? 'bg-amber-500 text-slate-950 shadow-sm' 
+                  ? 'bg-red-600 text-white shadow-sm' 
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -450,7 +450,7 @@ export default function ExpenseManager({
                             <span>{isIncome ? 'From:' : 'To:'} <strong>{item.payee}</strong></span>
                           )}
                           {item.linkedTaskOrTruck && (
-                            <span className="px-1.5 py-0.2 rounded bg-slate-800 text-amber-400 font-mono text-[10px]">
+                            <span className="px-1.5 py-0.2 rounded bg-slate-800 text-red-400 font-mono text-[10px]">
                               {item.linkedTaskOrTruck}
                             </span>
                           )}

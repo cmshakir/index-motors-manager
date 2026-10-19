@@ -77,7 +77,7 @@ export default function TaskManager({
             <h1 className="text-2xl font-black text-white tracking-wide">
               Workshop Job Cards & Service Tasks
             </h1>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-500/10 text-red-400 border border-red-500/20">
               {filteredTasks.length} Active
             </span>
           </div>
@@ -93,7 +93,7 @@ export default function TaskManager({
               onClick={() => setViewMode('kanban')}
               className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
                 viewMode === 'kanban' 
-                  ? 'bg-amber-500 text-slate-950 shadow-sm' 
+                  ? 'bg-red-600 text-white shadow-sm' 
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -104,7 +104,7 @@ export default function TaskManager({
               onClick={() => setViewMode('table')}
               className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
                 viewMode === 'table' 
-                  ? 'bg-amber-500 text-slate-950 shadow-sm' 
+                  ? 'bg-red-600 text-white shadow-sm' 
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -115,7 +115,7 @@ export default function TaskManager({
 
           <button
             onClick={onNewTask}
-            className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/25 transition active:scale-95"
+            className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black text-xs sm:text-sm shadow-lg shadow-red-600/25 transition active:scale-95"
           >
             <Plus className="h-4 w-4 stroke-[3]" />
             <span>+ New Job Card</span>
@@ -135,7 +135,7 @@ export default function TaskManager({
               placeholder="Search by Job #, Truck, Plate, VIN, Customer, or Mechanic..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 transition"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-red-500 transition"
             />
           </div>
 
@@ -145,7 +145,7 @@ export default function TaskManager({
             <select
               value={priorityFilter}
               onChange={(e) => setPriorityFilter(e.target.value)}
-              className="px-3 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 font-medium focus:outline-none focus:border-amber-500"
+              className="px-3 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 font-medium focus:outline-none focus:border-red-500"
             >
               <option value="All">All Priorities</option>
               <option value="Urgent">Urgent / Breakdown</option>
@@ -158,7 +158,7 @@ export default function TaskManager({
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-3 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 font-medium focus:outline-none focus:border-amber-500"
+              className="px-3 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 font-medium focus:outline-none focus:border-red-500"
             >
               <option value="All">All Service Types</option>
               {categories.map(cat => (
@@ -171,7 +171,7 @@ export default function TaskManager({
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 font-medium focus:outline-none focus:border-amber-500"
+                className="px-3 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 font-medium focus:outline-none focus:border-red-500"
               >
                 <option value="All">All Statuses</option>
                 <option value="Pending">Received / Pending</option>
@@ -189,7 +189,7 @@ export default function TaskManager({
                   setCategoryFilter('All');
                   setStatusFilter('All');
                 }}
-                className="text-xs text-amber-400 hover:text-amber-300 px-2 py-1 font-semibold"
+                className="text-xs text-red-400 hover:text-red-300 px-2 py-1 font-semibold"
               >
                 Clear Filters
               </button>
@@ -277,13 +277,13 @@ export default function TaskManager({
                       className="hover:bg-slate-850/60 transition cursor-pointer"
                       onClick={() => onViewTask(task)}
                     >
-                      <td className="py-3.5 px-4 font-mono font-bold text-amber-400 text-xs whitespace-nowrap">
+                      <td className="py-3.5 px-4 font-mono font-bold text-red-400 text-xs whitespace-nowrap">
                         {task.id}
                       </td>
                       <td className="py-3.5 px-4">
                         <div className="font-bold text-white text-xs">{task.truckModel}</div>
                         <div className="text-[11px] text-slate-400 flex items-center space-x-1.5">
-                          <span className="font-mono text-amber-300/90">{task.plate}</span>
+                          <span className="font-mono text-red-300/90">{task.plate}</span>
                           <span>•</span>
                           <span className="truncate max-w-[140px]">{task.customerName}</span>
                         </div>
@@ -359,11 +359,11 @@ function TaskCard({ task, currency, onView, onEdit, onDelete, onStatusChange, on
   return (
     <div 
       onClick={onView}
-      className="group bg-slate-950/90 rounded-xl border border-slate-800 hover:border-amber-500/50 p-3.5 space-y-3 cursor-pointer transition shadow-md hover:shadow-xl"
+      className="group bg-slate-950/90 rounded-xl border border-slate-800 hover:border-red-600/50 p-3.5 space-y-3 cursor-pointer transition shadow-md hover:shadow-xl"
     >
       {/* Top Header: ID & Priority */}
       <div className="flex items-center justify-between">
-        <span className="font-mono text-xs font-bold text-amber-400">
+        <span className="font-mono text-xs font-bold text-red-400">
           {task.id}
         </span>
         <div className="flex items-center space-x-1.5">
@@ -375,7 +375,7 @@ function TaskCard({ task, currency, onView, onEdit, onDelete, onStatusChange, on
 
       {/* Title & Category */}
       <div>
-        <h4 className="text-sm font-bold text-white group-hover:text-amber-400 transition line-clamp-2">
+        <h4 className="text-sm font-bold text-white group-hover:text-red-400 transition line-clamp-2">
           {task.title}
         </h4>
         <span className="text-[11px] font-medium text-slate-400 mt-0.5 block">
@@ -386,11 +386,11 @@ function TaskCard({ task, currency, onView, onEdit, onDelete, onStatusChange, on
       {/* Truck & Customer Block */}
       <div className="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800/80 space-y-1 text-xs">
         <div className="flex items-center space-x-1.5 text-white font-semibold truncate">
-          <Truck className="h-3.5 w-3.5 text-amber-400 flex-shrink-0" />
+          <Truck className="h-3.5 w-3.5 text-red-500 flex-shrink-0" />
           <span className="truncate">{task.truckModel}</span>
         </div>
         <div className="flex items-center justify-between text-[11px] text-slate-400">
-          <span className="font-mono text-amber-400">{task.plate || "No Plate"}</span>
+          <span className="font-mono text-red-400">{task.plate || "No Plate"}</span>
           <span className="truncate max-w-[110px]">{task.customerName}</span>
         </div>
       </div>
@@ -417,7 +417,7 @@ function TaskCard({ task, currency, onView, onEdit, onDelete, onStatusChange, on
         )}
 
         <span className="font-mono text-slate-400">
-          <Clock className="h-3 w-3 inline mr-0.5 text-amber-400" />
+          <Clock className="h-3 w-3 inline mr-0.5 text-red-400" />
           {task.actualHours || 0}/{task.estimatedHours}h
         </span>
       </div>

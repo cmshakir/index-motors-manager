@@ -189,7 +189,7 @@ export default function TaskModal({
         {/* Header */}
         <div className="px-6 py-4 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="h-10 w-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+            <div className="h-10 w-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500">
               <Wrench className="h-5 w-5" />
             </div>
             <div>
@@ -224,7 +224,7 @@ export default function TaskModal({
                 placeholder="e.g. Engine Turbo Overhaul & 200k Major Service"
                 value={formData.title}
                 onChange={e => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-amber-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-red-500"
               />
             </div>
 
@@ -235,7 +235,7 @@ export default function TaskModal({
               <select
                 value={formData.category}
                 onChange={e => setFormData({ ...formData, category: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-amber-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-red-500"
               >
                 <option value="Preventive Maintenance">Preventive Maintenance</option>
                 <option value="Engine & Fuel System">Engine & Fuel System</option>
@@ -251,7 +251,7 @@ export default function TaskModal({
 
           {/* Truck & Customer Block */}
           <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800 space-y-4">
-            <div className="flex items-center space-x-2 text-xs font-bold text-amber-400 uppercase tracking-wider">
+            <div className="flex items-center space-x-2 text-xs font-bold text-red-500 uppercase tracking-wider">
               <Truck className="h-4 w-4" />
               <span>Commercial Truck & Fleet Details</span>
             </div>
@@ -468,7 +468,7 @@ export default function TaskModal({
               placeholder="Driver complaints, observed symptoms, diagnostic codes, work performed..."
               value={formData.description}
               onChange={e => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-red-500"
             />
           </div>
 
@@ -493,7 +493,7 @@ export default function TaskModal({
                         updated[idx].completed = e.target.checked;
                         setFormData({ ...formData, checklist: updated });
                       }}
-                      className="rounded border-slate-700 text-amber-500 focus:ring-0 w-4 h-4 bg-slate-900 cursor-pointer"
+                      className="rounded border-slate-700 text-red-600 focus:ring-0 w-4 h-4 bg-slate-900 cursor-pointer"
                     />
                     <span className={item.completed ? 'line-through text-slate-500' : 'text-slate-200'}>
                       {item.task}
@@ -532,7 +532,7 @@ export default function TaskModal({
           {/* Parts Used / Allocated */}
           <div className="space-y-3 pt-2 border-t border-slate-800">
             <label className="text-xs font-bold text-slate-300 flex items-center space-x-1.5">
-              <Wrench className="h-4 w-4 text-amber-400" />
+              <Wrench className="h-4 w-4 text-red-500" />
               <span>Commercial Parts & Materials Used ({formData.parts.length})</span>
             </label>
 
@@ -541,7 +541,7 @@ export default function TaskModal({
                 {formData.parts.map((p, idx) => (
                   <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-slate-950/70 border border-slate-800 text-xs">
                     <div className="flex-1 min-w-0 pr-2">
-                      <span className="font-mono text-amber-400 mr-2">{p.partNo}</span>
+                      <span className="font-mono text-red-400 mr-2">{p.partNo}</span>
                       <span className="text-white font-medium">{p.name}</span>
                     </div>
                     <div className="flex items-center space-x-3 text-slate-400 font-mono">
@@ -598,7 +598,7 @@ export default function TaskModal({
               <button
                 type="button"
                 onClick={handleAddPart}
-                className="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-xs font-bold text-amber-400"
+                className="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-xs font-bold text-red-400"
               >
                 + Add Part
               </button>
@@ -618,7 +618,7 @@ export default function TaskModal({
           </button>
           <button
             onClick={handleSubmit}
-            className="px-6 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition active:scale-95"
+            className="px-6 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black text-xs sm:text-sm shadow-lg shadow-red-600/20 transition active:scale-95"
           >
             {taskToEdit ? 'Save Changes' : 'Create Job Card'}
           </button>

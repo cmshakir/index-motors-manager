@@ -479,7 +479,7 @@ export default function InvoiceModal({
           {/* Truck Information */}
           <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-3">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2 text-xs font-bold text-amber-400 uppercase tracking-wide">
+              <div className="flex items-center space-x-2 text-xs font-bold text-red-500 uppercase tracking-wide">
                 <Truck className="h-4 w-4" />
                 <span>Vehicle / Truck Linked</span>
               </div>
@@ -537,7 +537,7 @@ export default function InvoiceModal({
                 <button
                   type="button"
                   onClick={() => handleAddItem('Labor')}
-                  className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-xs font-bold text-amber-400 border border-slate-700"
+                  className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-xs font-bold text-red-400 border border-slate-700"
                 >
                   + Labor
                 </button>

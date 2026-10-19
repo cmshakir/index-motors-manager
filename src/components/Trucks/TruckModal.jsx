@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { X, Truck, Building, DollarSign } from 'lucide-react';
+import { X, Truck, Building, DollarSign, CheckCircle2 } from 'lucide-react';
+import { SWARAJ_MAZDA_CATALOG } from '../../data/initialData';
+
+const TATA_PRESETS = [
+  { model: "Tata 407 Gold SFC 29 WB Lorry", engine: "Tata 4SP CR BS6 (100 HP)", axle: "4x2 Light Commercial (4.5T GVW)" },
+  { model: "Tata 709g LPT BS6 Cargo Lorry", engine: "Tata 3.8L Turbotronn (125 HP)", axle: "4x2 Intermediate Lorry (7.5T GVW)" },
+  { model: "Tata 1109g LPT Medium Lorry", engine: "Tata 3.8L Turbotronn (140 HP)", axle: "4x2 Medium Heavy (11.2T GVW)" },
+  { model: "Tata 1512 LPT Heavy Cargo", engine: "Tata 3.3L NG BS6 (125 HP)", axle: "4x2 6-Wheeler Hauler (16T GVW)" },
+  { model: "Tata Signa 2823.K Tipper (16 CuM)", engine: "Cummins ISBe 5.6L (220 HP)", axle: "6x4 Heavy Rock Tipper (28T GVW)" },
+  { model: "Tata Starbus Ultra 36-Seater", engine: "Tata 4SP CR BS6 (100 HP)", axle: "4x2 Passenger Bus (8.2T GVW)" },
+  { model: "Tata Winger Commercial Passenger Van", engine: "Tata 2.2L DICOR BS6 (100 HP)", axle: "4x2 Commercial Van (3.5T GVW)" },
+];
 
 export default function TruckModal({
   isOpen,
@@ -13,18 +24,18 @@ export default function TruckModal({
   const [formData, setFormData] = useState({
     id: `TRK-${Math.floor(100 + Math.random() * 900)}`,
     type: 'Dealership Stock',
-    make: 'Volvo',
-    model: 'FH16 750',
+    make: 'Swaraj Mazda',
+    model: 'SML Isuzu Sartaj 5252 XM Lorry',
     year: new Date().getFullYear(),
     plate: '',
     vin: '',
-    engine: 'D16K 750HP Euro 6',
-    transmission: 'I-Shift 12-Speed',
-    axle: '6x4 Tractor',
+    engine: '3455cc SLT4 Turbo BS6 (100 HP)',
+    transmission: '5-Speed Manual Synchromesh',
+    axle: '4x2 Cargo Lorry (5.2T GVW)',
     mileage: 0,
     customerId: '',
     customerName: 'Index Motors Dealership Inventory',
-    salePrice: 150000,
+    salePrice: 1340000,
     status: 'For Sale',
     notes: ''
   });
@@ -36,18 +47,18 @@ export default function TruckModal({
       setFormData({
         id: `TRK-${Math.floor(100 + Math.random() * 900)}`,
         type: 'Dealership Stock',
-        make: 'Volvo',
-        model: 'FH16 750',
+        make: 'Swaraj Mazda',
+        model: 'SML Isuzu Sartaj 5252 XM Lorry',
         year: new Date().getFullYear(),
         plate: '',
         vin: `VIN-${Math.random().toString(36).substring(2, 11).toUpperCase()}`,
-        engine: 'D16K 750HP Euro 6',
-        transmission: 'I-Shift 12-Speed',
-        axle: '6x4 Tractor',
+        engine: '3455cc SLT4 Turbo BS6 (100 HP)',
+        transmission: '5-Speed Manual Synchromesh',
+        axle: '4x2 Cargo Lorry (5.2T GVW)',
         mileage: 0,
         customerId: '',
         customerName: 'Index Motors Dealership Inventory',
-        salePrice: 150000,
+        salePrice: 1340000,
         status: 'For Sale',
         notes: ''
       });
@@ -74,6 +85,34 @@ export default function TruckModal({
     }
   };
 
+  const handleQuickModelSelect = (e) => {
+    const selected = e.target.value;
+    if (!selected) return;
+
+    if (formData.make === 'Swaraj Mazda') {
+      const match = SWARAJ_MAZDA_CATALOG.find(m => m.model === selected);
+      if (match) {
+        setFormData(prev => ({
+          ...prev,
+          model: match.model,
+          engine: match.engine,
+          axle: `${match.type} (${match.gvw})`,
+          salePrice: match.basePrice
+        }));
+      }
+    } else if (formData.make === 'Tata Motors') {
+      const match = TATA_PRESETS.find(m => m.model === selected);
+      if (match) {
+        setFormData(prev => ({
+          ...prev,
+          model: match.model,
+          engine: match.engine,
+          axle: match.axle
+        }));
+      }
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.make.trim() || !formData.model.trim() || !formData.vin.trim()) {
@@ -85,37 +124,39 @@ export default function TruckModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
         
         {/* Header */}
-        <div className="px-6 py-4 bg-slate-950/90 border-b border-slate-800 flex items-center justify-between">
+        <div className="px-6 py-4 bg-zinc-950 border-b border-zinc-800 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="h-10 w-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-red-600 via-red-700 to-black border border-red-500/30 flex items-center justify-center text-white shadow-md shadow-red-600/20">
               <Truck className="h-5 w-5" />
             </div>
             <div>
               <h3 className="text-base font-black text-white">
-                {truckToEdit ? `Edit Truck: ${formData.make} ${formData.model}` : 'Register Commercial Truck'}
+                {truckToEdit ? `Edit Commercial Vehicle: ${formData.id}` : 'Register Commercial Vehicle / Stock'}
               </h3>
-              <p className="text-xs text-slate-400">Index Motors Commercial Inventory & Fleet Registry</p>
+              <p className="text-xs text-red-400 font-medium">
+                Swaraj Mazda Sales Stock & Tata / SML Workshop Service Fleet
+              </p>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white"
+          <button 
+            onClick={onClose} 
+            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4 text-xs">
+        {/* Form Body */}
+        <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-4 flex-1 text-xs">
           
           {/* Classification & Status */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="font-bold text-slate-300">Classification</label>
+              <label className="font-bold text-zinc-300">Vehicle Classification *</label>
               <select
                 value={formData.type}
                 onChange={e => {
@@ -127,19 +168,19 @@ export default function TruckModal({
                     status: newType === 'Dealership Stock' ? 'For Sale' : 'In Workshop'
                   }));
                 }}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white"
+                className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white font-medium focus:border-red-500"
               >
-                <option value="Dealership Stock">Dealership Stock (Yard / Showroom)</option>
-                <option value="Customer Truck">Customer Fleet Vehicle (Workshop)</option>
+                <option value="Dealership Stock">Dealership Stock (Showroom / Sales Yard)</option>
+                <option value="Customer Truck">Customer Fleet Vehicle (Workshop Service)</option>
               </select>
             </div>
 
             <div className="space-y-1">
-              <label className="font-bold text-slate-300">Status</label>
+              <label className="font-bold text-zinc-300">Status</label>
               <select
                 value={formData.status}
                 onChange={e => setFormData({ ...formData, status: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white"
+                className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white font-bold text-red-400 focus:border-red-500"
               >
                 {formData.type === 'Dealership Stock' ? (
                   <>
@@ -158,50 +199,78 @@ export default function TruckModal({
             </div>
           </div>
 
-          {/* Make, Model, Year */}
+          {/* Make, Model, Preset */}
           <div className="grid grid-cols-3 gap-3">
             <div className="space-y-1">
-              <label className="font-bold text-slate-300">Make / Manufacturer *</label>
+              <label className="font-bold text-zinc-300">Make / Manufacturer *</label>
               <select
                 value={formData.make}
-                onChange={e => setFormData({ ...formData, make: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white"
+                onChange={e => {
+                  const newMake = e.target.value;
+                  setFormData(prev => ({
+                    ...prev,
+                    make: newMake,
+                    model: newMake === 'Swaraj Mazda' ? SWARAJ_MAZDA_CATALOG[0].model : (newMake === 'Tata Motors' ? TATA_PRESETS[0].model : prev.model)
+                  }));
+                }}
+                className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white font-bold text-red-400 focus:border-red-500"
               >
-                <option value="Volvo">Volvo Trucks</option>
-                <option value="Scania">Scania</option>
-                <option value="Mercedes-Benz">Mercedes-Benz</option>
-                <option value="MAN">MAN Trucks</option>
-                <option value="Isuzu">Isuzu Commercial</option>
-                <option value="Hino">Hino</option>
-                <option value="DAF">DAF Trucks</option>
-                <option value="Freightliner">Freightliner</option>
-                <option value="Mack">Mack</option>
-                <option value="Iveco">Iveco</option>
-                <option value="Other">Other</option>
+                <option value="Swaraj Mazda">Swaraj Mazda (SML Isuzu)</option>
+                <option value="Tata Motors">Tata Motors Commercial</option>
+                <option value="Ashok Leyland">Ashok Leyland</option>
+                <option value="Eicher Motors">Eicher Motors</option>
+                <option value="BharatBenz">BharatBenz</option>
+                <option value="Mahindra">Mahindra Truck & Bus</option>
+                <option value="Other">Other Make</option>
               </select>
             </div>
 
-            <div className="space-y-1">
-              <label className="font-bold text-slate-300">Model *</label>
+            <div className="col-span-2 space-y-1">
+              <label className="font-bold text-zinc-300">
+                Quick Model Preset ({formData.make})
+              </label>
+              <select
+                onChange={handleQuickModelSelect}
+                defaultValue=""
+                className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white focus:border-red-500"
+              >
+                <option value="">-- Choose From Catalog Presets --</option>
+                {formData.make === 'Swaraj Mazda' && SWARAJ_MAZDA_CATALOG.map(v => (
+                  <option key={v.id} value={v.model}>
+                    [{v.type}] {v.model} ({v.gvw})
+                  </option>
+                ))}
+                {formData.make === 'Tata Motors' && TATA_PRESETS.map(v => (
+                  <option key={v.model} value={v.model}>
+                    {v.model}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3">
+            <div className="col-span-2 space-y-1">
+              <label className="font-bold text-zinc-300">Full Model Name *</label>
               <input
                 type="text"
                 required
-                placeholder="e.g. FH16 750 or Actros 2653"
+                placeholder="e.g. SML Isuzu Sartaj 5252 XM Lorry"
                 value={formData.model}
                 onChange={e => setFormData({ ...formData, model: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white"
+                className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white font-medium focus:border-red-500"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="font-bold text-slate-300">Year</label>
+              <label className="font-bold text-zinc-300">Model Year</label>
               <input
                 type="number"
                 min="1990"
                 max="2030"
                 value={formData.year}
                 onChange={e => setFormData({ ...formData, year: Number(e.target.value) })}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono"
+                className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white font-mono focus:border-red-500"
               />
             </div>
           </div>
@@ -209,93 +278,105 @@ export default function TruckModal({
           {/* Plate & VIN */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
-              <label className="font-bold text-slate-300">Registration / Plate #</label>
+              <label className="font-bold text-zinc-300">Registration / Plate #</label>
               <input
                 type="text"
-                placeholder="e.g. APX-8821"
+                placeholder="e.g. TN-43-C-1984 or KL-72-B-4412"
                 value={formData.plate}
                 onChange={e => setFormData({ ...formData, plate: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono uppercase"
+                className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white font-mono uppercase focus:border-red-500"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="font-bold text-slate-300">Chassis / VIN Number *</label>
+              <label className="font-bold text-zinc-300">Chassis / VIN Number *</label>
               <input
                 type="text"
                 required
-                placeholder="17-character VIN"
+                placeholder="e.g. SML5252XM9820194A"
                 value={formData.vin}
-                onChange={e => setFormData({ ...formData, vin: e.target.value.toUpperCase() })}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono uppercase"
+                onChange={e => setFormData({ ...formData, vin: e.target.value })}
+                className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white font-mono uppercase focus:border-red-500"
               />
             </div>
           </div>
 
-          {/* Engine & Axle */}
-          <div className="grid grid-cols-2 gap-3">
+          {/* Technical Specifications */}
+          <div className="grid grid-cols-3 gap-3">
             <div className="space-y-1">
-              <label className="font-bold text-slate-300">Engine Specs</label>
+              <label className="text-zinc-400">Engine / Powertrain</label>
               <input
                 type="text"
-                placeholder="e.g. D16K 750HP / 3550Nm Euro 6"
+                placeholder="e.g. 3455cc SLT4 Turbo BS6"
                 value={formData.engine}
                 onChange={e => setFormData({ ...formData, engine: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white"
+                className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:border-red-500"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="font-bold text-slate-300">Axle Configuration</label>
-              <select
+              <label className="text-zinc-400">Transmission</label>
+              <input
+                type="text"
+                placeholder="e.g. 5-Speed Manual Synchromesh"
+                value={formData.transmission}
+                onChange={e => setFormData({ ...formData, transmission: e.target.value })}
+                className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:border-red-500"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-zinc-400">Axle / Body Config</label>
+              <input
+                type="text"
+                placeholder="e.g. 4x2 Cargo Lorry (5.2T GVW)"
                 value={formData.axle}
                 onChange={e => setFormData({ ...formData, axle: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white"
-              >
-                <option value="6x4 Tractor">6x4 Heavy Prime Mover / Tractor</option>
-                <option value="6x2 Tag Axle">6x2 Tag / Pusher Axle</option>
-                <option value="4x2 Rigid / Tractor">4x2 Distribution</option>
-                <option value="8x4 Heavy Tipper / Construction">8x4 Heavy Tipper / Crane</option>
-                <option value="6x6 All-Wheel Drive">6x6 All-Wheel Drive Off-Road</option>
-              </select>
+                className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:border-red-500"
+              />
             </div>
           </div>
 
-          {/* Odometer & Asking Price */}
-          <div className="grid grid-cols-2 gap-3">
+          {/* Odometer & Customer Assignment */}
+          <div className="grid grid-cols-3 gap-3">
             <div className="space-y-1">
-              <label className="font-bold text-slate-300">Odometer Mileage (KM)</label>
+              <label className="text-zinc-400">Current Odometer (km)</label>
               <input
                 type="number"
-                placeholder="e.g. 150000"
+                min="0"
                 value={formData.mileage}
                 onChange={e => setFormData({ ...formData, mileage: Number(e.target.value) })}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono"
+                className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white font-mono focus:border-red-500"
               />
             </div>
 
             {formData.type === 'Dealership Stock' ? (
-              <div className="space-y-1">
-                <label className="font-bold text-slate-300">Asking Sale Price ($)</label>
-                <input
-                  type="number"
-                  placeholder="e.g. 175000"
-                  value={formData.salePrice || ''}
-                  onChange={e => setFormData({ ...formData, salePrice: Number(e.target.value) })}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono text-emerald-400 font-bold"
-                />
+              <div className="col-span-2 space-y-1">
+                <label className="text-zinc-400">Showroom Ex-Showroom Sale Price (₹)</label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-red-500 font-bold">₹</span>
+                  <input
+                    type="number"
+                    min="0"
+                    value={formData.salePrice}
+                    onChange={e => setFormData({ ...formData, salePrice: Number(e.target.value) })}
+                    className="w-full pl-8 pr-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white font-mono font-bold text-red-400 focus:border-red-500"
+                  />
+                </div>
               </div>
             ) : (
-              <div className="space-y-1">
-                <label className="font-bold text-slate-300">Fleet Owner / Customer</label>
+              <div className="col-span-2 space-y-1">
+                <label className="text-zinc-400">Registered Fleet Owner / Client</label>
                 <select
                   value={formData.customerId || ''}
                   onChange={handleCustomerChange}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white"
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white font-medium focus:border-red-500"
                 >
-                  <option value="">-- Choose Customer --</option>
+                  <option value="">-- Private / Unlinked Client --</option>
                   {customers.map(c => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
+                    <option key={c.id} value={c.id}>
+                      {c.name} {c.company ? `(${c.company})` : ''}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -304,30 +385,30 @@ export default function TruckModal({
 
           {/* Notes */}
           <div className="space-y-1">
-            <label className="font-bold text-slate-300">Vehicle Notes / Specs</label>
+            <label className="text-zinc-400">Notes & Service History</label>
             <textarea
               rows="2"
-              placeholder="Features, retarder, sleeper cab type, maintenance history..."
+              placeholder="Factory options, high-deck body specs, warranty terms, or special service requests..."
               value={formData.notes}
               onChange={e => setFormData({ ...formData, notes: e.target.value })}
-              className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white"
+              className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:border-red-500"
             />
           </div>
 
-          {/* Buttons */}
-          <div className="pt-4 border-t border-slate-800 flex items-center justify-end space-x-2">
+          {/* Footer Save */}
+          <div className="pt-4 border-t border-zinc-800 flex items-center justify-end space-x-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold"
+              className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold transition"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black shadow-lg shadow-amber-500/25 transition active:scale-95"
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black shadow-lg shadow-red-600/30 transition active:scale-95 cursor-pointer"
             >
-              {truckToEdit ? 'Save Changes' : 'Register Truck'}
+              {truckToEdit ? 'Save Vehicle Updates' : 'Add Commercial Vehicle'}
             </button>
           </div>
 

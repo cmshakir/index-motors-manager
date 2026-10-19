@@ -792,10 +792,12 @@ export default function App() {
                 profile={appState.profile}
                 sales={appState.sales}
                 customers={appState.customers}
+                trucks={appState.trucks}
                 onSaveDeal={handleSaveDeal}
                 onDeleteDeal={handleDeleteDeal}
                 onUpdateDealStage={handleUpdateDealStage}
                 onConvertDealToInvoice={handleConvertDealToInvoice}
+                onNewTask={handleOpenNewTask}
               />
             )}
 

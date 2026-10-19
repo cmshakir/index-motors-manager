@@ -86,14 +86,14 @@ export default function InvoicePrintModal({
               {/* Left: Dealership Branding */}
               <div className="space-y-1 max-w-sm">
                 <div className="flex items-center space-x-3">
-                  <div className="h-10 w-10 bg-slate-950 rounded-lg flex items-center justify-center text-amber-400">
+                  <div className="h-10 w-10 bg-red-600 rounded-lg flex items-center justify-center text-white shadow-md shadow-red-600/30">
                     <Truck className="h-6 w-6 stroke-[2.5]" />
                   </div>
                   <div>
                     <h1 className="text-2xl font-black tracking-wider text-slate-950">
                       {profile.name || "INDEX MOTORS"}
                     </h1>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-amber-600">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-red-600">
                       {profile.subTitle || "Swaraj Mazda Sales & Service - Buses & Lorries"}
                     </p>
                   </div>
@@ -263,7 +263,7 @@ export default function InvoicePrintModal({
                   <span className="font-mono font-bold">{formatCurrency(invoice.paidAmount || 0, currency)}</span>
                 </div>
 
-                <div className="flex justify-between py-2 text-sm font-black bg-amber-50 px-3 rounded border border-amber-200 text-amber-950">
+                <div className="flex justify-between py-2 text-sm font-black bg-red-50 px-3 rounded border border-red-200 text-red-950">
                   <span>Balance Due:</span>
                   <span className="font-mono font-black">{formatCurrency(invoice.balanceDue, currency)}</span>
                 </div>

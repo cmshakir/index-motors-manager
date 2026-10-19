@@ -50,7 +50,7 @@ export default function TaskDetailsModal({
         {/* Top Header */}
         <div className="no-print px-6 py-4 bg-slate-950/90 border-b border-slate-800 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <span className="font-mono text-sm font-black text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded border border-amber-500/20">
+            <span className="font-mono text-sm font-black text-red-400 bg-red-500/10 px-2.5 py-1 rounded border border-red-500/20">
               {task.id}
             </span>
             <div>
@@ -96,7 +96,7 @@ export default function TaskDetailsModal({
               <div className="flex flex-wrap items-center gap-2 mt-1.5 text-xs text-slate-400">
                 <span className="font-semibold text-slate-300">Category: {task.category}</span>
                 <span>•</span>
-                <span>Bay: <strong className="text-amber-400">{task.bay}</strong></span>
+                <span>Bay: <strong className="text-red-400">{task.bay}</strong></span>
                 <span>•</span>
                 <span>Lead Tech: <strong className="text-slate-200">{task.assignedTech}</strong></span>
               </div>
@@ -115,7 +115,7 @@ export default function TaskDetailsModal({
           {/* Truck & Customer Block */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2">
-              <div className="flex items-center space-x-2 text-xs font-bold text-amber-400 uppercase tracking-wide">
+              <div className="flex items-center space-x-2 text-xs font-bold text-red-500 uppercase tracking-wide">
                 <Truck className="h-4 w-4" />
                 <span>Vehicle Specifications</span>
               </div>
@@ -123,7 +123,7 @@ export default function TaskDetailsModal({
               <div className="grid grid-cols-2 gap-2 text-xs text-slate-300">
                 <div>
                   <span className="text-slate-500 block text-[11px]">Plate / Registration:</span>
-                  <span className="font-mono text-amber-300 font-semibold">{task.plate || "Unregistered"}</span>
+                  <span className="font-mono text-red-300 font-semibold">{task.plate || "Unregistered"}</span>
                 </div>
                 <div>
                   <span className="text-slate-500 block text-[11px]">Odometer:</span>
@@ -200,7 +200,7 @@ export default function TaskDetailsModal({
                       type="checkbox"
                       checked={item.completed}
                       onChange={() => onToggleChecklistItem(task.id, idx)}
-                      className="rounded border-slate-700 text-amber-500 focus:ring-0 w-4 h-4 bg-slate-900 cursor-pointer"
+                      className="rounded border-slate-700 text-red-600 focus:ring-0 w-4 h-4 bg-slate-900 cursor-pointer"
                     />
                     <span className={item.completed ? 'line-through text-slate-500' : 'text-slate-200 font-medium'}>
                       {item.task}
@@ -215,7 +215,7 @@ export default function TaskDetailsModal({
           {task.parts && task.parts.length > 0 && (
             <div className="space-y-3">
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center space-x-2">
-                <Wrench className="h-4 w-4 text-amber-400" />
+                <Wrench className="h-4 w-4 text-red-500" />
                 <span>Commercial Spare Parts & Replaced Components</span>
               </h4>
 
@@ -233,7 +233,7 @@ export default function TaskDetailsModal({
                   <tbody className="divide-y divide-slate-800/80 bg-slate-950/40">
                     {task.parts.map((p, idx) => (
                       <tr key={idx}>
-                        <td className="py-2.5 px-3 font-mono text-amber-400">{p.partNo}</td>
+                        <td className="py-2.5 px-3 font-mono text-red-400">{p.partNo}</td>
                         <td className="py-2.5 px-3 font-medium text-white">{p.name}</td>
                         <td className="py-2.5 px-3 text-center">{p.qty}</td>
                         <td className="py-2.5 px-3 text-right">{formatCurrency(p.unitPrice, currency)}</td>
@@ -260,7 +260,7 @@ export default function TaskDetailsModal({
 
             <div>
               <span className="text-[11px] text-slate-400 uppercase tracking-wider block">Parts Subtotal</span>
-              <span className="text-lg font-black text-amber-400 font-mono">
+              <span className="text-lg font-black text-red-400 font-mono">
                 {formatCurrency(partsCost, currency)}
               </span>
               <span className="text-[11px] text-slate-500 block">{task.parts?.length || 0} line items</span>
@@ -311,7 +311,7 @@ export default function TaskDetailsModal({
             </button>
             <button
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs"
+              className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black text-xs shadow-lg shadow-red-600/25"
             >
               Done
             </button>
