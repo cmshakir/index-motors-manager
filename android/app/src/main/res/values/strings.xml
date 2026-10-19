@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Index Motors</string>
+    <string name="title_activity_main">Index Motors</string>
+    <string name="package_name">online.indexmotors.manager</string>
+    <string name="custom_url_scheme">online.indexmotors.manager</string>
+</resources>
