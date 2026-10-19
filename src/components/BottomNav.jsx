@@ -43,7 +43,7 @@ export default function BottomNav({
   ];
 
   const moreTabs = [
-    { id: 'expenses', label: 'Expenditures & P&L', icon: Receipt, badge: expensesCount, desc: 'Workshop parts stock, wages & utility bills' },
+    { id: 'expenses', label: 'Income & Expenses', icon: Receipt, badge: expensesCount, desc: 'Add income, direct expenses & live P&L' },
     { id: 'trucks', label: 'Trucks & Catalog', icon: Truck, badge: trucksCount, desc: 'Swaraj Mazda commercial models & fleet' },
     { id: 'customers', label: 'Fleet Customers', icon: Users, badge: customersCount, desc: 'Transport operators & accounts' },
     { id: 'technicians', label: 'Technicians & Bays', icon: UserCheck, desc: 'Service team & workshop capacity' },

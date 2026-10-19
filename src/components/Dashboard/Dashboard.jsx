@@ -17,7 +17,8 @@ import {
   Printer,
   Sparkles,
   MapPin,
-  Receipt
+  Receipt,
+  Plus
 } from 'lucide-react';
 import { formatCurrency, formatDate, getPriorityBadgeClass, getStatusBadgeClass } from '../../utils/formatters';
 
@@ -33,14 +34,20 @@ export default function Dashboard({
   onSelectInvoice,
   onNewTask,
   onNewInvoice,
+  onNewIncome,
+  onNewExpense,
   onNavigateTab,
   onGenerateInvoiceFromTask
 }) {
   const currency = profile?.currency || '$';
 
-  // Calculations
-  const totalRevenueCollected = invoices.reduce((acc, inv) => acc + (Number(inv.paidAmount) || 0), 0);
-  const totalExpenses = expenses.reduce((acc, exp) => acc + (Number(exp.amount) || 0), 0);
+  // Calculations: Separate Incomes vs Expenses
+  const directIncomes = expenses.filter(e => e.type === 'income');
+  const directExpenses = expenses.filter(e => !e.type || e.type === 'expense');
+  const totalDirectIncome = directIncomes.reduce((sum, inc) => sum + (Number(inc.amount) || 0), 0);
+  const totalExpenses = directExpenses.reduce((acc, exp) => acc + (Number(exp.amount) || 0), 0);
+  const invoiceCollections = invoices.reduce((acc, inv) => acc + (Number(inv.paidAmount) || 0), 0);
+  const totalRevenueCollected = invoiceCollections + totalDirectIncome;
   const netOperatingProfit = totalRevenueCollected - totalExpenses;
 
   const pendingInvoices = invoices.filter(inv => inv.status === 'Pending' || inv.status === 'Partially Paid' || inv.status === 'Overdue');
@@ -86,21 +93,41 @@ export default function Dashboard({
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
             <button
               onClick={onNewTask}
-              className="flex items-center space-x-2 px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/20 transition-all transform active:scale-95"
+              className="flex items-center space-x-1.5 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/20 transition-all transform active:scale-95"
             >
               <Wrench className="h-4 w-4 stroke-[2.5]" />
-              <span>+ Create Workshop Job</span>
+              <span>+ New Job Card</span>
             </button>
             <button
               onClick={onNewInvoice}
-              className="flex items-center space-x-2 px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm border border-slate-700 shadow-md transition-all active:scale-95"
+              className="flex items-center space-x-1.5 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm border border-slate-700 shadow-md transition-all active:scale-95"
             >
               <FileText className="h-4 w-4 text-blue-400" />
               <span>+ Generate Invoice</span>
             </button>
+            {onNewIncome && (
+              <button
+                onClick={onNewIncome}
+                className="flex items-center space-x-1.5 px-3.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm shadow-md shadow-emerald-600/20 transition-all transform active:scale-95"
+                title="Record direct income: scrap metal, warranty claims, buybacks"
+              >
+                <Plus className="h-4 w-4 stroke-[2.5]" />
+                <span>+ Add Income</span>
+              </button>
+            )}
+            {onNewExpense && (
+              <button
+                onClick={onNewExpense}
+                className="flex items-center space-x-1.5 px-3.5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black text-sm shadow-md shadow-rose-600/20 transition-all transform active:scale-95"
+                title="Record expense: parts stock, lubricants, technician wages"
+              >
+                <Plus className="h-4 w-4 stroke-[2.5]" />
+                <span>+ Add Expense</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -116,7 +143,7 @@ export default function Dashboard({
         {/* Metric 1: Total Revenue Collected */}
         <div className="bg-slate-900/90 rounded-2xl p-4 sm:p-5 border border-slate-800 hover:border-slate-700 transition shadow-lg">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Collections</span>
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Inflows</span>
             <div className="h-9 w-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
               <DollarSign className="h-4 w-4" />
             </div>
@@ -127,9 +154,9 @@ export default function Dashboard({
             </div>
             <div className="mt-1 flex items-center text-[11px] text-slate-400">
               <span className="text-emerald-400 font-semibold mr-1">
-                {invoices.filter(i => i.status === 'Paid').length} Paid
+                {invoices.filter(i => i.status === 'Paid').length} Invoices
               </span>
-              <span>Invoices</span>
+              <span>• {directIncomes.length} Direct Incomes</span>
             </div>
           </div>
         </div>
@@ -141,7 +168,7 @@ export default function Dashboard({
           title="Click to manage expenditures"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider group-hover:text-rose-400 transition">Expenses</span>
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider group-hover:text-rose-400 transition">Outflows</span>
             <div className="h-9 w-9 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
               <Receipt className="h-4 w-4" />
             </div>
@@ -151,7 +178,7 @@ export default function Dashboard({
               {formatCurrency(totalExpenses, currency)}
             </div>
             <div className="mt-1 flex items-center text-[11px] text-slate-400">
-              <span>{expenses.length} Vouchers</span>
+              <span>{directExpenses.length} Expense Vouchers</span>
               <span className="text-amber-400 ml-1 underline group-hover:inline hidden">View ➔</span>
             </div>
           </div>

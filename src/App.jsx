@@ -76,6 +76,7 @@ export default function App() {
 
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
   const [expenseToEdit, setExpenseToEdit] = useState(null);
+  const [expenseModalType, setExpenseModalType] = useState('expense');
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isCloudModalOpen, setIsCloudModalOpen] = useState(false);
@@ -331,13 +332,25 @@ export default function App() {
   };
 
   const handleDeleteExpense = (expenseId) => {
-    if (window.confirm('Are you sure you want to delete this expenditure record?')) {
+    if (window.confirm('Are you sure you want to delete this income/expense record?')) {
       setAppState(prev => ({
         ...prev,
         expenses: (prev.expenses || []).filter(e => e.id !== expenseId)
       }));
       deleteCloudRecord('expenses', expenseId);
     }
+  };
+
+  const handleOpenNewIncome = () => {
+    setExpenseToEdit(null);
+    setExpenseModalType('income');
+    setIsExpenseModalOpen(true);
+  };
+
+  const handleOpenNewExpense = () => {
+    setExpenseToEdit(null);
+    setExpenseModalType('expense');
+    setIsExpenseModalOpen(true);
   };
 
   const handleUpdateDealStage = (dealId, newStage) => {
@@ -693,6 +706,8 @@ export default function App() {
                   setPrefilledTaskForInvoice(null);
                   setIsInvoiceModalOpen(true);
                 }}
+                onNewIncome={handleOpenNewIncome}
+                onNewExpense={handleOpenNewExpense}
                 onNavigateTab={setActiveTab}
                 onGenerateInvoiceFromTask={handleGenerateInvoiceFromTask}
               />
@@ -762,12 +777,11 @@ export default function App() {
                 expenses={appState.expenses || []}
                 invoices={appState.invoices || []}
                 currency={appState.profile.currency}
-                onNewExpense={() => {
-                  setExpenseToEdit(null);
-                  setIsExpenseModalOpen(true);
-                }}
+                onNewExpense={handleOpenNewExpense}
+                onNewIncome={handleOpenNewIncome}
                 onEditExpense={(exp) => {
                   setExpenseToEdit(exp);
+                  setExpenseModalType(exp.type || 'expense');
                   setIsExpenseModalOpen(true);
                 }}
                 onDeleteExpense={handleDeleteExpense}
@@ -998,6 +1012,7 @@ export default function App() {
         onClose={() => setIsExpenseModalOpen(false)}
         onSave={handleSaveExpense}
         expenseToEdit={expenseToEdit}
+        defaultType={expenseModalType}
         currency={appState.profile.currency}
         currentUser={currentUser}
         tasks={appState.tasks}

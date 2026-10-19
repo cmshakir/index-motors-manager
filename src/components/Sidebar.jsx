@@ -33,7 +33,7 @@ export default function Sidebar({
     { id: 'sales', label: 'Sales & Vehicle CRM', icon: TrendingUp, badge: salesCount },
     { id: 'tasks', label: 'Workshop Job Cards', icon: Wrench, badge: tasksCount },
     { id: 'invoices', label: 'Invoices & Billing', icon: FileText, badge: invoicesCount },
-    { id: 'expenses', label: 'Expenditures & Costs', icon: Receipt, badge: expensesCount },
+    { id: 'expenses', label: 'Income & Expenses', icon: Receipt, badge: expensesCount },
     { id: 'trucks', label: 'Trucks & Inventory', icon: Truck, badge: trucksCount },
     { id: 'customers', label: 'Fleet Customers', icon: Users, badge: customersCount },
     { id: 'technicians', label: 'Technicians & Bays', icon: UserCheck, badge: null },
