@@ -185,17 +185,17 @@ export default function ExpenseManager({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         
         {/* Card 1: Total Inflows (Income) */}
-        <div className="p-5 rounded-2xl bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 shadow-xl flex flex-col justify-between">
+        <div className="glass-panel p-5 rounded-2xl border border-zinc-800/80 hover:border-emerald-500/40 hover:-translate-y-0.5 transition-all duration-300 shadow-xl flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">
               Total Inflows (Revenue & Income)
             </span>
-            <div className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-400">
+            <div className="p-1.5 rounded-xl bg-emerald-500/20 text-emerald-400">
               <ArrowUpRight className="h-5 w-5 stroke-[2.5]" />
             </div>
           </div>
-          <div className="my-2.5">
-            <div className="text-2xl sm:text-3xl font-black text-emerald-400">
+          <div className="my-3">
+            <div className="text-2xl sm:text-3xl font-black text-emerald-400 tracking-tight">
               {formatCurrency(totalAllIncome, currency)}
             </div>
             <div className="mt-1 flex items-center text-xs text-zinc-400">
@@ -212,17 +212,17 @@ export default function ExpenseManager({
         </div>
 
         {/* Card 2: Total Outflows (Expenses) */}
-        <div className="p-5 rounded-2xl bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 shadow-xl flex flex-col justify-between">
+        <div className="glass-panel p-5 rounded-2xl border border-zinc-800/80 hover:border-rose-500/40 hover:-translate-y-0.5 transition-all duration-300 shadow-xl flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">
               Total Outflows (Expenditures)
             </span>
-            <div className="p-1.5 rounded-lg bg-rose-500/20 text-rose-400">
+            <div className="p-1.5 rounded-xl bg-rose-500/20 text-rose-400">
               <ArrowDownRight className="h-5 w-5 stroke-[2.5]" />
             </div>
           </div>
-          <div className="my-2.5">
-            <div className="text-2xl sm:text-3xl font-black text-rose-400">
+          <div className="my-3">
+            <div className="text-2xl sm:text-3xl font-black text-rose-400 tracking-tight">
               {formatCurrency(totalDirectExpenses, currency)}
             </div>
             <div className="mt-1 flex items-center text-xs text-zinc-400">
@@ -236,17 +236,17 @@ export default function ExpenseManager({
         </div>
 
         {/* Card 3: Net Cash Balance / Operating Profit */}
-        <div className="p-5 rounded-2xl bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 shadow-xl flex flex-col justify-between">
+        <div className="glass-panel p-5 rounded-2xl border border-zinc-800/80 hover:border-red-500/40 hover:-translate-y-0.5 transition-all duration-300 shadow-xl flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-zinc-400">
               Net Operating Profit / Cash Balance
             </span>
-            <div className={`p-1.5 rounded-lg ${netCashProfit >= 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`}>
-              {netCashProfit >= 0 ? <TrendingUp className="h-5 w-5" /> : <TrendingDown className="h-5 w-5" />}
+            <div className={`p-1.5 rounded-xl ${netCashProfit >= 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`}>
+              {netCashProfit >= 0 ? <TrendingUp className="h-5 w-5 stroke-[2.5]" /> : <TrendingDown className="h-5 w-5 stroke-[2.5]" />}
             </div>
           </div>
-          <div className="my-2.5">
-            <div className={`text-2xl sm:text-3xl font-black ${netCashProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+          <div className="my-3">
+            <div className={`text-2xl sm:text-3xl font-black tracking-tight ${netCashProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
               {formatCurrency(netCashProfit, currency)}
             </div>
             <div className="mt-1 flex items-center space-x-2 text-xs">

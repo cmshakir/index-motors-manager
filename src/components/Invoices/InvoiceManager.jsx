@@ -83,33 +83,33 @@ export default function InvoiceManager({
 
       {/* Summary KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-zinc-900/90 rounded-2xl p-4 border border-zinc-800 shadow-md">
+        <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-zinc-800/80 hover:border-red-500/40 hover:-translate-y-0.5 transition-all duration-300 shadow-lg">
           <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider block">Total Invoiced</span>
-          <div className="text-xl font-black text-white mt-1">
+          <div className="text-xl sm:text-2xl font-black text-white mt-1.5 tracking-tight">
             {formatCurrency(totalInvoiced, currency)}
           </div>
           <span className="text-[11px] text-zinc-500 mt-1 block">{invoices.length} invoices generated</span>
         </div>
 
-        <div className="bg-zinc-900/90 rounded-2xl p-4 border border-zinc-800 shadow-md">
+        <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-zinc-800/80 hover:border-emerald-500/40 hover:-translate-y-0.5 transition-all duration-300 shadow-lg">
           <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider block">Collected Payments</span>
-          <div className="text-xl font-black text-emerald-400 mt-1">
+          <div className="text-xl sm:text-2xl font-black text-emerald-400 mt-1.5 tracking-tight">
             {formatCurrency(totalCollected, currency)}
           </div>
           <span className="text-[11px] text-emerald-400/80 mt-1 block">Deposited to bank</span>
         </div>
 
-        <div className="bg-zinc-900/90 rounded-2xl p-4 border border-zinc-800 shadow-md">
+        <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-zinc-800/80 hover:border-amber-500/40 hover:-translate-y-0.5 transition-all duration-300 shadow-lg">
           <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider block">Outstanding Balance</span>
-          <div className="text-xl font-black text-amber-400 mt-1">
+          <div className="text-xl sm:text-2xl font-black text-amber-400 mt-1.5 tracking-tight">
             {formatCurrency(totalOutstanding, currency)}
           </div>
           <span className="text-[11px] text-zinc-500 mt-1 block">Receivable across fleets</span>
         </div>
 
-        <div className="bg-zinc-900/90 rounded-2xl p-4 border border-zinc-800 shadow-md">
+        <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-zinc-800/80 hover:border-red-500/40 hover:-translate-y-0.5 transition-all duration-300 shadow-lg">
           <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider block">Overdue Invoices</span>
-          <div className={`text-xl font-black mt-1 ${overdueCount > 0 ? 'text-red-400' : 'text-zinc-300'}`}>
+          <div className={`text-xl sm:text-2xl font-black mt-1.5 tracking-tight ${overdueCount > 0 ? 'text-red-400' : 'text-zinc-300'}`}>
             {overdueCount} Accounts
           </div>
           <span className="text-[11px] text-zinc-500 mt-1 block">Requiring immediate follow-up</span>

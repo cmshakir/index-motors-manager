@@ -6,31 +6,27 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+      },
       colors: {
         brand: {
-          50: '#f0f5fa',
-          100: '#e1ecf5',
-          200: '#c3daec',
-          300: '#95c0de',
-          400: '#60a0cc',
-          500: '#3c84b9',
-          600: '#2b6a9c',
-          700: '#23557e',
-          800: '#204868',
-          900: '#1e3d57',
-          950: '#0e1f2d',
+          50: '#fef2f2',
+          100: '#fee2e2',
+          200: '#fecaca',
+          300: '#fca5a5',
+          400: '#f87171',
+          500: '#ef4444',
+          600: '#dc2626',
+          700: '#b91c1c',
+          800: '#991b1b',
+          900: '#7f1d1d',
+          950: '#450a0a',
         },
-        truck: {
-          amber: '#f59e0b',
-          diesel: '#0f172a',
-          steel: '#334155',
-          chrome: '#94a3b8',
-          safety: '#ea580c',
-          success: '#10b981',
-          warning: '#f59e0b',
-          danger: '#ef4444',
-          info: '#3b82f6',
-        }
+      },
+      boxShadow: {
+        'glow-red': '0 0 30px -5px rgba(220, 38, 38, 0.25)',
+        'glow-red-lg': '0 0 45px -5px rgba(220, 38, 38, 0.35)',
       }
     },
   },

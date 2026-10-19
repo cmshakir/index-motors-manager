@@ -217,33 +217,33 @@ export default function SalesManager({
 
       {/* KPI Cards (Always visible across CRM) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-zinc-900/90 rounded-2xl p-4 border border-zinc-800 shadow-md">
+        <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-zinc-800/80 hover:border-red-500/40 hover:-translate-y-0.5 transition-all duration-300 shadow-lg">
           <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider block">Total Sales Pipeline</span>
-          <div className="text-xl font-black text-white mt-1">
+          <div className="text-xl sm:text-2xl font-black text-white mt-1.5 tracking-tight">
             {formatCurrency(totalPipelineValue, currency)}
           </div>
           <span className="text-[11px] text-red-400 mt-1 block font-semibold">{sales.length} active opportunities</span>
         </div>
 
-        <div className="bg-zinc-900/90 rounded-2xl p-4 border border-zinc-800 shadow-md">
+        <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-zinc-800/80 hover:border-emerald-500/40 hover:-translate-y-0.5 transition-all duration-300 shadow-lg">
           <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider block">Confirmed Bookings</span>
-          <div className="text-xl font-black text-emerald-400 mt-1">
+          <div className="text-xl sm:text-2xl font-black text-emerald-400 mt-1.5 tracking-tight">
             {formatCurrency(totalBookingsValue, currency)}
           </div>
           <span className="text-[11px] text-emerald-400/80 mt-1 block">Contracted vehicle orders</span>
         </div>
 
-        <div className="bg-zinc-900/90 rounded-2xl p-4 border border-zinc-800 shadow-md">
+        <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-zinc-800/80 hover:border-red-500/40 hover:-translate-y-0.5 transition-all duration-300 shadow-lg">
           <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider block">Advance Tokens Received</span>
-          <div className="text-xl font-black text-red-500 mt-1">
+          <div className="text-xl sm:text-2xl font-black text-red-500 mt-1.5 tracking-tight">
             {formatCurrency(totalAdvanceReceived, currency)}
           </div>
           <span className="text-[11px] text-zinc-400 mt-1 block">Deposited in dealership account</span>
         </div>
 
-        <div className="bg-zinc-900/90 rounded-2xl p-4 border border-zinc-800 shadow-md">
+        <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-zinc-800/80 hover:border-purple-500/40 hover:-translate-y-0.5 transition-all duration-300 shadow-lg">
           <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider block">Active Enquiries</span>
-          <div className="text-xl font-black text-purple-400 mt-1">
+          <div className="text-xl sm:text-2xl font-black text-purple-400 mt-1.5 tracking-tight">
             {activeEnquiriesCount} Deals
           </div>
           <span className="text-[11px] text-zinc-400 mt-1 block">In proposal & loan sanction</span>

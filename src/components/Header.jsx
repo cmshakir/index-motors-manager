@@ -27,18 +27,18 @@ export default function Header({
   stats
 }) {
   return (
-    <header className="no-print bg-zinc-950 border-b border-zinc-800/90 sticky top-0 z-40 shadow-2xl">
+    <header className="no-print bg-zinc-950/95 backdrop-blur-xl border-b border-zinc-800/80 sticky top-0 z-40 shadow-2xl shadow-black/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           
           {/* Logo & Dealership Branding */}
           <div className="flex items-center space-x-3 sm:space-x-4">
-            <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-gradient-to-br from-red-600 via-red-700 to-black flex items-center justify-center shadow-lg shadow-red-600/30 border border-red-500/40 flex-shrink-0">
+            <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-2xl bg-gradient-to-br from-red-600 via-red-700 to-black flex items-center justify-center shadow-lg shadow-red-600/30 border border-red-500/50 flex-shrink-0 group hover:scale-105 transition duration-300">
               <Truck className="h-6 w-6 sm:h-7 sm:w-7 text-white stroke-[2.5]" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="text-lg sm:text-2xl font-black tracking-wider text-white truncate max-w-[130px] xs:max-w-none">
+                <span className="text-lg sm:text-2xl font-black tracking-tight text-white truncate max-w-[130px] xs:max-w-none">
                   {profile.name || "INDEX MOTORS"}
                 </span>
                 
@@ -121,7 +121,7 @@ export default function Header({
             {/* Quick Sale Creation */}
             <button
               onClick={onNewSale}
-              className="hidden xs:flex items-center space-x-1.5 px-2.5 sm:px-3 py-2 rounded-lg bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold text-xs sm:text-sm shadow-md shadow-red-600/30 transition-all transform active:scale-95"
+              className="hidden xs:flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold text-xs sm:text-sm shadow-md shadow-red-600/30 transition-all transform active:scale-95 cursor-pointer"
               title="Create new vehicle sales deal"
             >
               <TrendingUp className="h-4 w-4" />
@@ -132,7 +132,7 @@ export default function Header({
             {/* Quick Task Creation */}
             <button
               onClick={onNewTask}
-              className="flex items-center space-x-1.5 px-2.5 sm:px-4 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white font-bold text-xs sm:text-sm border border-red-500/40 shadow-md transition-all transform active:scale-95"
+              className="flex items-center space-x-1.5 px-3 sm:px-4 py-2 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 text-white font-bold text-xs sm:text-sm border border-zinc-700 hover:border-red-500/50 shadow-md transition-all transform active:scale-95 cursor-pointer"
               title="Create new workshop repair or service job card"
             >
               <Wrench className="h-4 w-4 stroke-[2.5] text-red-500" />
@@ -143,7 +143,7 @@ export default function Header({
             {/* Quick Invoice Creation (Desktop/Tablet) */}
             <button
               onClick={onNewInvoice}
-              className="hidden sm:flex items-center space-x-1.5 px-3 sm:px-4 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-200 font-bold text-xs sm:text-sm border border-zinc-700 shadow transition-all transform active:scale-95"
+              className="hidden sm:flex items-center space-x-1.5 px-3 sm:px-4 py-2 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 text-zinc-200 font-bold text-xs sm:text-sm border border-zinc-700 hover:border-zinc-600 shadow transition-all transform active:scale-95 cursor-pointer"
               title="Create new workshop or truck sale invoice"
             >
               <FileText className="h-4 w-4 stroke-[2.5]" />
@@ -153,10 +153,10 @@ export default function Header({
             {/* Settings Button */}
             <button
               onClick={onOpenSettings}
-              className="hidden sm:block p-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 transition"
+              className="hidden sm:block p-2.5 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 transition cursor-pointer"
               title="Dealership profile, labor rates, and database backup"
             >
-              <Settings className="h-5 w-5" />
+              <Settings className="h-4 w-4" />
             </button>
 
             {/* User Profile Pill & Logout Button */}

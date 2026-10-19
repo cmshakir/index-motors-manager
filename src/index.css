@@ -5,8 +5,26 @@
 @layer base {
   body {
     @apply bg-zinc-950 text-zinc-100 antialiased min-h-screen selection:bg-red-600 selection:text-white;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.01em;
   }
+
+  input, select, textarea {
+    @apply transition-all duration-150;
+  }
+}
+
+/* Luxury Automotive Edge Accents & Glass Highlights */
+.glass-panel {
+  background: linear-gradient(135deg, rgba(24, 24, 27, 0.95) 0%, rgba(9, 9, 11, 0.98) 100%);
+  border: 1px solid rgba(39, 39, 42, 0.8);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+}
+
+.glass-panel-glow {
+  background: linear-gradient(135deg, rgba(24, 24, 27, 0.95) 0%, rgba(9, 9, 11, 0.98) 100%);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  box-shadow: 0 10px 30px -10px rgba(220, 38, 38, 0.15);
 }
 
 /* Custom Scrollbars */
