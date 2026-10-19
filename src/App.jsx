@@ -42,7 +42,11 @@ import {
   Truck, 
   Users, 
   UserCheck,
-  TrendingUp 
+  TrendingUp,
+  CheckCircle2,
+  AlertCircle,
+  Database,
+  X
 } from 'lucide-react';
 
 export default function App() {
@@ -80,6 +84,39 @@ export default function App() {
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isCloudModalOpen, setIsCloudModalOpen] = useState(false);
+  const [cloudNotice, setCloudNotice] = useState(null);
+
+  useEffect(() => {
+    if (!cloudNotice) return;
+    const timer = setTimeout(() => setCloudNotice(null), 4500);
+    return () => clearTimeout(timer);
+  }, [cloudNotice]);
+
+  const syncRecordToCloud = async (tableName, id, data) => {
+    if (!isSupabaseConfigured()) {
+      setCloudNotice({
+        type: 'local',
+        title: 'Saved Locally on this Device',
+        desc: 'Database is not connected on this device. Click here to connect Supabase and sync.'
+      });
+      return;
+    }
+
+    const res = await upsertCloudRecord(tableName, id, data);
+    if (res?.success) {
+      setCloudNotice({
+        type: 'success',
+        title: 'Saved to Supabase Cloud Database',
+        desc: `${tableName.toUpperCase()} record synced across all devices.`
+      });
+    } else {
+      setCloudNotice({
+        type: 'error',
+        title: `Cloud Database Save Error (${tableName})`,
+        desc: res?.error || 'Database rejected the record. Click to check SQL tables.'
+      });
+    }
+  };
 
   // Sync to localStorage
   useEffect(() => {
@@ -229,7 +266,7 @@ export default function App() {
         : [taskData, ...prev.tasks];
       return { ...prev, tasks: updatedTasks };
     });
-    upsertCloudRecord('tasks', taskData.id, taskData);
+    syncRecordToCloud('tasks', taskData.id, taskData);
     if (selectedTask && selectedTask.id === taskData.id) {
       setSelectedTask(taskData);
     }
@@ -261,7 +298,7 @@ export default function App() {
       return { ...prev, tasks: updatedTasks };
     });
     if (updated) {
-      upsertCloudRecord('tasks', taskId, updated);
+      syncRecordToCloud('tasks', taskId, updated);
     }
   };
 
@@ -286,7 +323,7 @@ export default function App() {
       return { ...prev, tasks: updatedTasks };
     });
     if (updatedTask) {
-      upsertCloudRecord('tasks', taskId, updatedTask);
+      syncRecordToCloud('tasks', taskId, updatedTask);
     }
   };
 
@@ -306,7 +343,7 @@ export default function App() {
         : [dealData, ...prev.sales];
       return { ...prev, sales: updated };
     });
-    upsertCloudRecord('sales', dealData.id, dealData);
+    syncRecordToCloud('sales', dealData.id, dealData);
   };
 
   const handleDeleteDeal = (dealId) => {
@@ -328,7 +365,7 @@ export default function App() {
         : [expenseData, ...(prev.expenses || [])];
       return { ...prev, expenses: updatedExpenses };
     });
-    upsertCloudRecord('expenses', expenseData.id, expenseData);
+    syncRecordToCloud('expenses', expenseData.id, expenseData);
   };
 
   const handleDeleteExpense = (expenseId) => {
@@ -366,7 +403,7 @@ export default function App() {
       return { ...prev, sales: updatedSales };
     });
     if (updatedDeal) {
-      upsertCloudRecord('sales', dealId, updatedDeal);
+      syncRecordToCloud('sales', dealId, updatedDeal);
     }
   };
 
@@ -463,7 +500,7 @@ export default function App() {
         sales: updatedSales
       };
     });
-    upsertCloudRecord('invoices', invoiceData.id, invoiceData);
+    syncRecordToCloud('invoices', invoiceData.id, invoiceData);
     setPrefilledTaskForInvoice(null);
     if (selectedInvoice && selectedInvoice.id === invoiceData.id) {
       setSelectedInvoice(invoiceData);
@@ -512,7 +549,7 @@ export default function App() {
       return { ...prev, invoices: updatedInvoices };
     });
     if (updatedInv) {
-      upsertCloudRecord('invoices', invoiceId, updatedInv);
+      syncRecordToCloud('invoices', invoiceId, updatedInv);
     }
   };
 
@@ -525,7 +562,7 @@ export default function App() {
         : [truckData, ...prev.trucks];
       return { ...prev, trucks: updatedTrucks };
     });
-    upsertCloudRecord('trucks', truckData.id, truckData);
+    syncRecordToCloud('trucks', truckData.id, truckData);
   };
 
   const handleDeleteTruck = (truckId) => {
@@ -558,7 +595,7 @@ export default function App() {
         : [customerData, ...prev.customers];
       return { ...prev, customers: updated };
     });
-    upsertCloudRecord('customers', customerData.id, customerData);
+    syncRecordToCloud('customers', customerData.id, customerData);
   };
 
   const handleDeleteCustomer = (customerId) => {
@@ -591,7 +628,7 @@ export default function App() {
         : [techData, ...prev.technicians];
       return { ...prev, technicians: updated };
     });
-    upsertCloudRecord('technicians', techData.id, techData);
+    syncRecordToCloud('technicians', techData.id, techData);
   };
 
   const handleDeleteTechnician = (techId) => {
@@ -972,7 +1009,7 @@ export default function App() {
         onOpenCloudModal={() => setIsCloudModalOpen(true)}
         onSaveProfile={(updatedProfile) => {
           setAppState(prev => ({ ...prev, profile: updatedProfile }));
-          upsertCloudRecord('profile', 'main', updatedProfile);
+          syncRecordToCloud('profile', 'main', updatedProfile);
         }}
         onResetData={(resetState) => {
           setAppState(resetState);
@@ -1017,6 +1054,48 @@ export default function App() {
         currentUser={currentUser}
         tasks={appState.tasks}
       />
+
+      {/* Floating Cloud Sync Notification Toast */}
+      {cloudNotice && (
+        <div 
+          onClick={() => {
+            if (cloudNotice.type !== 'success') {
+              setIsCloudModalOpen(true);
+            }
+          }}
+          className={`fixed top-20 right-4 z-50 max-w-sm p-3.5 rounded-xl border shadow-2xl transition-all transform animate-fade-in flex items-start space-x-3 cursor-pointer ${
+            cloudNotice.type === 'success'
+              ? 'bg-emerald-950/95 border-emerald-500/40 text-emerald-200'
+              : cloudNotice.type === 'error'
+              ? 'bg-rose-950/95 border-rose-500/50 text-rose-200'
+              : 'bg-amber-950/95 border-amber-500/40 text-amber-200'
+          }`}
+          title={cloudNotice.type !== 'success' ? 'Click to open Database Setup' : ''}
+        >
+          <div className="mt-0.5 flex-shrink-0">
+            {cloudNotice.type === 'success' ? (
+              <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+            ) : cloudNotice.type === 'error' ? (
+              <AlertCircle className="h-4 w-4 text-rose-400" />
+            ) : (
+              <Database className="h-4 w-4 text-amber-400" />
+            )}
+          </div>
+          <div className="flex-1 text-xs">
+            <p className="font-bold">{cloudNotice.title}</p>
+            <p className="opacity-90 mt-0.5 text-[11px] leading-snug">{cloudNotice.desc}</p>
+          </div>
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              setCloudNotice(null);
+            }} 
+            className="text-slate-400 hover:text-white ml-1 flex-shrink-0"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
 
     </div>
   );

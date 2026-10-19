@@ -74,19 +74,28 @@ export const testCloudConnection = async (testUrl, testKey) => {
 
   try {
     const client = createClient(url, key, { auth: { persistSession: false } });
-    const { data, error } = await client.from('tasks').select('id').limit(1);
+    
+    // Check all 9 application tables
+    const requiredTables = ['tasks', 'invoices', 'sales', 'expenses', 'trucks', 'customers', 'technicians', 'users', 'profile'];
+    const missingTables = [];
 
-    if (error) {
-      if (error.code === '42P01' || error.message?.toLowerCase().includes('does not exist')) {
-        return { 
-          success: false, 
-          error: 'Connected to Supabase, but tables are missing! Please run the SQL query from supabase_schema.sql in Supabase SQL Editor.' 
-        };
+    for (const table of requiredTables) {
+      const { error } = await client.from(table).select('id').limit(1);
+      if (error) {
+        if (error.code === '42P01' || error.message?.toLowerCase().includes('does not exist') || error.code === 'PGRST204' || error.code === 'PGRST205') {
+          missingTables.push(table);
+        }
       }
-      return { success: false, error: error.message };
     }
 
-    return { success: true, count: data?.length || 0 };
+    if (missingTables.length > 0) {
+      return { 
+        success: false, 
+        error: `Supabase connected, but missing table(s): "${missingTables.join(', ')}". Please copy and run the SQL query in Supabase SQL Editor.` 
+      };
+    }
+
+    return { success: true };
   } catch (err) {
     return { success: false, error: err.message || 'Network connection failed' };
   }
@@ -119,10 +128,12 @@ export const fetchCloudTable = async (tableName) => {
 };
 
 /**
- * Upsert a record to Supabase cloud table.
+ * Upsert a record to Supabase cloud table with status reporting.
  */
 export const upsertCloudRecord = async (tableName, id, record) => {
-  if (!supabase) return false;
+  if (!supabase) {
+    return { success: false, notConfigured: true, error: 'Database not connected on this device' };
+  }
   try {
     const payload = {
       id: String(id),
@@ -132,12 +143,12 @@ export const upsertCloudRecord = async (tableName, id, record) => {
     const { error } = await supabase.from(tableName).upsert(payload);
     if (error) {
       console.warn(`Supabase upsert failed for ${tableName}:`, error.message);
-      return false;
+      return { success: false, error: error.message };
     }
-    return true;
+    return { success: true };
   } catch (err) {
     console.warn(`Supabase error saving to ${tableName}:`, err);
-    return false;
+    return { success: false, error: err.message || 'Network error' };
   }
 };
 
@@ -145,17 +156,17 @@ export const upsertCloudRecord = async (tableName, id, record) => {
  * Delete a record from Supabase cloud table.
  */
 export const deleteCloudRecord = async (tableName, id) => {
-  if (!supabase) return false;
+  if (!supabase) return { success: false, notConfigured: true };
   try {
     const { error } = await supabase.from(tableName).delete().eq('id', String(id));
     if (error) {
       console.warn(`Supabase delete failed for ${tableName}:`, error.message);
-      return false;
+      return { success: false, error: error.message };
     }
-    return true;
+    return { success: true };
   } catch (err) {
     console.warn(`Supabase error deleting from ${tableName}:`, err);
-    return false;
+    return { success: false, error: err.message || 'Network error' };
   }
 };
 
@@ -187,39 +198,53 @@ export const subscribeToCloudChanges = (onDataChange) => {
 };
 
 /**
- * Fast batch seeding: Populates cloud database in 1 single HTTP request per table.
+ * Table-by-table intelligent seeding: Populates empty tables with default dealership data.
  */
 export const seedCloudIfEmpty = async (state) => {
   if (!supabase) return;
   try {
-    const { data: existingTasks, error } = await supabase.from('tasks').select('id').limit(1);
-    if (error) {
-      console.warn('Could not query tasks table for auto-seed:', error.message);
-      return;
+    const prepareBatch = (items) => (items || []).map(item => ({
+      id: String(item.id),
+      data: item,
+      updated_at: new Date().toISOString()
+    }));
+
+    const tablesToCheck = [
+      { name: 'tasks', data: state.tasks },
+      { name: 'invoices', data: state.invoices },
+      { name: 'sales', data: state.sales },
+      { name: 'expenses', data: state.expenses },
+      { name: 'trucks', data: state.trucks },
+      { name: 'customers', data: state.customers },
+      { name: 'technicians', data: state.technicians },
+      { name: 'users', data: state.users },
+    ];
+
+    for (const t of tablesToCheck) {
+      if (!t.data || t.data.length === 0) continue;
+      try {
+        const { data: existing, error } = await supabase.from(t.name).select('id').limit(1);
+        if (!error && (!existing || existing.length === 0)) {
+          console.log(`[Auto-Seed] Seeding empty table '${t.name}' with initial records...`);
+          await supabase.from(t.name).upsert(prepareBatch(t.data));
+        }
+      } catch (e) {
+        console.warn(`[Auto-Seed] Could not check or seed table ${t.name}:`, e);
+      }
     }
 
-    if (!existingTasks || existingTasks.length === 0) {
-      console.log('Cloud database is empty. Fast batch-seeding initial data to Supabase...');
-      
-      const prepareBatch = (items) => (items || []).map(item => ({
-        id: String(item.id),
-        data: item,
-        updated_at: new Date().toISOString()
-      }));
-
-      await Promise.allSettled([
-        state.tasks?.length ? supabase.from('tasks').upsert(prepareBatch(state.tasks)) : null,
-        state.invoices?.length ? supabase.from('invoices').upsert(prepareBatch(state.invoices)) : null,
-        state.sales?.length ? supabase.from('sales').upsert(prepareBatch(state.sales)) : null,
-        state.expenses?.length ? supabase.from('expenses').upsert(prepareBatch(state.expenses)) : null,
-        state.trucks?.length ? supabase.from('trucks').upsert(prepareBatch(state.trucks)) : null,
-        state.customers?.length ? supabase.from('customers').upsert(prepareBatch(state.customers)) : null,
-        state.technicians?.length ? supabase.from('technicians').upsert(prepareBatch(state.technicians)) : null,
-        state.profile ? supabase.from('profile').upsert({ id: 'main', data: state.profile, updated_at: new Date().toISOString() }) : null,
-      ]);
-      console.log('Batch seeding complete!');
+    // Profile check
+    if (state.profile) {
+      try {
+        const { data: existingProf, error: pErr } = await supabase.from('profile').select('id').limit(1);
+        if (!pErr && (!existingProf || existingProf.length === 0)) {
+          await supabase.from('profile').upsert({ id: 'main', data: state.profile, updated_at: new Date().toISOString() });
+        }
+      } catch (err) {
+        // ignore
+      }
     }
   } catch (err) {
-    console.warn('Auto-seed check failed:', err);
+    console.warn('[Auto-Seed] Error checking tables:', err);
   }
 };

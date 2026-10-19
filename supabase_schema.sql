@@ -59,7 +59,15 @@ CREATE TABLE IF NOT EXISTS public.expenses (
     updated_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 8. Profile Table (Dealership Profile & Settings)
+-- 8. Users Table (Dealership Staff Accounts & Roles)
+CREATE TABLE IF NOT EXISTS public.users (
+    id TEXT PRIMARY KEY,
+    data JSONB NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 9. Profile Table (Dealership Profile & Settings)
 CREATE TABLE IF NOT EXISTS public.profile (
     id TEXT PRIMARY KEY,
     data JSONB NOT NULL,
@@ -75,6 +83,7 @@ ALTER TABLE public.expenses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.trucks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.customers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.technicians ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profile ENABLE ROW LEVEL SECURITY;
 
 -- Allow public anonymous read and write access for dealership web client
@@ -99,16 +108,27 @@ CREATE POLICY "Allow public read-write on customers" ON public.customers FOR ALL
 DROP POLICY IF EXISTS "Allow public read-write on technicians" ON public.technicians;
 CREATE POLICY "Allow public read-write on technicians" ON public.technicians FOR ALL USING (true) WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow public read-write on users" ON public.users;
+CREATE POLICY "Allow public read-write on users" ON public.users FOR ALL USING (true) WITH CHECK (true);
+
 DROP POLICY IF EXISTS "Allow public read-write on profile" ON public.profile;
 CREATE POLICY "Allow public read-write on profile" ON public.profile FOR ALL USING (true) WITH CHECK (true);
 
--- Enable Realtime Live Sync (optional)
+-- Enable Realtime Live Sync on all tables
 DO $$
 BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_publication_tables 
-    WHERE pubname = 'supabase_realtime' AND tablename = 'tasks'
-  ) THEN
-    ALTER PUBLICATION supabase_realtime ADD TABLE public.tasks, public.invoices, public.sales, public.expenses, public.trucks;
-  END IF;
+  BEGIN
+    ALTER PUBLICATION supabase_realtime ADD TABLE 
+      public.tasks, 
+      public.invoices, 
+      public.sales, 
+      public.expenses, 
+      public.trucks, 
+      public.customers, 
+      public.technicians, 
+      public.users, 
+      public.profile;
+  EXCEPTION WHEN duplicate_object THEN
+    NULL;
+  END;
 END $$;

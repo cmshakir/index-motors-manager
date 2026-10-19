@@ -20,32 +20,93 @@ import {
   testCloudConnection 
 } from '../../utils/supabaseClient';
 
-const SUPABASE_SCHEMA_SQL = `-- INDEX MOTORS: SUPABASE POSTGRESQL SCHEMA
+const SUPABASE_SCHEMA_SQL = `-- INDEX MOTORS: SUPABASE POSTGRESQL SCHEMA (ALL 9 TABLES)
 CREATE TABLE IF NOT EXISTS public.tasks (id TEXT PRIMARY KEY, data JSONB NOT NULL, updated_at TIMESTAMPTZ DEFAULT now());
 CREATE TABLE IF NOT EXISTS public.invoices (id TEXT PRIMARY KEY, data JSONB NOT NULL, updated_at TIMESTAMPTZ DEFAULT now());
 CREATE TABLE IF NOT EXISTS public.sales (id TEXT PRIMARY KEY, data JSONB NOT NULL, updated_at TIMESTAMPTZ DEFAULT now());
+CREATE TABLE IF NOT EXISTS public.expenses (id TEXT PRIMARY KEY, data JSONB NOT NULL, updated_at TIMESTAMPTZ DEFAULT now());
 CREATE TABLE IF NOT EXISTS public.trucks (id TEXT PRIMARY KEY, data JSONB NOT NULL, updated_at TIMESTAMPTZ DEFAULT now());
 CREATE TABLE IF NOT EXISTS public.customers (id TEXT PRIMARY KEY, data JSONB NOT NULL, updated_at TIMESTAMPTZ DEFAULT now());
 CREATE TABLE IF NOT EXISTS public.technicians (id TEXT PRIMARY KEY, data JSONB NOT NULL, updated_at TIMESTAMPTZ DEFAULT now());
+CREATE TABLE IF NOT EXISTS public.users (id TEXT PRIMARY KEY, data JSONB NOT NULL, updated_at TIMESTAMPTZ DEFAULT now());
 CREATE TABLE IF NOT EXISTS public.profile (id TEXT PRIMARY KEY, data JSONB NOT NULL, updated_at TIMESTAMPTZ DEFAULT now());
 
 ALTER TABLE public.tasks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.invoices ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sales ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.expenses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.trucks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.customers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.technicians ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.profile ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Allow all on tasks" ON public.tasks;
 CREATE POLICY "Allow all on tasks" ON public.tasks FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow all on invoices" ON public.invoices;
 CREATE POLICY "Allow all on invoices" ON public.invoices FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow all on sales" ON public.sales;
 CREATE POLICY "Allow all on sales" ON public.sales FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow all on expenses" ON public.expenses;
+CREATE POLICY "Allow all on expenses" ON public.expenses FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow all on trucks" ON public.trucks;
 CREATE POLICY "Allow all on trucks" ON public.trucks FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow all on customers" ON public.customers;
 CREATE POLICY "Allow all on customers" ON public.customers FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow all on technicians" ON public.technicians;
 CREATE POLICY "Allow all on technicians" ON public.technicians FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow all on users" ON public.users;
+CREATE POLICY "Allow all on users" ON public.users FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow all on profile" ON public.profile;
 CREATE POLICY "Allow all on profile" ON public.profile FOR ALL USING (true) WITH CHECK (true);
 
-ALTER PUBLICATION supabase_realtime ADD TABLE public.tasks, public.invoices, public.sales, public.trucks;`;
+DO $$
+BEGIN
+  BEGIN
+    ALTER PUBLICATION supabase_realtime ADD TABLE 
+      public.tasks, 
+      public.invoices, 
+      public.sales, 
+      public.expenses, 
+      public.trucks, 
+      public.customers, 
+      public.technicians, 
+      public.users, 
+      public.profile;
+  EXCEPTION WHEN duplicate_object THEN
+    NULL;
+  END;
+END $$;`;
+
+const EXPENSES_ONLY_SQL = `-- INDEX MOTORS: QUICK FIX TO CREATE MISSING EXPENSES & INCOMES TABLE
+CREATE TABLE IF NOT EXISTS public.expenses (
+    id TEXT PRIMARY KEY,
+    data JSONB NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+ALTER TABLE public.expenses ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Allow all on expenses" ON public.expenses;
+CREATE POLICY "Allow all on expenses" ON public.expenses FOR ALL USING (true) WITH CHECK (true);
+
+DO $$
+BEGIN
+  BEGIN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.expenses;
+  EXCEPTION WHEN duplicate_object THEN
+    NULL;
+  END;
+END $$;`;
 
 export default function CloudConnectModal({
   isOpen,
@@ -61,11 +122,18 @@ export default function CloudConnectModal({
   const [testing, setTesting] = useState(false);
   const [statusMessage, setStatusMessage] = useState(null);
   const [copiedSql, setCopiedSql] = useState(false);
+  const [copiedExpensesSql, setCopiedExpensesSql] = useState(false);
 
   const handleCopySql = () => {
     navigator.clipboard.writeText(SUPABASE_SCHEMA_SQL);
     setCopiedSql(true);
     setTimeout(() => setCopiedSql(false), 2500);
+  };
+
+  const handleCopyExpensesSql = () => {
+    navigator.clipboard.writeText(EXPENSES_ONLY_SQL);
+    setCopiedExpensesSql(true);
+    setTimeout(() => setCopiedExpensesSql(false), 2500);
   };
 
   const handleTestAndSave = async (e) => {
@@ -252,29 +320,51 @@ export default function CloudConnectModal({
           </form>
 
           {/* SQL Setup Helper */}
-          <div className="mt-4 p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-slate-300 text-xs">Need to set up the Database Tables?</span>
-              <button
-                type="button"
-                onClick={handleCopySql}
-                className="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs font-semibold transition"
-              >
-                {copiedSql ? (
-                  <>
-                    <Check className="h-3.5 w-3.5 text-emerald-400" />
-                    <span className="text-emerald-400">Copied!</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-3.5 w-3.5" />
-                    <span>Copy SQL Schema</span>
-                  </>
-                )}
-              </button>
+          <div className="mt-4 p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <span className="font-bold text-slate-200 text-xs">Supabase Database Setup Queries:</span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleCopyExpensesSql}
+                  className="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-emerald-950 border border-emerald-800/80 hover:bg-emerald-900/60 text-emerald-400 text-xs font-semibold transition"
+                  title="Copy SQL to create only the missing expenses/income table"
+                >
+                  {copiedExpensesSql ? (
+                    <>
+                      <Check className="h-3.5 w-3.5 text-emerald-400" />
+                      <span className="text-emerald-400">Copied Expenses SQL!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-3.5 w-3.5" />
+                      <span>Copy Expenses Fix SQL</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleCopySql}
+                  className="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs font-semibold transition"
+                  title="Copy complete 9-table schema"
+                >
+                  {copiedSql ? (
+                    <>
+                      <Check className="h-3.5 w-3.5 text-emerald-400" />
+                      <span className="text-emerald-400">Copied All SQL!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-3.5 w-3.5" />
+                      <span>Copy All 9 Tables SQL</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
-            <p className="text-[11px] text-slate-400">
-              Paste and run this query inside your <strong>Supabase Dashboard ➔ SQL Editor</strong> to create the 7 tables and enable real-time sync.
+            <p className="text-[11px] text-slate-400 leading-relaxed">
+              If saving income or expenses fails, click <strong>Copy Expenses Fix SQL</strong> and paste it into your <strong>Supabase Dashboard ➔ SQL Editor ➔ Run</strong>. All tables are created safely with <code className="text-amber-400">IF NOT EXISTS</code> without affecting existing data.
             </p>
           </div>
 
