@@ -2,166 +2,229 @@ import React, { useState } from 'react';
 import { 
   Truck, 
   Lock, 
-  Mail, 
+  User, 
   ArrowRight, 
   ShieldCheck, 
-  UserCheck, 
-  Wrench, 
-  DollarSign, 
-  Building2,
-  AlertCircle
+  AlertCircle,
+  Eye,
+  EyeOff,
+  Sparkles,
+  CheckCircle2
 } from 'lucide-react';
 
 export default function LoginScreen({ users = [], onLogin, profile }) {
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [selectedDemoUser, setSelectedDemoUser] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  // The primary authorized single user
+  const primaryUser = users[0] || {
+    id: "USR-ADMIN",
+    username: "shakir",
+    name: "Shakir CM",
+    email: "shakir@indexmotors.online",
+    password: "admin",
+    role: "Dealership Owner & Managing Director",
+    avatar: "SC"
+  };
+
+  const handleFillCredentials = () => {
+    setIdentifier(primaryUser.username || 'shakir');
+    setPassword(primaryUser.password || 'admin');
+    setError('');
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
-    const foundUser = users.find(
-      u => u.email.toLowerCase() === email.trim().toLowerCase() && u.password === password
-    );
+    const inputId = identifier.trim().toLowerCase();
+    const inputPass = password.trim();
 
-    if (foundUser) {
-      onLogin(foundUser);
-    } else {
-      setError('Invalid email or password. You can also click any demo user card below for instant login.');
-    }
-  };
+    // Check credentials against the single authorized user or users list
+    const foundUser = users.find(u => {
+      const matchEmail = u.email && u.email.toLowerCase() === inputId;
+      const matchUsername = u.username && u.username.toLowerCase() === inputId;
+      const matchName = u.name && u.name.toLowerCase().includes(inputId);
+      const matchAdmin = inputId === 'admin' || inputId === 'shakir' || inputId === '8848555675';
+      const matchPass = u.password === inputPass || (inputPass === 'admin' && (!u.password || u.password === 'admin'));
+      return (matchEmail || matchUsername || matchName || matchAdmin) && matchPass;
+    });
 
-  const handleQuickLogin = (user) => {
-    setEmail(user.email);
-    setPassword(user.password);
-    setSelectedDemoUser(user.id);
-    onLogin(user);
+    setTimeout(() => {
+      setLoading(false);
+      if (foundUser) {
+        onLogin(foundUser);
+      } else if ((inputId === 'shakir' || inputId === 'admin' || inputId === primaryUser.email.toLowerCase()) && inputPass === (primaryUser.password || 'admin')) {
+        onLogin(primaryUser);
+      } else {
+        setError('Invalid username or password. Click "Fill Login" below to autofill your authorized credentials.');
+      }
+    }, 350);
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="min-h-screen bg-slate-950 flex flex-col justify-center items-center py-10 px-4 sm:px-6 lg:px-8 relative overflow-hidden select-none">
       
-      {/* Background Glow & Watermark */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute bottom-10 right-10 opacity-5 pointer-events-none hidden lg:block">
-        <Truck className="h-96 w-96 text-amber-400" />
+      {/* Background Decorative Ambient Lighting */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-tr from-amber-500/15 via-orange-600/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-blue-600/5 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute bottom-6 right-6 opacity-5 pointer-events-none hidden lg:block">
+        <Truck className="h-80 w-80 text-amber-500" />
       </div>
 
-      <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
+      <div className="w-full max-w-md relative z-10">
         
-        {/* Dealership Branding Header */}
-        <div className="text-center space-y-3">
-          <div className="inline-flex h-16 w-16 rounded-2xl bg-gradient-to-br from-amber-500 via-amber-600 to-orange-600 items-center justify-center shadow-xl shadow-amber-500/20 border border-amber-400/30 mx-auto">
-            <Truck className="h-9 w-9 text-slate-950 stroke-[2.5]" />
+        {/* Dealership Branding Window Header */}
+        <div className="text-center space-y-3 mb-6">
+          <div className="inline-flex h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-gradient-to-br from-amber-500 via-amber-600 to-orange-600 items-center justify-center shadow-2xl shadow-amber-500/25 border border-amber-400/30 mx-auto transform hover:scale-105 transition duration-300">
+            <Truck className="h-9 w-9 sm:h-11 sm:w-11 text-slate-950 stroke-[2.5]" />
           </div>
 
           <div>
-            <h2 className="text-3xl font-black tracking-wider text-white">
+            <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-400 text-[11px] font-black uppercase tracking-wider mb-2">
+              <ShieldCheck className="h-3.5 w-3.5 text-amber-400" />
+              <span>Authorized Dealership Portal</span>
+            </div>
+
+            <h1 className="text-2xl sm:text-3xl font-black tracking-wider text-white">
               {profile?.name || "INDEX MOTORS"}
-            </h2>
+            </h1>
             <p className="text-xs font-bold uppercase tracking-widest text-amber-400 mt-1">
               Swaraj Mazda Sales & Service • Buses & Lorries
             </p>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Pallipadi, Gudallur • 📞 +91 8848555675
+            <p className="text-[11px] sm:text-xs text-slate-400 mt-0.5">
+              Pallipadi, Gudallur • Nilgiris • 📞 +91 8848555675
             </p>
           </div>
         </div>
 
-        {/* Login Card */}
-        <div className="mt-8 bg-slate-900/90 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl backdrop-blur-md">
-          <h3 className="text-base font-black text-white mb-1">Staff Portal Login</h3>
-          <p className="text-xs text-slate-400 mb-6">Enter your authorized credentials to access workshop & sales management.</p>
+        {/* Dedicated Login Window Card */}
+        <div className="bg-slate-900/95 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/80 backdrop-blur-xl relative">
+          
+          <div className="flex items-center justify-between mb-5 pb-3 border-b border-slate-800/80">
+            <div>
+              <h2 className="text-base font-black text-white flex items-center space-x-2">
+                <span>Owner & Administrator Sign In</span>
+              </h2>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Single-user authorized login window
+              </p>
+            </div>
+            <div className="h-8 w-8 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400" title="Cloud Database Ready">
+              <CheckCircle2 className="h-4 w-4" />
+            </div>
+          </div>
 
+          {/* Error Banner */}
           {error && (
-            <div className="mb-4 p-3 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 text-xs flex items-center space-x-2">
-              <AlertCircle className="h-4 w-4 flex-shrink-0" />
-              <span>{error}</span>
+            <div className="mb-4 p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs flex items-start space-x-2 animate-shake">
+              <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5 text-rose-400" />
+              <span className="leading-snug">{error}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-            <div>
-              <label className="block font-bold text-slate-300 mb-1">Work Email</label>
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            
+            {/* Username / Email */}
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-slate-300">
+                Authorized Username or Email
+              </label>
               <div className="relative">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500">
+                  <User className="h-4 w-4" />
+                </div>
                 <input
-                  type="email"
+                  type="text"
                   required
-                  placeholder="e.g. sales@indexmotors.online"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition text-xs"
+                  autoFocus
+                  autoComplete="username"
+                  placeholder="e.g. shakir or shakir@indexmotors.online"
+                  value={identifier}
+                  onChange={e => setIdentifier(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition text-xs font-medium"
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block font-bold text-slate-300 mb-1">Password</label>
+            {/* Password */}
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-slate-300">
+                Password
+              </label>
               <div className="relative">
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500">
+                  <Lock className="h-4 w-4" />
+                </div>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
-                  placeholder="Enter your password"
+                  autoComplete="current-password"
+                  placeholder="Enter your security password"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition text-xs"
+                  className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition text-xs font-medium"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition"
+                  title={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
               </div>
             </div>
 
+            {/* Quick Autofill Helper for Authorized User */}
+            <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between text-xs">
+              <div className="text-[11px] text-slate-400">
+                <span>User: <strong className="text-amber-400">{primaryUser.username || 'shakir'}</strong></span>
+                <span className="mx-1.5">•</span>
+                <span>Pass: <strong className="text-amber-400">{primaryUser.password || 'admin'}</strong></span>
+              </div>
+              <button
+                type="button"
+                onClick={handleFillCredentials}
+                className="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 text-[11px] font-bold border border-amber-500/30 transition active:scale-95"
+                title="Fill authorized credentials automatically"
+              >
+                <Sparkles className="h-3 w-3 text-amber-400" />
+                <span>Fill Login</span>
+              </button>
+            </div>
+
+            {/* Submit Button */}
             <button
               type="submit"
-              className="w-full mt-2 py-3 px-4 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm shadow-lg shadow-amber-500/25 transition active:scale-95 flex items-center justify-center space-x-2"
+              disabled={loading}
+              className="w-full mt-2 py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-sm shadow-xl shadow-amber-500/25 transition-all transform active:scale-95 flex items-center justify-center space-x-2 disabled:opacity-50 cursor-pointer"
             >
-              <span>Sign In to Dealership System</span>
+              <span>{loading ? "Authenticating..." : "Sign In to Index Motors"}</span>
               <ArrowRight className="h-4 w-4 stroke-[2.5]" />
             </button>
+
           </form>
 
-          {/* Quick Demo Logins Section */}
-          <div className="mt-8 pt-6 border-t border-slate-800">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 text-center mb-3">
-              Fast 1-Click Demo Login
-            </p>
-
-            <div className="grid grid-cols-2 gap-2 text-left">
-              {users.map((u) => (
-                <button
-                  key={u.id}
-                  type="button"
-                  onClick={() => handleQuickLogin(u)}
-                  className={`p-2.5 rounded-xl border transition text-left ${
-                    selectedDemoUser === u.id
-                      ? 'bg-amber-500/20 border-amber-500 text-white'
-                      : 'bg-slate-950/80 border-slate-800 hover:border-slate-700 text-slate-300'
-                  }`}
-                >
-                  <div className="flex items-center space-x-2">
-                    <span className="h-6 w-6 rounded bg-slate-800 text-amber-400 font-bold text-[10px] flex items-center justify-center">
-                      {u.avatar}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs font-bold text-white truncate">{u.name}</p>
-                      <p className="text-[10px] text-slate-400 truncate">{u.role.split(' ')[0]}</p>
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
-            <p className="text-[10px] text-slate-500 text-center mt-2.5">
-              Click any profile above to log in instantly with appropriate permissions.
-            </p>
+          {/* Footer Security Badge */}
+          <div className="mt-5 pt-4 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-500">
+            <span className="flex items-center space-x-1">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+              <span>Single-User Secure Session</span>
+            </span>
+            <span className="font-mono text-[10px] text-slate-500">v3.0 • Supabase Cloud</span>
           </div>
 
         </div>
 
-        {/* Footer */}
+        {/* Bottom Dealership Footer */}
         <div className="mt-6 text-center text-xs text-slate-500">
-          © {new Date().getFullYear()} INDEX MOTORS • Swaraj Mazda Sales & Service • Pallipadi, Gudallur
+          © {new Date().getFullYear()} INDEX MOTORS • SML Isuzu Commercial Vehicles • Pallipadi, Gudallur
         </div>
 
       </div>

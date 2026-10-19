@@ -53,7 +53,7 @@ export const getInitialAppState = () => {
     sales: loadFromStorage(STORAGE_KEYS.SALES, initialSalesDeals),
     expenses: loadFromStorage(STORAGE_KEYS.EXPENSES, initialExpenses),
     users: loadFromStorage(STORAGE_KEYS.USERS, initialUsers),
-    currentUser: loadFromStorage(STORAGE_KEYS.CURRENT_USER, initialUsers[0]), // default to logged in as Rajesh K. (Admin) or switchable
+    currentUser: null, // Always show login window when opening link
   };
 };
 
@@ -67,7 +67,7 @@ export const resetToDefaults = () => {
   localStorage.setItem(STORAGE_KEYS.SALES, JSON.stringify(initialSalesDeals));
   localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(initialExpenses));
   localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(initialUsers));
-  localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(initialUsers[0]));
+  localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
   return getInitialAppState();
 };
 

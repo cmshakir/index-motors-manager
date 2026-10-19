@@ -51,7 +51,14 @@ import {
 
 export default function App() {
   const [appState, setAppState] = useState(() => getInitialAppState());
-  const [currentUser, setCurrentUser] = useState(() => appState.currentUser || appState.users[0]);
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem('index_motors_session_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      return null;
+    }
+  });
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isSyncing, setIsSyncing] = useState(false);
 
@@ -249,12 +256,21 @@ export default function App() {
   // Auth Handlers
   const handleLogin = (user) => {
     setCurrentUser(user);
-    saveToStorage(STORAGE_KEYS.CURRENT_USER, user);
+    try {
+      sessionStorage.setItem('index_motors_session_user', JSON.stringify(user));
+    } catch (e) {
+      // ignore
+    }
   };
 
   const handleLogout = () => {
     setCurrentUser(null);
-    saveToStorage(STORAGE_KEYS.CURRENT_USER, null);
+    try {
+      sessionStorage.removeItem('index_motors_session_user');
+      localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+    } catch (e) {
+      // ignore
+    }
   };
 
   // Task Handlers

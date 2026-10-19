@@ -42,44 +42,15 @@ export const initialTechnicians = [
 
 export const initialUsers = [
   {
-    id: "USR-01",
+    id: "USR-ADMIN",
+    username: "shakir",
     name: "Shakir CM",
     email: "shakir@indexmotors.online",
     password: "admin",
-    role: "Dealership Director & GM",
+    role: "Dealership Owner & Managing Director",
     permissions: ["all"],
     avatar: "SC",
     phone: "+91 88485 55675"
-  },
-  {
-    id: "USR-02",
-    name: "Rajesh K.",
-    email: "rajesh@indexmotors.online",
-    password: "admin",
-    role: "Managing Director",
-    permissions: ["all"],
-    avatar: "RK",
-    phone: "+91 88485 55675"
-  },
-  {
-    id: "USR-03",
-    name: "Arun Menon",
-    email: "sales@indexmotors.online",
-    password: "sales",
-    role: "Commercial Sales Manager",
-    permissions: ["sales", "invoices", "trucks", "customers", "dashboard"],
-    avatar: "AM",
-    phone: "+91 94471 88920"
-  },
-  {
-    id: "USR-04",
-    name: "Deepa Nair",
-    email: "accounts@indexmotors.online",
-    password: "accounts",
-    role: "Accounts & Billing Executive",
-    permissions: ["invoices", "sales", "customers", "dashboard"],
-    avatar: "DN",
-    phone: "+91 98460 11234"
   }
 ];
 
