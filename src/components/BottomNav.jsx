@@ -12,7 +12,8 @@ import {
   Menu, 
   X,
   RefreshCw,
-  ShieldCheck
+  ShieldCheck,
+  Receipt
 } from 'lucide-react';
 
 export default function BottomNav({
@@ -21,6 +22,7 @@ export default function BottomNav({
   salesCount = 0,
   tasksCount = 0,
   invoicesCount = 0,
+  expensesCount = 0,
   trucksCount = 0,
   customersCount = 0,
   onOpenSettings,
@@ -41,6 +43,7 @@ export default function BottomNav({
   ];
 
   const moreTabs = [
+    { id: 'expenses', label: 'Expenditures & P&L', icon: Receipt, badge: expensesCount, desc: 'Workshop parts stock, wages & utility bills' },
     { id: 'trucks', label: 'Trucks & Catalog', icon: Truck, badge: trucksCount, desc: 'Swaraj Mazda commercial models & fleet' },
     { id: 'customers', label: 'Fleet Customers', icon: Users, badge: customersCount, desc: 'Transport operators & accounts' },
     { id: 'technicians', label: 'Technicians & Bays', icon: UserCheck, desc: 'Service team & workshop capacity' },

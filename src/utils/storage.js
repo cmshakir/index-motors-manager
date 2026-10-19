@@ -6,7 +6,8 @@ import {
   initialTasks,
   initialInvoices,
   initialUsers,
-  initialSalesDeals
+  initialSalesDeals,
+  initialExpenses
 } from '../data/initialData';
 
 const STORAGE_KEYS = {
@@ -17,6 +18,7 @@ const STORAGE_KEYS = {
   TASKS: 'index_motors_online_v3_tasks',
   INVOICES: 'index_motors_online_v3_invoices',
   SALES: 'index_motors_online_v3_sales',
+  EXPENSES: 'index_motors_online_v3_expenses',
   USERS: 'index_motors_online_v3_users',
   CURRENT_USER: 'index_motors_online_v3_current_user',
 };
@@ -49,6 +51,7 @@ export const getInitialAppState = () => {
     tasks: loadFromStorage(STORAGE_KEYS.TASKS, initialTasks),
     invoices: loadFromStorage(STORAGE_KEYS.INVOICES, initialInvoices),
     sales: loadFromStorage(STORAGE_KEYS.SALES, initialSalesDeals),
+    expenses: loadFromStorage(STORAGE_KEYS.EXPENSES, initialExpenses),
     users: loadFromStorage(STORAGE_KEYS.USERS, initialUsers),
     currentUser: loadFromStorage(STORAGE_KEYS.CURRENT_USER, initialUsers[0]), // default to logged in as Rajesh K. (Admin) or switchable
   };
@@ -62,6 +65,7 @@ export const resetToDefaults = () => {
   localStorage.setItem(STORAGE_KEYS.TASKS, JSON.stringify(initialTasks));
   localStorage.setItem(STORAGE_KEYS.INVOICES, JSON.stringify(initialInvoices));
   localStorage.setItem(STORAGE_KEYS.SALES, JSON.stringify(initialSalesDeals));
+  localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(initialExpenses));
   localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(initialUsers));
   localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(initialUsers[0]));
   return getInitialAppState();
@@ -88,6 +92,7 @@ export const importAllDataJSON = (jsonString) => {
     if (parsed.tasks) saveToStorage(STORAGE_KEYS.TASKS, parsed.tasks);
     if (parsed.invoices) saveToStorage(STORAGE_KEYS.INVOICES, parsed.invoices);
     if (parsed.sales) saveToStorage(STORAGE_KEYS.SALES, parsed.sales);
+    if (parsed.expenses) saveToStorage(STORAGE_KEYS.EXPENSES, parsed.expenses);
     if (parsed.users) saveToStorage(STORAGE_KEYS.USERS, parsed.users);
     return { success: true, state: getInitialAppState() };
   } catch (err) {

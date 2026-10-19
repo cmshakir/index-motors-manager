@@ -211,6 +211,7 @@ export const seedCloudIfEmpty = async (state) => {
         state.tasks?.length ? supabase.from('tasks').upsert(prepareBatch(state.tasks)) : null,
         state.invoices?.length ? supabase.from('invoices').upsert(prepareBatch(state.invoices)) : null,
         state.sales?.length ? supabase.from('sales').upsert(prepareBatch(state.sales)) : null,
+        state.expenses?.length ? supabase.from('expenses').upsert(prepareBatch(state.expenses)) : null,
         state.trucks?.length ? supabase.from('trucks').upsert(prepareBatch(state.trucks)) : null,
         state.customers?.length ? supabase.from('customers').upsert(prepareBatch(state.customers)) : null,
         state.technicians?.length ? supabase.from('technicians').upsert(prepareBatch(state.technicians)) : null,

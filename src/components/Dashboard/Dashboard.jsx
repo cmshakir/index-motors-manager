@@ -11,11 +11,13 @@ import {
   Calendar, 
   ShieldAlert, 
   TrendingUp, 
+  TrendingDown,
   Layers,
   ChevronRight,
   Printer,
   Sparkles,
-  MapPin
+  MapPin,
+  Receipt
 } from 'lucide-react';
 import { formatCurrency, formatDate, getPriorityBadgeClass, getStatusBadgeClass } from '../../utils/formatters';
 
@@ -23,6 +25,7 @@ export default function Dashboard({
   profile,
   tasks = [],
   invoices = [],
+  expenses = [],
   trucks = [],
   customers = [],
   technicians = [],
@@ -37,6 +40,9 @@ export default function Dashboard({
 
   // Calculations
   const totalRevenueCollected = invoices.reduce((acc, inv) => acc + (Number(inv.paidAmount) || 0), 0);
+  const totalExpenses = expenses.reduce((acc, exp) => acc + (Number(exp.amount) || 0), 0);
+  const netOperatingProfit = totalRevenueCollected - totalExpenses;
+
   const pendingInvoices = invoices.filter(inv => inv.status === 'Pending' || inv.status === 'Partially Paid' || inv.status === 'Overdue');
   const pendingInvoicesAmount = pendingInvoices.reduce((acc, inv) => acc + (Number(inv.balanceDue) || 0), 0);
   
@@ -104,70 +110,115 @@ export default function Dashboard({
         </div>
       </div>
 
-      {/* Top 4 Key Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      {/* Top 5 Key Metric Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         
         {/* Metric 1: Total Revenue Collected */}
-        <div className="bg-slate-900/90 rounded-2xl p-5 border border-slate-800 hover:border-slate-700 transition shadow-lg">
+        <div className="bg-slate-900/90 rounded-2xl p-4 sm:p-5 border border-slate-800 hover:border-slate-700 transition shadow-lg">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Collected</span>
-            <div className="h-10 w-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
-              <DollarSign className="h-5 w-5" />
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Collections</span>
+            <div className="h-9 w-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+              <DollarSign className="h-4 w-4" />
             </div>
           </div>
-          <div className="mt-3">
-            <div className="text-2xl font-black text-white">
+          <div className="mt-2.5">
+            <div className="text-xl sm:text-2xl font-black text-white">
               {formatCurrency(totalRevenueCollected, currency)}
             </div>
-            <div className="mt-1 flex items-center text-xs text-slate-400">
-              <span className="text-emerald-400 font-semibold flex items-center mr-1.5">
-                <CheckCircle className="h-3 w-3 mr-0.5 inline" /> {invoices.filter(i => i.status === 'Paid').length} Paid
+            <div className="mt-1 flex items-center text-[11px] text-slate-400">
+              <span className="text-emerald-400 font-semibold mr-1">
+                {invoices.filter(i => i.status === 'Paid').length} Paid
               </span>
-              <span>across sales & workshop</span>
+              <span>Invoices</span>
             </div>
           </div>
         </div>
 
-        {/* Metric 2: Pending Receivables */}
-        <div className="bg-slate-900/90 rounded-2xl p-5 border border-slate-800 hover:border-slate-700 transition shadow-lg">
+        {/* Metric 2: Total Expenditures (Outflow) */}
+        <div 
+          onClick={() => onNavigateTab && onNavigateTab('expenses')}
+          className="bg-slate-900/90 rounded-2xl p-4 sm:p-5 border border-slate-800 hover:border-rose-500/50 transition shadow-lg cursor-pointer group"
+          title="Click to manage expenditures"
+        >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Pending Receivables</span>
-            <div className="h-10 w-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
-              <Clock className="h-5 w-5" />
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider group-hover:text-rose-400 transition">Expenses</span>
+            <div className="h-9 w-9 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
+              <Receipt className="h-4 w-4" />
             </div>
           </div>
-          <div className="mt-3">
-            <div className="text-2xl font-black text-amber-400">
+          <div className="mt-2.5">
+            <div className="text-xl sm:text-2xl font-black text-rose-400">
+              {formatCurrency(totalExpenses, currency)}
+            </div>
+            <div className="mt-1 flex items-center text-[11px] text-slate-400">
+              <span>{expenses.length} Vouchers</span>
+              <span className="text-amber-400 ml-1 underline group-hover:inline hidden">View ➔</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Metric 3: Net Operating Profit */}
+        <div className="bg-slate-900/90 rounded-2xl p-4 sm:p-5 border border-slate-800 hover:border-slate-700 transition shadow-lg">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Net Profit</span>
+            <div className={`h-9 w-9 rounded-xl flex items-center justify-center ${
+              netOperatingProfit >= 0 
+                ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400' 
+                : 'bg-rose-500/10 border border-rose-500/20 text-rose-400'
+            }`}>
+              {netOperatingProfit >= 0 ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
+            </div>
+          </div>
+          <div className="mt-2.5">
+            <div className={`text-xl sm:text-2xl font-black ${netOperatingProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+              {formatCurrency(netOperatingProfit, currency)}
+            </div>
+            <div className="mt-1 flex items-center text-[11px] text-slate-400">
+              <span>Revenue minus costs</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Metric 4: Pending Receivables */}
+        <div className="bg-slate-900/90 rounded-2xl p-4 sm:p-5 border border-slate-800 hover:border-slate-700 transition shadow-lg">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Receivables</span>
+            <div className="h-9 w-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+              <Clock className="h-4 w-4" />
+            </div>
+          </div>
+          <div className="mt-2.5">
+            <div className="text-xl sm:text-2xl font-black text-amber-400">
               {formatCurrency(pendingInvoicesAmount, currency)}
             </div>
-            <div className="mt-1 flex items-center text-xs text-slate-400">
-              <span className="text-amber-400 font-semibold mr-1.5">
-                {pendingInvoices.length} Invoices
+            <div className="mt-1 flex items-center text-[11px] text-slate-400">
+              <span className="text-amber-400 font-semibold mr-1">
+                {pendingInvoices.length} Due
               </span>
               <span>({invoices.filter(i => i.status === 'Overdue').length} overdue)</span>
             </div>
           </div>
         </div>
 
-        {/* Metric 3: Active Workshop Jobs */}
-        <div className="bg-slate-900/90 rounded-2xl p-5 border border-slate-800 hover:border-slate-700 transition shadow-lg">
+        {/* Metric 5: Active Workshop Jobs */}
+        <div className="bg-slate-900/90 rounded-2xl p-4 sm:p-5 border border-slate-800 hover:border-slate-700 transition shadow-lg">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Workshop Jobs</span>
-            <div className="h-10 w-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
-              <Wrench className="h-5 w-5" />
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Workshop Jobs</span>
+            <div className="h-9 w-9 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+              <Wrench className="h-4 w-4" />
             </div>
           </div>
-          <div className="mt-3">
-            <div className="text-2xl font-black text-white">
-              {activeTasks.length} <span className="text-sm font-medium text-slate-400">In Bays</span>
+          <div className="mt-2.5">
+            <div className="text-xl sm:text-2xl font-black text-white">
+              {activeTasks.length} <span className="text-xs font-medium text-slate-400">In Bays</span>
             </div>
-            <div className="mt-1 flex items-center text-xs text-slate-400">
+            <div className="mt-1 flex items-center text-[11px] text-slate-400">
               {urgentTasks.length > 0 ? (
                 <span className="text-red-400 font-semibold flex items-center">
-                  <AlertTriangle className="h-3 w-3 mr-1 inline" /> {urgentTasks.length} Urgent / High Priority
+                  <AlertTriangle className="h-3 w-3 mr-1 inline" /> {urgentTasks.length} High Priority
                 </span>
               ) : (
-                <span className="text-emerald-400">All jobs within schedule</span>
+                <span className="text-emerald-400">Within schedule</span>
               )}
             </div>
           </div>

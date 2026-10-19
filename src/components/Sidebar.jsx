@@ -11,7 +11,8 @@ import {
   Clock,
   CheckCircle2,
   DollarSign,
-  TrendingUp
+  TrendingUp,
+  Receipt
 } from 'lucide-react';
 import { formatCurrency } from '../utils/formatters';
 
@@ -21,6 +22,7 @@ export default function Sidebar({
   salesCount = 0,
   tasksCount = 0, 
   invoicesCount = 0, 
+  expensesCount = 0,
   trucksCount = 0,
   customersCount = 0,
   currency = '₹',
@@ -31,6 +33,7 @@ export default function Sidebar({
     { id: 'sales', label: 'Sales & Vehicle CRM', icon: TrendingUp, badge: salesCount },
     { id: 'tasks', label: 'Workshop Job Cards', icon: Wrench, badge: tasksCount },
     { id: 'invoices', label: 'Invoices & Billing', icon: FileText, badge: invoicesCount },
+    { id: 'expenses', label: 'Expenditures & Costs', icon: Receipt, badge: expensesCount },
     { id: 'trucks', label: 'Trucks & Inventory', icon: Truck, badge: trucksCount },
     { id: 'customers', label: 'Fleet Customers', icon: Users, badge: customersCount },
     { id: 'technicians', label: 'Technicians & Bays', icon: UserCheck, badge: null },

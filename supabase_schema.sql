@@ -51,7 +51,15 @@ CREATE TABLE IF NOT EXISTS public.technicians (
     updated_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 7. Profile Table (Dealership Profile & Settings)
+-- 7. Expenses Table (Workshop & Dealership Expenditures)
+CREATE TABLE IF NOT EXISTS public.expenses (
+    id TEXT PRIMARY KEY,
+    data JSONB NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 8. Profile Table (Dealership Profile & Settings)
 CREATE TABLE IF NOT EXISTS public.profile (
     id TEXT PRIMARY KEY,
     data JSONB NOT NULL,
@@ -63,6 +71,7 @@ CREATE TABLE IF NOT EXISTS public.profile (
 ALTER TABLE public.tasks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.invoices ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.sales ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.expenses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.trucks ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.customers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.technicians ENABLE ROW LEVEL SECURITY;
@@ -77,6 +86,9 @@ CREATE POLICY "Allow public read-write on invoices" ON public.invoices FOR ALL U
 
 DROP POLICY IF EXISTS "Allow public read-write on sales" ON public.sales;
 CREATE POLICY "Allow public read-write on sales" ON public.sales FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Allow public read-write on expenses" ON public.expenses;
+CREATE POLICY "Allow public read-write on expenses" ON public.expenses FOR ALL USING (true) WITH CHECK (true);
 
 DROP POLICY IF EXISTS "Allow public read-write on trucks" ON public.trucks;
 CREATE POLICY "Allow public read-write on trucks" ON public.trucks FOR ALL USING (true) WITH CHECK (true);
@@ -97,6 +109,6 @@ BEGIN
     SELECT 1 FROM pg_publication_tables 
     WHERE pubname = 'supabase_realtime' AND tablename = 'tasks'
   ) THEN
-    ALTER PUBLICATION supabase_realtime ADD TABLE public.tasks, public.invoices, public.sales, public.trucks;
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.tasks, public.invoices, public.sales, public.expenses, public.trucks;
   END IF;
 END $$;

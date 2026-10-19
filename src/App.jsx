@@ -17,6 +17,8 @@ import TechniciansView from './components/Dashboard/TechniciansView';
 import SettingsModal from './components/Settings/SettingsModal';
 import SalesManager from './components/Sales/SalesManager';
 import DealModal from './components/Sales/DealModal';
+import ExpenseManager from './components/Expenses/ExpenseManager';
+import ExpenseModal from './components/Expenses/ExpenseModal';
 import LoginScreen from './components/Auth/LoginScreen';
 import CloudConnectModal from './components/Cloud/CloudConnectModal';
 
@@ -72,6 +74,9 @@ export default function App() {
   const [isDealModalOpen, setIsDealModalOpen] = useState(false);
   const [dealToEdit, setDealToEdit] = useState(null);
 
+  const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
+  const [expenseToEdit, setExpenseToEdit] = useState(null);
+
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isCloudModalOpen, setIsCloudModalOpen] = useState(false);
 
@@ -101,6 +106,10 @@ export default function App() {
   }, [appState.sales]);
 
   useEffect(() => {
+    saveToStorage(STORAGE_KEYS.EXPENSES, appState.expenses);
+  }, [appState.expenses]);
+
+  useEffect(() => {
     saveToStorage(STORAGE_KEYS.USERS, appState.users);
   }, [appState.users]);
 
@@ -120,10 +129,11 @@ export default function App() {
       // Auto-seed cloud database if tables are empty
       await seedCloudIfEmpty(appState);
 
-      const [cloudTasks, cloudInvoices, cloudSales, cloudTrucks, cloudCustomers, cloudTechs, cloudUsers] = await Promise.all([
+      const [cloudTasks, cloudInvoices, cloudSales, cloudExpenses, cloudTrucks, cloudCustomers, cloudTechs, cloudUsers] = await Promise.all([
         fetchCloudTable('tasks'),
         fetchCloudTable('invoices'),
         fetchCloudTable('sales'),
+        fetchCloudTable('expenses'),
         fetchCloudTable('trucks'),
         fetchCloudTable('customers'),
         fetchCloudTable('technicians'),
@@ -135,6 +145,7 @@ export default function App() {
         tasks: (cloudTasks && cloudTasks.length > 0) ? cloudTasks : prev.tasks,
         invoices: (cloudInvoices && cloudInvoices.length > 0) ? cloudInvoices : prev.invoices,
         sales: (cloudSales && cloudSales.length > 0) ? cloudSales : prev.sales,
+        expenses: (cloudExpenses && cloudExpenses.length > 0) ? cloudExpenses : prev.expenses,
         trucks: (cloudTrucks && cloudTrucks.length > 0) ? cloudTrucks : prev.trucks,
         customers: (cloudCustomers && cloudCustomers.length > 0) ? cloudCustomers : prev.customers,
         technicians: (cloudTechs && cloudTechs.length > 0) ? cloudTechs : prev.technicians,
@@ -304,6 +315,28 @@ export default function App() {
         sales: prev.sales.filter(d => d.id !== dealId)
       }));
       deleteCloudRecord('sales', dealId);
+    }
+  };
+
+  // Expenditure Handlers
+  const handleSaveExpense = (expenseData) => {
+    setAppState(prev => {
+      const exists = prev.expenses?.some(e => e.id === expenseData.id);
+      const updatedExpenses = exists
+        ? prev.expenses.map(e => e.id === expenseData.id ? expenseData : e)
+        : [expenseData, ...(prev.expenses || [])];
+      return { ...prev, expenses: updatedExpenses };
+    });
+    upsertCloudRecord('expenses', expenseData.id, expenseData);
+  };
+
+  const handleDeleteExpense = (expenseId) => {
+    if (window.confirm('Are you sure you want to delete this expenditure record?')) {
+      setAppState(prev => ({
+        ...prev,
+        expenses: (prev.expenses || []).filter(e => e.id !== expenseId)
+      }));
+      deleteCloudRecord('expenses', expenseId);
     }
   };
 
@@ -624,6 +657,7 @@ export default function App() {
           salesCount={appState.sales?.length || 0}
           tasksCount={appState.tasks?.length || 0}
           invoicesCount={appState.invoices?.length || 0}
+          expensesCount={appState.expenses?.length || 0}
           trucksCount={appState.trucks?.length || 0}
           customersCount={appState.customers?.length || 0}
           currency={appState.profile.currency}
@@ -638,6 +672,7 @@ export default function App() {
                 profile={appState.profile}
                 tasks={appState.tasks}
                 invoices={appState.invoices}
+                expenses={appState.expenses || []}
                 trucks={appState.trucks}
                 customers={appState.customers}
                 technicians={appState.technicians}
@@ -719,6 +754,23 @@ export default function App() {
                   setInvoiceForPayment(inv);
                   setIsRecordPaymentOpen(true);
                 }}
+              />
+            )}
+
+            {activeTab === 'expenses' && (
+              <ExpenseManager
+                expenses={appState.expenses || []}
+                invoices={appState.invoices || []}
+                currency={appState.profile.currency}
+                onNewExpense={() => {
+                  setExpenseToEdit(null);
+                  setIsExpenseModalOpen(true);
+                }}
+                onEditExpense={(exp) => {
+                  setExpenseToEdit(exp);
+                  setIsExpenseModalOpen(true);
+                }}
+                onDeleteExpense={handleDeleteExpense}
               />
             )}
 
@@ -920,6 +972,7 @@ export default function App() {
         salesCount={appState.sales?.length || 0}
         tasksCount={appState.tasks?.length || 0}
         invoicesCount={appState.invoices?.length || 0}
+        expensesCount={appState.expenses?.length || 0}
         trucksCount={appState.trucks?.length || 0}
         customersCount={appState.customers?.length || 0}
         onOpenSettings={() => setIsSettingsOpen(true)}
@@ -937,6 +990,17 @@ export default function App() {
         onClose={() => setIsCloudModalOpen(false)}
         isCloudConnected={isSupabaseConfigured()}
         onConnected={refreshFromCloud}
+      />
+
+      {/* 11. Record / Edit Expenditure Modal */}
+      <ExpenseModal
+        isOpen={isExpenseModalOpen}
+        onClose={() => setIsExpenseModalOpen(false)}
+        onSave={handleSaveExpense}
+        expenseToEdit={expenseToEdit}
+        currency={appState.profile.currency}
+        currentUser={currentUser}
+        tasks={appState.tasks}
       />
 
     </div>
