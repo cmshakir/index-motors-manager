@@ -1,13 +1,21 @@
 {
   "name": "index-motors-manager",
+  "productName": "Index Motors",
   "private": true,
-  "version": "0.0.0",
+  "version": "3.0.0",
+  "description": "Index Motors Commercial Vehicle Sales & Workshop Manager",
+  "main": "electron/main.cjs",
+  "author": "Index Motors",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "electron:dev": "vite build && electron .",
+    "electron:build": "vite build && electron-builder --win",
+    "electron:build:dir": "vite build && electron-builder --win --dir",
+    "electron:build:portable": "vite build && electron-builder --win portable"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",
@@ -20,9 +28,43 @@
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
     "autoprefixer": "^10.6.1",
+    "electron": "^44.9.0",
+    "electron-builder": "^26.15.3",
     "oxlint": "^1.81.0",
     "postcss": "^8.5.30",
     "tailwindcss": "^3.4.19",
     "vite": "^8.3.0"
+  },
+  "build": {
+    "appId": "online.indexmotors.manager",
+    "productName": "Index Motors",
+    "copyright": "Copyright © 2026 Index Motors",
+    "asar": true,
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Index Motors",
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "${productName}-Portable-${version}.${ext}"
+    }
   }
 }

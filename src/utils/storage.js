@@ -23,6 +23,33 @@ const STORAGE_KEYS = {
   CURRENT_USER: 'index_motors_online_v4_current_user',
 };
 
+// Desktop Local Store File Bridge (Electron AppData JSON file backup)
+let saveFileTimeout = null;
+export const triggerDesktopLocalBackup = () => {
+  if (typeof window !== 'undefined' && window.electronAPI && window.electronAPI.saveLocalStore) {
+    if (saveFileTimeout) clearTimeout(saveFileTimeout);
+    saveFileTimeout = setTimeout(() => {
+      try {
+        const fullData = getInitialAppState();
+        window.electronAPI.saveLocalStore(fullData);
+      } catch (err) {
+        console.warn('Desktop file backup error:', err);
+      }
+    }, 500);
+  }
+};
+
+export const isDesktopApp = () => {
+  return typeof window !== 'undefined' && Boolean(window.electronAPI && window.electronAPI.isDesktop);
+};
+
+export const openLocalDataFolder = async () => {
+  if (typeof window !== 'undefined' && window.electronAPI?.openDataFolder) {
+    return await window.electronAPI.openDataFolder();
+  }
+  return false;
+};
+
 export const loadFromStorage = (key, fallback) => {
   try {
     const item = localStorage.getItem(key);
@@ -37,6 +64,7 @@ export const loadFromStorage = (key, fallback) => {
 export const saveToStorage = (key, data) => {
   try {
     localStorage.setItem(key, JSON.stringify(data));
+    triggerDesktopLocalBackup();
   } catch (e) {
     console.error(`Failed to save ${key} to storage:`, e);
   }
