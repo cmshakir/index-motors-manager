@@ -13,6 +13,7 @@ import {
   Cloud 
 } from 'lucide-react';
 import { exportAllDataJSON, importAllDataJSON, resetToDefaults } from '../../utils/storage';
+import { supabase } from '../../utils/supabaseClient';
 
 export default function SettingsModal({
   isOpen,
@@ -56,10 +57,21 @@ export default function SettingsModal({
     reader.readAsText(file);
   };
 
-  const handleReset = () => {
-    if (window.confirm('Are you sure you want to reset all data back to Index Motors demo state? Any custom entries will be replaced.')) {
-      const defaultState = resetToDefaults();
-      onResetData(defaultState);
+  const handleReset = async () => {
+    if (window.confirm('Are you sure you want to clear all operational data (jobs, invoices, sales, expenses, trucks, customers) to start completely fresh? Company profile and staff logins will be preserved.')) {
+      const cleanState = resetToDefaults();
+      onResetData(cleanState);
+
+      // Clear from Supabase Cloud as well
+      if (isCloudConnected && supabase) {
+        try {
+          const tables = ['tasks', 'invoices', 'sales', 'expenses', 'trucks', 'customers'];
+          await Promise.allSettled(tables.map(t => supabase.from(t).delete().neq('id', '___NON_EXISTENT___')));
+        } catch (e) {
+          console.warn('Could not clear all cloud tables:', e);
+        }
+      }
+
       onClose();
     }
   };
@@ -345,16 +357,16 @@ export default function SettingsModal({
 
               <div className="pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="font-bold text-red-400">Reset Demo Data</p>
-                  <p className="text-slate-400 text-[11px]">Restore factory initial data with sample trucks and tasks.</p>
+                  <p className="font-bold text-red-400">Clear All Records (Fresh Start)</p>
+                  <p className="text-slate-400 text-[11px]">Erase all sample jobs, invoices, sales, expenses, and trucks from cloud & local storage to start fresh.</p>
                 </div>
                 <button
                   type="button"
                   onClick={handleReset}
-                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-red-500/15 hover:bg-red-500 hover:text-white text-red-400 font-bold border border-red-500/30"
+                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-red-500/15 hover:bg-red-500 hover:text-white text-red-400 font-bold border border-red-500/30 transition active:scale-95"
                 >
                   <RotateCcw className="h-3.5 w-3.5" />
-                  <span>Reset to Sample Data</span>
+                  <span>Clear All Data (Fresh Start)</span>
                 </button>
               </div>
             </div>

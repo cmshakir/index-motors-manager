@@ -180,14 +180,14 @@ export default function App() {
 
       setAppState(prev => ({
         ...prev,
-        tasks: (cloudTasks && cloudTasks.length > 0) ? cloudTasks : prev.tasks,
-        invoices: (cloudInvoices && cloudInvoices.length > 0) ? cloudInvoices : prev.invoices,
-        sales: (cloudSales && cloudSales.length > 0) ? cloudSales : prev.sales,
-        expenses: (cloudExpenses && cloudExpenses.length > 0) ? cloudExpenses : prev.expenses,
-        trucks: (cloudTrucks && cloudTrucks.length > 0) ? cloudTrucks : prev.trucks,
-        customers: (cloudCustomers && cloudCustomers.length > 0) ? cloudCustomers : prev.customers,
-        technicians: (cloudTechs && cloudTechs.length > 0) ? cloudTechs : prev.technicians,
-        users: (cloudUsers && cloudUsers.length > 0) ? cloudUsers : prev.users,
+        tasks: Array.isArray(cloudTasks) ? cloudTasks : prev.tasks,
+        invoices: Array.isArray(cloudInvoices) ? cloudInvoices : prev.invoices,
+        sales: Array.isArray(cloudSales) ? cloudSales : prev.sales,
+        expenses: Array.isArray(cloudExpenses) ? cloudExpenses : prev.expenses,
+        trucks: Array.isArray(cloudTrucks) ? cloudTrucks : prev.trucks,
+        customers: Array.isArray(cloudCustomers) ? cloudCustomers : prev.customers,
+        technicians: Array.isArray(cloudTechs) ? cloudTechs : prev.technicians,
+        users: Array.isArray(cloudUsers) ? cloudUsers : prev.users,
       }));
     } catch (e) {
       console.warn('Cloud sync error:', e);
