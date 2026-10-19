@@ -137,8 +137,8 @@ export default function Dashboard({
         </div>
       </div>
 
-      {/* Top 5 Key Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      {/* Top 6 Key Operational Metric Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
         
         {/* Metric 1: Total Revenue Collected */}
         <div className="bg-zinc-900/90 rounded-2xl p-4 sm:p-5 border border-zinc-800 hover:border-zinc-700 transition shadow-lg">
@@ -228,18 +228,18 @@ export default function Dashboard({
         </div>
 
         {/* Metric 5: Active Workshop Jobs */}
-        <div className="bg-slate-900/90 rounded-2xl p-4 sm:p-5 border border-slate-800 hover:border-slate-700 transition shadow-lg">
+        <div className="bg-zinc-900/90 rounded-2xl p-4 sm:p-5 border border-zinc-800 hover:border-zinc-700 transition shadow-lg">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Workshop Jobs</span>
+            <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Workshop Jobs</span>
             <div className="h-9 w-9 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
               <Wrench className="h-4 w-4" />
             </div>
           </div>
           <div className="mt-2.5">
             <div className="text-xl sm:text-2xl font-black text-white">
-              {activeTasks.length} <span className="text-xs font-medium text-slate-400">In Bays</span>
+              {activeTasks.length} <span className="text-xs font-medium text-zinc-400">In Bays</span>
             </div>
-            <div className="mt-1 flex items-center text-[11px] text-slate-400">
+            <div className="mt-1 flex items-center text-[11px] text-zinc-400">
               {urgentTasks.length > 0 ? (
                 <span className="text-red-400 font-semibold flex items-center">
                   <AlertTriangle className="h-3 w-3 mr-1 inline" /> {urgentTasks.length} High Priority
@@ -251,22 +251,24 @@ export default function Dashboard({
           </div>
         </div>
 
-        {/* Metric 4: Commercial Truck Fleet */}
-        <div className="bg-slate-900/90 rounded-2xl p-5 border border-slate-800 hover:border-slate-700 transition shadow-lg">
+        {/* Metric 6: Commercial Fleet Status */}
+        <div 
+          onClick={() => onNavigateTab && onNavigateTab('trucks')}
+          className="bg-zinc-900/90 rounded-2xl p-4 sm:p-5 border border-zinc-800 hover:border-red-600/50 transition shadow-lg cursor-pointer group"
+          title="Click to view fleet & catalog"
+        >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Trucks in Facility</span>
-            <div className="h-10 w-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
-              <Truck className="h-5 w-5" />
+            <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider group-hover:text-red-400 transition">Fleet Facility</span>
+            <div className="h-9 w-9 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400">
+              <Truck className="h-4 w-4" />
             </div>
           </div>
-          <div className="mt-3">
-            <div className="text-2xl font-black text-white">
-              {trucks.length} <span className="text-sm font-medium text-slate-400">Total Units</span>
+          <div className="mt-2.5">
+            <div className="text-xl sm:text-2xl font-black text-white">
+              {trucks.length > 0 ? `${trucks.length} Units` : 'Fleet Ready'}
             </div>
-            <div className="mt-1 flex items-center justify-between text-xs text-slate-400">
-              <span>{dealershipStockTrucks.length} Dealership Stock</span>
-              <span>•</span>
-              <span>{customerWorkshopTrucks.length} In Workshop</span>
+            <div className="mt-1 flex items-center text-[11px] text-zinc-400">
+              <span>Showroom & Workshop Bays</span>
             </div>
           </div>
         </div>
@@ -274,7 +276,7 @@ export default function Dashboard({
       </div>
 
       {/* Workshop Bays Live Status Monitor */}
-      <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 shadow-xl">
+      <div className="bg-zinc-900/90 rounded-2xl border border-zinc-800 p-6 shadow-xl">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
             <div className="flex items-center space-x-2">
@@ -285,7 +287,7 @@ export default function Dashboard({
                 LIVE
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-zinc-400 mt-1">
               Active heavy vehicle repair bays, lift allocations, and assigned lead mechanics
             </p>
           </div>
@@ -403,7 +405,7 @@ export default function Dashboard({
                     </div>
 
                     <div className="text-right flex-shrink-0 space-y-1">
-                      <span className="text-xs text-slate-400 block font-mono">
+                      <span className="text-xs text-zinc-400 block font-mono">
                         {task.actualHours || 0}/{task.estimatedHours} hrs
                       </span>
                       {!task.invoiceId && (
@@ -425,7 +427,7 @@ export default function Dashboard({
             </div>
           </div>
 
-          <div className="mt-4 pt-4 border-t border-slate-800 text-center">
+          <div className="mt-4 pt-4 border-t border-zinc-800 text-center">
             <button
               onClick={onNewTask}
               className="text-xs font-bold text-amber-400 hover:text-amber-300 flex items-center justify-center space-x-1 w-full"
@@ -436,7 +438,7 @@ export default function Dashboard({
         </div>
 
         {/* Recent Invoices & Billing */}
-        <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 shadow-xl flex flex-col justify-between">
+        <div className="bg-zinc-900/90 rounded-2xl border border-zinc-800 p-6 shadow-xl flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-2">
@@ -445,7 +447,7 @@ export default function Dashboard({
               </div>
               <button
                 onClick={() => onNavigateTab('invoices')}
-                className="text-xs font-bold text-slate-400 hover:text-white flex items-center"
+                className="text-xs font-bold text-zinc-400 hover:text-white flex items-center"
               >
                 <span>View All ({invoices.length})</span>
                 <ChevronRight className="h-4 w-4 ml-1" />
@@ -454,7 +456,7 @@ export default function Dashboard({
 
             <div className="space-y-3">
               {invoices.length === 0 ? (
-                <div className="py-8 text-center text-xs text-slate-500 italic">
+                <div className="py-8 text-center text-xs text-zinc-500 italic">
                   No commercial invoices created yet. Click below to create your first invoice.
                 </div>
               ) : (
@@ -462,12 +464,12 @@ export default function Dashboard({
                   <div
                     key={inv.id}
                     onClick={() => onSelectInvoice(inv)}
-                    className="group p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 hover:border-blue-500/40 cursor-pointer transition flex items-center justify-between gap-3"
+                    className="group p-3.5 rounded-xl bg-zinc-950/60 border border-zinc-800 hover:border-blue-500/40 cursor-pointer transition flex items-center justify-between gap-3"
                   >
                     <div className="space-y-1 min-w-0">
                       <div className="flex items-center space-x-2">
                         <span className="font-mono text-xs font-bold text-blue-400">{inv.invoiceNumber}</span>
-                        <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                        <span className="text-[10px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700">
                           {inv.type}
                         </span>
                         <span className={`text-[10px] px-2 py-0.5 rounded font-bold ${getStatusBadgeClass(inv.status)}`}>
@@ -477,7 +479,7 @@ export default function Dashboard({
                       <p className="text-sm font-semibold text-white group-hover:text-blue-400 transition truncate">
                         {inv.customerName}
                       </p>
-                      <p className="text-xs text-slate-400 truncate">
+                      <p className="text-xs text-zinc-400 truncate">
                         Issued: {formatDate(inv.issueDate)} • Due: {formatDate(inv.dueDate)}
                       </p>
                     </div>
@@ -502,7 +504,7 @@ export default function Dashboard({
             </div>
           </div>
 
-          <div className="mt-4 pt-4 border-t border-slate-800 text-center">
+          <div className="mt-4 pt-4 border-t border-zinc-800 text-center">
             <button
               onClick={onNewInvoice}
               className="text-xs font-bold text-blue-400 hover:text-blue-300 flex items-center justify-center space-x-1 w-full"

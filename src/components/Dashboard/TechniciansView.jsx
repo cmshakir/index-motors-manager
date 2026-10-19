@@ -56,7 +56,7 @@ export default function TechniciansView({
               {technicians.length} Mechanics
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-zinc-400 mt-1">
             Certified diesel mechanics, heavy commercial electrical specialists, and PDI foremen.
           </p>
         </div>
@@ -71,10 +71,10 @@ export default function TechniciansView({
       </div>
 
       {technicians.length === 0 ? (
-        <div className="p-12 text-center rounded-2xl border border-dashed border-slate-800 bg-slate-900/40">
-          <Wrench className="h-10 w-10 text-slate-600 mx-auto mb-3" />
-          <p className="text-slate-300 font-bold text-sm">No workshop technicians registered yet</p>
-          <p className="text-xs text-slate-500 mt-1">Click "+ Add Technician" above to register mechanics and specialists.</p>
+        <div className="p-12 text-center rounded-2xl border border-dashed border-zinc-800 bg-zinc-900/40">
+          <Wrench className="h-10 w-10 text-zinc-600 mx-auto mb-3" />
+          <p className="text-zinc-300 font-bold text-sm">No workshop technicians registered yet</p>
+          <p className="text-xs text-zinc-500 mt-1">Click "+ Add Technician" above to register mechanics and specialists.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -83,7 +83,7 @@ export default function TechniciansView({
             return (
               <div 
                 key={tech.id}
-                className="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 space-y-4 shadow-xl flex flex-col justify-between"
+                className="bg-zinc-900/90 rounded-2xl border border-zinc-800 p-5 space-y-4 shadow-xl flex flex-col justify-between"
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
@@ -101,14 +101,14 @@ export default function TechniciansView({
                     </span>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2 text-xs">
+                  <div className="p-3 rounded-xl bg-zinc-950/70 border border-zinc-800 space-y-2 text-xs">
                     <div>
-                      <span className="text-slate-500 block text-[10px] uppercase">Specialty:</span>
-                      <span className="text-slate-200 font-medium">{tech.specialty}</span>
+                      <span className="text-zinc-500 block text-[10px] uppercase">Specialty:</span>
+                      <span className="text-zinc-200 font-medium">{tech.specialty}</span>
                     </div>
                     {tech.phone && (
-                      <div className="flex items-center space-x-1.5 text-slate-300">
-                        <Phone className="h-3.5 w-3.5 text-slate-500" />
+                      <div className="flex items-center space-x-1.5 text-zinc-300">
+                        <Phone className="h-3.5 w-3.5 text-zinc-500" />
                         <span>{tech.phone}</span>
                       </div>
                     )}
@@ -116,14 +116,14 @@ export default function TechniciansView({
 
                   {/* Active Jobs for this tech */}
                   <div className="space-y-1.5">
-                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+                    <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider block">
                       Active Assigned Jobs ({assignedJobs.length}):
                     </span>
                     {assignedJobs.length === 0 ? (
-                      <p className="text-xs text-slate-500 italic">No active job currently assigned</p>
+                      <p className="text-xs text-zinc-500 italic">No active job currently assigned</p>
                     ) : (
                       assignedJobs.map(j => (
-                        <div key={j.id} className="p-2 rounded-lg bg-slate-950/50 border border-slate-800 text-xs flex items-center justify-between">
+                        <div key={j.id} className="p-2 rounded-lg bg-zinc-950/50 border border-zinc-800 text-xs flex items-center justify-between">
                           <span className="font-semibold text-white truncate max-w-[160px]">{j.truckModel}</span>
                           <span className="font-mono text-red-400 text-[10px]">{j.bay}</span>
                         </div>
@@ -132,16 +132,16 @@ export default function TechniciansView({
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-slate-800 flex items-center justify-end space-x-1">
+                <div className="pt-3 border-t border-zinc-800 flex items-center justify-end space-x-1">
                   <button
                     onClick={() => handleOpenEdit(tech)}
-                    className="p-1.5 rounded hover:bg-slate-800 text-slate-400 hover:text-white transition"
+                    className="p-1.5 rounded hover:bg-zinc-800 text-zinc-400 hover:text-white transition"
                   >
                     <Edit3 className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => onDeleteTechnician(tech.id)}
-                    className="p-1.5 rounded hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition"
+                    className="p-1.5 rounded hover:bg-red-500/20 text-zinc-400 hover:text-red-400 transition"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -154,56 +154,56 @@ export default function TechniciansView({
       )}
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md shadow-2xl p-6 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-zinc-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-md shadow-2xl p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
               <h3 className="text-base font-black text-white">
                 {techToEdit ? 'Edit Technician' : 'Add Technician'}
               </h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white">
+              <button onClick={() => setIsModalOpen(false)} className="text-zinc-400 hover:text-white">
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-3 text-xs">
               <div className="space-y-1">
-                <label className="font-bold text-slate-300">Full Name *</label>
+                <label className="font-bold text-zinc-300">Full Name *</label>
                 <input
                   type="text"
                   required
                   value={formData.name}
                   onChange={e => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white"
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="font-bold text-slate-300">Job Title / Role</label>
+                <label className="font-bold text-zinc-300">Job Title / Role</label>
                 <input
                   type="text"
                   value={formData.role}
                   onChange={e => setFormData({ ...formData, role: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white"
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="font-bold text-slate-300">Technical Specialty</label>
+                <label className="font-bold text-zinc-300">Technical Specialty</label>
                 <input
                   type="text"
                   value={formData.specialty}
                   onChange={e => setFormData({ ...formData, specialty: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white"
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="font-bold text-slate-300">Contact Phone</label>
+                <label className="font-bold text-zinc-300">Contact Phone</label>
                 <input
                   type="text"
                   value={formData.phone}
                   onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white"
+                  className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white"
                 />
               </div>
 
@@ -211,7 +211,7 @@ export default function TechniciansView({
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-bold"
+                  className="px-4 py-2 rounded-xl bg-zinc-800 text-zinc-300 font-bold"
                 >
                   Cancel
                 </button>

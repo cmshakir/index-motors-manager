@@ -24,7 +24,7 @@ import {
 import { formatCurrency, formatDate, getPriorityBadgeClass, getStatusBadgeClass } from '../../utils/formatters';
 
 const KANBAN_COLUMNS = [
-  { id: 'Pending', label: 'Received / Pending', color: 'border-slate-600' },
+  { id: 'Pending', label: 'Received / Pending', color: 'border-zinc-600' },
   { id: 'In Progress', label: 'In Progress (Bay Work)', color: 'border-blue-500' },
   { id: 'Awaiting Parts', label: 'Awaiting Parts / Order', color: 'border-amber-500' },
   { id: 'Ready for Pickup', label: 'Quality Check / Ready', color: 'border-emerald-500' },
@@ -81,20 +81,20 @@ export default function TaskManager({
               {filteredTasks.length} Active
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-zinc-400 mt-1">
             Manage heavy truck work orders, bay allocation, technician assignments, and parts usage.
           </p>
         </div>
 
         <div className="flex items-center space-x-3">
           {/* View Mode Toggle */}
-          <div className="flex items-center bg-slate-900 border border-slate-800 rounded-xl p-1">
+          <div className="flex items-center bg-zinc-900 border border-zinc-800 rounded-xl p-1">
             <button
               onClick={() => setViewMode('kanban')}
               className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
                 viewMode === 'kanban' 
                   ? 'bg-red-600 text-white shadow-sm' 
-                  : 'text-slate-400 hover:text-white'
+                  : 'text-zinc-400 hover:text-white'
               }`}
             >
               <Kanban className="h-3.5 w-3.5" />
@@ -105,7 +105,7 @@ export default function TaskManager({
               className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
                 viewMode === 'table' 
                   ? 'bg-red-600 text-white shadow-sm' 
-                  : 'text-slate-400 hover:text-white'
+                  : 'text-zinc-400 hover:text-white'
               }`}
             >
               <TableIcon className="h-3.5 w-3.5" />
@@ -124,18 +124,18 @@ export default function TaskManager({
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-slate-900/90 rounded-2xl border border-slate-800 p-4 space-y-3">
+      <div className="bg-zinc-900/90 rounded-2xl border border-zinc-800 p-4 space-y-3">
         <div className="flex flex-col md:flex-row items-center gap-3">
           
           {/* Search box */}
           <div className="relative flex-1 w-full">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
             <input
               type="text"
               placeholder="Search by Job #, Truck, Plate, VIN, Customer, or Mechanic..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-red-500 transition"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-red-500 transition"
             />
           </div>
 
@@ -145,7 +145,7 @@ export default function TaskManager({
             <select
               value={priorityFilter}
               onChange={(e) => setPriorityFilter(e.target.value)}
-              className="px-3 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 font-medium focus:outline-none focus:border-red-500"
+              className="px-3 py-2.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-xs text-zinc-300 font-medium focus:outline-none focus:border-red-500"
             >
               <option value="All">All Priorities</option>
               <option value="Urgent">Urgent / Breakdown</option>
@@ -158,7 +158,7 @@ export default function TaskManager({
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-3 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 font-medium focus:outline-none focus:border-red-500"
+              className="px-3 py-2.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-xs text-zinc-300 font-medium focus:outline-none focus:border-red-500"
             >
               <option value="All">All Service Types</option>
               {categories.map(cat => (
@@ -171,7 +171,7 @@ export default function TaskManager({
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 font-medium focus:outline-none focus:border-red-500"
+                className="px-3 py-2.5 rounded-xl bg-zinc-950/80 border border-zinc-800 text-xs text-zinc-300 font-medium focus:outline-none focus:border-red-500"
               >
                 <option value="All">All Statuses</option>
                 <option value="Pending">Received / Pending</option>
@@ -207,16 +207,16 @@ export default function TaskManager({
             return (
               <div 
                 key={col.id} 
-                className="bg-slate-900/80 rounded-2xl border border-slate-800 flex flex-col max-h-[calc(100vh-250px)]"
+                className="bg-zinc-900/80 rounded-2xl border border-zinc-800 flex flex-col max-h-[calc(100vh-250px)]"
               >
                 {/* Column Header */}
-                <div className={`p-3.5 border-b border-slate-800 flex items-center justify-between border-t-4 ${col.color} rounded-t-2xl`}>
+                <div className={`p-3.5 border-b border-zinc-800 flex items-center justify-between border-t-4 ${col.color} rounded-t-2xl`}>
                   <div className="flex items-center space-x-2">
                     <span className="text-xs font-black text-white tracking-wide uppercase">
                       {col.label}
                     </span>
                   </div>
-                  <span className="text-xs font-black px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                  <span className="text-xs font-black px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700">
                     {colTasks.length}
                   </span>
                 </div>
@@ -224,7 +224,7 @@ export default function TaskManager({
                 {/* Column Body / Cards List */}
                 <div className="p-3 space-y-3 overflow-y-auto flex-1 min-h-[300px]">
                   {colTasks.length === 0 ? (
-                    <div className="py-12 text-center text-xs text-slate-500">
+                    <div className="py-12 text-center text-xs text-zinc-500">
                       No jobs in this stage
                     </div>
                   ) : (
@@ -248,10 +248,10 @@ export default function TaskManager({
         </div>
       ) : (
         /* TABLE VIEW */
-        <div className="bg-slate-900/90 rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
+        <div className="bg-zinc-900/90 rounded-2xl border border-zinc-800 overflow-hidden shadow-xl">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-300">
-              <thead className="bg-slate-950/80 text-[11px] font-black uppercase tracking-wider text-slate-400 border-b border-slate-800">
+            <table className="w-full text-left text-sm text-zinc-300">
+              <thead className="bg-zinc-950/80 text-[11px] font-black uppercase tracking-wider text-zinc-400 border-b border-zinc-800">
                 <tr>
                   <th className="py-3.5 px-4">Job Card #</th>
                   <th className="py-3.5 px-4">Truck & Fleet</th>
@@ -263,10 +263,10 @@ export default function TaskManager({
                   <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/80">
+              <tbody className="divide-y divide-zinc-800/80">
                 {filteredTasks.length === 0 ? (
                   <tr>
-                    <td colSpan="8" className="py-12 text-center text-sm text-slate-500">
+                    <td colSpan="8" className="py-12 text-center text-sm text-zinc-500">
                       No workshop job cards match your criteria.
                     </td>
                   </tr>
@@ -274,7 +274,7 @@ export default function TaskManager({
                   filteredTasks.map((task) => (
                     <tr 
                       key={task.id} 
-                      className="hover:bg-slate-850/60 transition cursor-pointer"
+                      className="hover:bg-zinc-850/60 transition cursor-pointer"
                       onClick={() => onViewTask(task)}
                     >
                       <td className="py-3.5 px-4 font-mono font-bold text-red-400 text-xs whitespace-nowrap">
@@ -282,15 +282,15 @@ export default function TaskManager({
                       </td>
                       <td className="py-3.5 px-4">
                         <div className="font-bold text-white text-xs">{task.truckModel}</div>
-                        <div className="text-[11px] text-slate-400 flex items-center space-x-1.5">
+                        <div className="text-[11px] text-zinc-400 flex items-center space-x-1.5">
                           <span className="font-mono text-red-300/90">{task.plate}</span>
                           <span>•</span>
                           <span className="truncate max-w-[140px]">{task.customerName}</span>
                         </div>
                       </td>
                       <td className="py-3.5 px-4">
-                        <div className="font-semibold text-slate-200 text-xs truncate max-w-xs">{task.title}</div>
-                        <div className="text-[11px] text-slate-400">{task.category}</div>
+                        <div className="font-semibold text-zinc-200 text-xs truncate max-w-xs">{task.title}</div>
+                        <div className="text-[11px] text-zinc-400">{task.category}</div>
                       </td>
                       <td className="py-3.5 px-4 whitespace-nowrap">
                         <span className={`text-[10px] px-2 py-0.5 rounded font-bold ${getPriorityBadgeClass(task.priority)}`}>
@@ -301,12 +301,12 @@ export default function TaskManager({
                         <span className={`text-[10px] px-2 py-0.5 rounded font-bold ${getStatusBadgeClass(task.status)} block w-fit`}>
                           {task.status}
                         </span>
-                        <span className="text-[10px] text-slate-400 block mt-0.5">{task.bay}</span>
+                        <span className="text-[10px] text-zinc-400 block mt-0.5">{task.bay}</span>
                       </td>
-                      <td className="py-3.5 px-4 text-xs text-slate-300 whitespace-nowrap">
+                      <td className="py-3.5 px-4 text-xs text-zinc-300 whitespace-nowrap">
                         {task.assignedTech}
                       </td>
-                      <td className="py-3.5 px-4 text-xs font-mono text-slate-400 whitespace-nowrap">
+                      <td className="py-3.5 px-4 text-xs font-mono text-zinc-400 whitespace-nowrap">
                         {task.actualHours || 0} / {task.estimatedHours}h
                       </td>
                       <td className="py-3.5 px-4 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
@@ -322,14 +322,14 @@ export default function TaskManager({
                           )}
                           <button
                             onClick={() => onEditTask(task)}
-                            className="p-1.5 rounded hover:bg-slate-800 text-slate-400 hover:text-white transition"
+                            className="p-1.5 rounded hover:bg-zinc-800 text-zinc-400 hover:text-white transition"
                             title="Edit Job Card"
                           >
                             <Edit3 className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => onDeleteTask(task.id)}
-                            className="p-1.5 rounded hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition"
+                            className="p-1.5 rounded hover:bg-red-500/20 text-zinc-400 hover:text-red-400 transition"
                             title="Delete Job Card"
                           >
                             <Trash2 className="h-4 w-4" />
@@ -359,7 +359,7 @@ function TaskCard({ task, currency, onView, onEdit, onDelete, onStatusChange, on
   return (
     <div 
       onClick={onView}
-      className="group bg-slate-950/90 rounded-xl border border-slate-800 hover:border-red-600/50 p-3.5 space-y-3 cursor-pointer transition shadow-md hover:shadow-xl"
+      className="group bg-zinc-950/90 rounded-xl border border-zinc-800 hover:border-red-600/50 p-3.5 space-y-3 cursor-pointer transition shadow-md hover:shadow-xl"
     >
       {/* Top Header: ID & Priority */}
       <div className="flex items-center justify-between">
@@ -378,52 +378,52 @@ function TaskCard({ task, currency, onView, onEdit, onDelete, onStatusChange, on
         <h4 className="text-sm font-bold text-white group-hover:text-red-400 transition line-clamp-2">
           {task.title}
         </h4>
-        <span className="text-[11px] font-medium text-slate-400 mt-0.5 block">
+        <span className="text-[11px] font-medium text-zinc-400 mt-0.5 block">
           {task.category}
         </span>
       </div>
 
       {/* Truck & Customer Block */}
-      <div className="p-2.5 rounded-lg bg-slate-900/90 border border-slate-800/80 space-y-1 text-xs">
+      <div className="p-2.5 rounded-lg bg-zinc-900/90 border border-zinc-800/80 space-y-1 text-xs">
         <div className="flex items-center space-x-1.5 text-white font-semibold truncate">
           <Truck className="h-3.5 w-3.5 text-red-500 flex-shrink-0" />
           <span className="truncate">{task.truckModel}</span>
         </div>
-        <div className="flex items-center justify-between text-[11px] text-slate-400">
+        <div className="flex items-center justify-between text-[11px] text-zinc-400">
           <span className="font-mono text-red-400">{task.plate || "No Plate"}</span>
           <span className="truncate max-w-[110px]">{task.customerName}</span>
         </div>
       </div>
 
       {/* Bay & Mechanic */}
-      <div className="flex items-center justify-between text-[11px] text-slate-400">
-        <span className="truncate max-w-[120px] font-medium text-slate-300">
+      <div className="flex items-center justify-between text-[11px] text-zinc-400">
+        <span className="truncate max-w-[120px] font-medium text-zinc-300">
           📍 {task.bay || "Unassigned Bay"}
         </span>
-        <span className="truncate max-w-[100px] text-slate-400">
+        <span className="truncate max-w-[100px] text-zinc-400">
           🔧 {task.assignedTech}
         </span>
       </div>
 
       {/* Checklist & Hours summary */}
-      <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
+      <div className="pt-2 border-t border-zinc-800/80 flex items-center justify-between text-[11px]">
         {totalChecklist > 0 ? (
-          <span className="text-slate-400 flex items-center space-x-1">
+          <span className="text-zinc-400 flex items-center space-x-1">
             <CheckCircle2 className="h-3 w-3 text-emerald-400" />
             <span>{completedChecklist}/{totalChecklist} Checks</span>
           </span>
         ) : (
-          <span className="text-slate-500">No checklist</span>
+          <span className="text-zinc-500">No checklist</span>
         )}
 
-        <span className="font-mono text-slate-400">
+        <span className="font-mono text-zinc-400">
           <Clock className="h-3 w-3 inline mr-0.5 text-red-400" />
           {task.actualHours || 0}/{task.estimatedHours}h
         </span>
       </div>
 
       {/* Footer Quick Stage Mover & Invoice Button */}
-      <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between" onClick={(e) => e.stopPropagation()}>
+      <div className="pt-2 border-t border-zinc-800/80 flex items-center justify-between" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center space-x-1">
           {task.status !== 'Pending' && (
             <button
@@ -432,7 +432,7 @@ function TaskCard({ task, currency, onView, onEdit, onDelete, onStatusChange, on
                 else if (task.status === 'Awaiting Parts') onStatusChange('In Progress');
                 else if (task.status === 'In Progress') onStatusChange('Pending');
               }}
-              className="p-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800"
+              className="p-1 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white border border-zinc-800"
               title="Move backward"
             >
               <ChevronLeft className="h-3.5 w-3.5" />
@@ -446,7 +446,7 @@ function TaskCard({ task, currency, onView, onEdit, onDelete, onStatusChange, on
                 else if (task.status === 'In Progress') onStatusChange('Awaiting Parts');
                 else if (task.status === 'Awaiting Parts') onStatusChange('Ready for Pickup');
               }}
-              className="p-1 rounded bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800"
+              className="p-1 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white border border-zinc-800"
               title="Advance stage"
             >
               <ChevronRight className="h-3.5 w-3.5" />
@@ -472,14 +472,14 @@ function TaskCard({ task, currency, onView, onEdit, onDelete, onStatusChange, on
 
           <button
             onClick={onEdit}
-            className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-white transition"
+            className="p-1 rounded hover:bg-zinc-800 text-zinc-400 hover:text-white transition"
             title="Edit"
           >
             <Edit3 className="h-3.5 w-3.5" />
           </button>
           <button
             onClick={onDelete}
-            className="p-1 rounded hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition"
+            className="p-1 rounded hover:bg-red-500/20 text-zinc-400 hover:text-red-400 transition"
             title="Delete"
           >
             <Trash2 className="h-3.5 w-3.5" />

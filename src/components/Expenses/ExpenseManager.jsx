@@ -144,7 +144,7 @@ export default function ExpenseManager({
               <h1 className="text-xl sm:text-2xl font-black text-white tracking-wide">
                 Income & Expenditure Manager (Cash Book)
               </h1>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-zinc-400">
                 Record miscellaneous income inflows, parts stock purchases, technician wages, and monitor net profit
               </p>
             </div>
@@ -154,7 +154,7 @@ export default function ExpenseManager({
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={exportCSV}
-            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white text-xs font-bold transition"
+            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white text-xs font-bold transition"
             title="Download CSV financial ledger"
           >
             <Download className="h-4 w-4" />
@@ -185,9 +185,9 @@ export default function ExpenseManager({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         
         {/* Card 1: Total Inflows (Income) */}
-        <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 shadow-xl flex flex-col justify-between">
+        <div className="p-5 rounded-2xl bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 shadow-xl flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">
               Total Inflows (Revenue & Income)
             </span>
             <div className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-400">
@@ -198,23 +198,23 @@ export default function ExpenseManager({
             <div className="text-2xl sm:text-3xl font-black text-emerald-400">
               {formatCurrency(totalAllIncome, currency)}
             </div>
-            <div className="mt-1 flex items-center text-xs text-slate-400">
+            <div className="mt-1 flex items-center text-xs text-zinc-400">
               <span className="text-emerald-400 font-semibold mr-1.5">
                 +{formatCurrency(totalDirectIncome, currency)} Direct Incomes
               </span>
               <span>• {formatCurrency(invoiceCollections, currency)} Invoices</span>
             </div>
           </div>
-          <div className="pt-2.5 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
+          <div className="pt-2.5 border-t border-zinc-800/80 flex items-center justify-between text-[11px] text-zinc-400">
             <span>{directIncomes.length} Direct Inflows Recorded</span>
             <span className="text-emerald-400 font-bold">Money In</span>
           </div>
         </div>
 
         {/* Card 2: Total Outflows (Expenses) */}
-        <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 shadow-xl flex flex-col justify-between">
+        <div className="p-5 rounded-2xl bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 shadow-xl flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">
               Total Outflows (Expenditures)
             </span>
             <div className="p-1.5 rounded-lg bg-rose-500/20 text-rose-400">
@@ -225,20 +225,20 @@ export default function ExpenseManager({
             <div className="text-2xl sm:text-3xl font-black text-rose-400">
               {formatCurrency(totalDirectExpenses, currency)}
             </div>
-            <div className="mt-1 flex items-center text-xs text-slate-400">
+            <div className="mt-1 flex items-center text-xs text-zinc-400">
               <span>Parts stock, mechanic wages & facility bills</span>
             </div>
           </div>
-          <div className="pt-2.5 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
+          <div className="pt-2.5 border-t border-zinc-800/80 flex items-center justify-between text-[11px] text-zinc-400">
             <span>{directExpenses.length} Expense Vouchers</span>
             <span className="text-rose-400 font-bold">Money Out</span>
           </div>
         </div>
 
         {/* Card 3: Net Cash Balance / Operating Profit */}
-        <div className="p-5 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 shadow-xl flex flex-col justify-between">
+        <div className="p-5 rounded-2xl bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 shadow-xl flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">
               Net Operating Profit / Cash Balance
             </span>
             <div className={`p-1.5 rounded-lg ${netCashProfit >= 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`}>
@@ -253,10 +253,10 @@ export default function ExpenseManager({
               <span className={`font-bold px-2 py-0.5 rounded-md ${netCashProfit >= 0 ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'}`}>
                 {marginPercent}% Margin
               </span>
-              <span className="text-slate-400">All Inflows minus Outflows</span>
+              <span className="text-zinc-400">All Inflows minus Outflows</span>
             </div>
           </div>
-          <div className="pt-2.5 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
+          <div className="pt-2.5 border-t border-zinc-800/80 flex items-center justify-between text-[11px] text-zinc-400">
             <span>Index Motors Cash Position</span>
             <span className={netCashProfit >= 0 ? 'text-emerald-400 font-semibold' : 'text-rose-400 font-semibold'}>
               {netCashProfit >= 0 ? 'Profitable' : 'Deficit'}
@@ -267,20 +267,20 @@ export default function ExpenseManager({
       </div>
 
       {/* Filter and Search Controls */}
-      <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-3">
+      <div className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-3">
         
         {/* Row 1: Search + Payment Mode + Date */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           
           {/* Search Input */}
           <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
             <input
               type="text"
               placeholder="Search by title, source, payee, ref no, or job card..."
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-red-500 transition"
+              className="w-full pl-10 pr-4 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-500 text-xs focus:outline-none focus:border-red-500 transition"
             />
           </div>
 
@@ -289,7 +289,7 @@ export default function ExpenseManager({
             <select
               value={selectedPaymentMethod}
               onChange={e => setSelectedPaymentMethod(e.target.value)}
-              className="px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-red-500 transition"
+              className="px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-red-500 transition"
             >
               <option value="All">All Payment Modes</option>
               <option value="Bank Transfer (NEFT/RTGS)">Bank Transfer</option>
@@ -303,7 +303,7 @@ export default function ExpenseManager({
             <select
               value={dateFilter}
               onChange={e => setDateFilter(e.target.value)}
-              className="px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-red-500 transition"
+              className="px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-red-500 transition"
             >
               <option value="all">All Dates</option>
               <option value="this_month">This Month</option>
@@ -314,15 +314,15 @@ export default function ExpenseManager({
         </div>
 
         {/* Row 2: Type Filter Tabs (All / Income / Expense) */}
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800/80">
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-zinc-800/80">
           
-          <div className="flex items-center space-x-1.5 p-1 rounded-xl bg-slate-950 border border-slate-800 text-xs">
+          <div className="flex items-center space-x-1.5 p-1 rounded-xl bg-zinc-950 border border-zinc-800 text-xs">
             <button
               onClick={() => setTypeFilter('all')}
               className={`px-3 py-1 rounded-lg font-bold transition ${
                 typeFilter === 'all' 
                   ? 'bg-red-600 text-white shadow-sm' 
-                  : 'text-slate-400 hover:text-white'
+                  : 'text-zinc-400 hover:text-white'
               }`}
             >
               All Transactions ({expenses.length})
@@ -332,7 +332,7 @@ export default function ExpenseManager({
               className={`px-3 py-1 rounded-lg font-bold flex items-center space-x-1 transition ${
                 typeFilter === 'income' 
                   ? 'bg-emerald-600 text-white shadow-sm' 
-                  : 'text-slate-400 hover:text-emerald-400'
+                  : 'text-zinc-400 hover:text-emerald-400'
               }`}
             >
               <ArrowUpRight className="h-3.5 w-3.5" />
@@ -343,7 +343,7 @@ export default function ExpenseManager({
               className={`px-3 py-1 rounded-lg font-bold flex items-center space-x-1 transition ${
                 typeFilter === 'expense' 
                   ? 'bg-rose-600 text-white shadow-sm' 
-                  : 'text-slate-400 hover:text-rose-400'
+                  : 'text-zinc-400 hover:text-rose-400'
               }`}
             >
               <ArrowDownRight className="h-3.5 w-3.5" />
@@ -353,11 +353,11 @@ export default function ExpenseManager({
 
           {/* Category Dropdown if many categories */}
           <div className="flex items-center space-x-1 text-xs">
-            <span className="text-slate-400">Category:</span>
+            <span className="text-zinc-400">Category:</span>
             <select
               value={selectedCategory}
               onChange={e => setSelectedCategory(e.target.value)}
-              className="px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-300 text-xs focus:outline-none"
+              className="px-2.5 py-1 rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-300 text-xs focus:outline-none"
             >
               {availableCategories.map(c => (
                 <option key={c} value={c}>{c}</option>
@@ -370,11 +370,11 @@ export default function ExpenseManager({
       </div>
 
       {/* Ledger Table */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl shadow-xl overflow-hidden">
         
         {filteredRecords.length === 0 ? (
-          <div className="py-16 text-center text-slate-500 space-y-3">
-            <Receipt className="h-12 w-12 mx-auto text-slate-700 stroke-[1.5]" />
+          <div className="py-16 text-center text-zinc-500 space-y-3">
+            <Receipt className="h-12 w-12 mx-auto text-zinc-700 stroke-[1.5]" />
             <p className="text-sm font-semibold">No transactions match your criteria</p>
             <div className="flex items-center justify-center space-x-2 pt-2">
               <button
@@ -397,7 +397,7 @@ export default function ExpenseManager({
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="border-b border-slate-800 bg-slate-950/60 text-slate-400 font-bold uppercase tracking-wider text-[11px]">
+                <tr className="border-b border-zinc-800 bg-zinc-950/60 text-zinc-400 font-bold uppercase tracking-wider text-[11px]">
                   <th className="py-3 px-4">Date</th>
                   <th className="py-3 px-4">Type</th>
                   <th className="py-3 px-4">Category</th>
@@ -408,14 +408,14 @@ export default function ExpenseManager({
                   <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/80">
+              <tbody className="divide-y divide-zinc-800/80">
                 {filteredRecords.map((item) => {
                   const isIncome = item.type === 'income';
                   return (
-                    <tr key={item.id} className="hover:bg-slate-800/50 transition-colors group">
+                    <tr key={item.id} className="hover:bg-zinc-800/50 transition-colors group">
                       
                       {/* Date */}
-                      <td className="py-3.5 px-4 font-mono text-slate-300 whitespace-nowrap">
+                      <td className="py-3.5 px-4 font-mono text-zinc-300 whitespace-nowrap">
                         {item.date}
                       </td>
 
@@ -432,8 +432,8 @@ export default function ExpenseManager({
                       </td>
 
                       {/* Category */}
-                      <td className="py-3.5 px-4 whitespace-nowrap text-slate-300 font-medium">
-                        <span className="px-2 py-0.5 rounded bg-slate-950 border border-slate-800 text-[10px]">
+                      <td className="py-3.5 px-4 whitespace-nowrap text-zinc-300 font-medium">
+                        <span className="px-2 py-0.5 rounded bg-zinc-950 border border-zinc-800 text-[10px]">
                           {item.category}
                         </span>
                       </td>
@@ -445,12 +445,12 @@ export default function ExpenseManager({
                         }`}>
                           {item.title}
                         </p>
-                        <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-400 mt-0.5">
+                        <div className="flex flex-wrap items-center gap-2 text-[11px] text-zinc-400 mt-0.5">
                           {item.payee && (
                             <span>{isIncome ? 'From:' : 'To:'} <strong>{item.payee}</strong></span>
                           )}
                           {item.linkedTaskOrTruck && (
-                            <span className="px-1.5 py-0.2 rounded bg-slate-800 text-red-400 font-mono text-[10px]">
+                            <span className="px-1.5 py-0.2 rounded bg-zinc-800 text-red-400 font-mono text-[10px]">
                               {item.linkedTaskOrTruck}
                             </span>
                           )}
@@ -460,13 +460,13 @@ export default function ExpenseManager({
 
                       {/* Payment Method */}
                       <td className="py-3.5 px-4 whitespace-nowrap">
-                        <span className="text-slate-300 text-[11px]">
+                        <span className="text-zinc-300 text-[11px]">
                           {item.paymentMethod}
                         </span>
                       </td>
 
                       {/* Reference No */}
-                      <td className="py-3.5 px-4 font-mono text-slate-400 whitespace-nowrap text-[11px]">
+                      <td className="py-3.5 px-4 font-mono text-zinc-400 whitespace-nowrap text-[11px]">
                         {item.referenceNo || '—'}
                       </td>
 
@@ -478,7 +478,7 @@ export default function ExpenseManager({
                           {isIncome ? '+' : '-'} {formatCurrency(item.amount, currency)}
                         </div>
                         {item.taxIncluded && item.taxAmount > 0 && (
-                          <div className="text-[10px] text-slate-400">
+                          <div className="text-[10px] text-zinc-400">
                             18% GST: {formatCurrency(item.taxAmount, currency)}
                           </div>
                         )}
@@ -489,7 +489,7 @@ export default function ExpenseManager({
                         <div className="flex items-center justify-end space-x-1.5">
                           <button
                             onClick={() => onEditExpense(item)}
-                            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition"
+                            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition"
                             title="Edit transaction"
                           >
                             <Edit3 className="h-3.5 w-3.5" />
@@ -513,7 +513,7 @@ export default function ExpenseManager({
         )}
 
         {/* Footer Summary Bar */}
-        <div className="px-4 py-3 bg-slate-950/80 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-2">
+        <div className="px-4 py-3 bg-zinc-950/80 border-t border-zinc-800 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-400 gap-2">
           <span>
             Showing <strong>{filteredRecords.length}</strong> transactions
           </span>

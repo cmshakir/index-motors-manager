@@ -316,11 +316,11 @@ export default function InvoiceModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-5xl shadow-2xl overflow-hidden flex flex-col max-h-[94vh]">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-zinc-950/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-5xl shadow-2xl overflow-hidden flex flex-col max-h-[94vh]">
         
         {/* Header */}
-        <div className="px-6 py-4 bg-slate-950/90 border-b border-slate-800 flex items-center justify-between">
+        <div className="px-6 py-4 bg-zinc-950/90 border-b border-zinc-800 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="h-10 w-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
               <FileText className="h-5 w-5" />
@@ -329,14 +329,14 @@ export default function InvoiceModal({
               <h3 className="text-lg font-black text-white">
                 {invoiceToEdit ? `Edit Invoice: ${formData.invoiceNumber}` : 'Create Commercial Invoice'}
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-zinc-400">
                 Index Motors Dealership & Workshop Accounts Billing
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition"
+            className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition"
           >
             <X className="h-5 w-5" />
           </button>
@@ -346,27 +346,27 @@ export default function InvoiceModal({
         <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-6 flex-1 text-sm">
           
           {/* Top Row: Meta info */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-xl bg-slate-950/70 border border-slate-800">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-xl bg-zinc-950/70 border border-zinc-800">
             <div className="space-y-1">
-              <label className="text-xs font-bold text-slate-300">Invoice Number *</label>
+              <label className="text-xs font-bold text-zinc-300">Invoice Number *</label>
               <input
                 type="text"
                 required
                 value={formData.invoiceNumber}
                 onChange={e => setFormData({ ...formData, invoiceNumber: e.target.value })}
-                className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs font-mono font-bold text-blue-400"
+                className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs font-mono font-bold text-blue-400"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-bold text-slate-300">Invoice Type</label>
+              <label className="text-xs font-bold text-zinc-300">Invoice Type</label>
               <select
                 value={formData.type}
                 onChange={e => {
                   const newType = e.target.value;
                   setFormData(prev => ({ ...prev, type: newType }));
                 }}
-                className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs"
+                className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs"
               >
                 <option value="Workshop Service">Workshop Service & Repairs</option>
                 <option value="Truck Sale (Dealership)">Truck Sale (Dealership)</option>
@@ -375,39 +375,39 @@ export default function InvoiceModal({
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-bold text-slate-300">Issue Date</label>
+              <label className="text-xs font-bold text-zinc-300">Issue Date</label>
               <input
                 type="date"
                 value={formData.issueDate}
                 onChange={e => setFormData({ ...formData, issueDate: e.target.value })}
-                className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs"
+                className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-bold text-slate-300">Due Date</label>
+              <label className="text-xs font-bold text-zinc-300">Due Date</label>
               <input
                 type="date"
                 value={formData.dueDate}
                 onChange={e => setFormData({ ...formData, dueDate: e.target.value })}
-                className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs"
+                className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs"
               />
             </div>
           </div>
 
           {/* Customer & Fleet Details */}
-          <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-4">
+          <div className="p-4 rounded-xl bg-zinc-950/70 border border-zinc-800 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2 text-xs font-bold text-blue-400 uppercase tracking-wide">
                 <User className="h-4 w-4" />
                 <span>Customer & Billing Information</span>
               </div>
               <div className="flex items-center space-x-2">
-                <label className="text-xs text-slate-400">Select Customer:</label>
+                <label className="text-xs text-zinc-400">Select Customer:</label>
                 <select
                   value={formData.customerId || ''}
                   onChange={handleCustomerChange}
-                  className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs"
+                  className="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs"
                 >
                   <option value="">-- Choose Existing Fleet --</option>
                   {customers.map(c => (
@@ -419,76 +419,76 @@ export default function InvoiceModal({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
               <div className="space-y-1 sm:col-span-2">
-                <label className="text-xs text-slate-400">Client / Company Name *</label>
+                <label className="text-xs text-zinc-400">Client / Company Name *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Apex Continental Haulage"
                   value={formData.customerName}
                   onChange={e => setFormData({ ...formData, customerName: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs text-slate-400">Email Address</label>
+                <label className="text-xs text-zinc-400">Email Address</label>
                 <input
                   type="email"
                   placeholder="billing@company.com"
                   value={formData.customerEmail}
                   onChange={e => setFormData({ ...formData, customerEmail: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs text-slate-400">Phone Number</label>
+                <label className="text-xs text-zinc-400">Phone Number</label>
                 <input
                   type="text"
                   placeholder="+1 (555) 000-0000"
                   value={formData.customerPhone}
                   onChange={e => setFormData({ ...formData, customerPhone: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs"
                 />
               </div>
 
               <div className="space-y-1 sm:col-span-3">
-                <label className="text-xs text-slate-400">Billing Address</label>
+                <label className="text-xs text-zinc-400">Billing Address</label>
                 <input
                   type="text"
                   placeholder="Street Address, City, Postal Code"
                   value={formData.billingAddress}
                   onChange={e => setFormData({ ...formData, billingAddress: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs text-slate-400">Tax / VAT ID</label>
+                <label className="text-xs text-zinc-400">Tax / VAT ID</label>
                 <input
                   type="text"
                   placeholder="TAX-XXX-12345"
                   value={formData.taxId}
                   onChange={e => setFormData({ ...formData, taxId: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs font-mono"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs font-mono"
                 />
               </div>
             </div>
           </div>
 
           {/* Truck Information */}
-          <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-3">
+          <div className="p-4 rounded-xl bg-zinc-950/70 border border-zinc-800 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2 text-xs font-bold text-red-500 uppercase tracking-wide">
                 <Truck className="h-4 w-4" />
                 <span>Vehicle / Truck Linked</span>
               </div>
               <div className="flex items-center space-x-2">
-                <label className="text-xs text-slate-400">Attach Vehicle:</label>
+                <label className="text-xs text-zinc-400">Attach Vehicle:</label>
                 <select
                   value={formData.truckId || ''}
                   onChange={handleTruckChange}
-                  className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs"
+                  className="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs"
                 >
                   <option value="">-- Select Truck from Inventory --</option>
                   {trucks.map(t => (
@@ -502,24 +502,24 @@ export default function InvoiceModal({
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="sm:col-span-2 space-y-1">
-                <label className="text-xs text-slate-400">Truck Specs / VIN / Plate</label>
+                <label className="text-xs text-zinc-400">Truck Specs / VIN / Plate</label>
                 <input
                   type="text"
                   placeholder="e.g. Volvo FH16 750 (Plate: APX-8821 / VIN: YV2RT40A5NA819201)"
                   value={formData.truckDetails}
                   onChange={e => setFormData({ ...formData, truckDetails: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs text-slate-400">Odometer Reading (KM)</label>
+                <label className="text-xs text-zinc-400">Odometer Reading (KM)</label>
                 <input
                   type="number"
                   placeholder="e.g. 215400"
                   value={formData.mileage}
                   onChange={e => setFormData({ ...formData, mileage: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs font-mono"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs font-mono"
                 />
               </div>
             </div>
@@ -528,7 +528,7 @@ export default function InvoiceModal({
           {/* Dynamic Line Items Table */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center space-x-1.5">
+              <label className="text-xs font-bold text-zinc-200 uppercase tracking-wider flex items-center space-x-1.5">
                 <Layers className="h-4 w-4 text-blue-400" />
                 <span>Line Items ({formData.items.length})</span>
               </label>
@@ -537,14 +537,14 @@ export default function InvoiceModal({
                 <button
                   type="button"
                   onClick={() => handleAddItem('Labor')}
-                  className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-xs font-bold text-red-400 border border-slate-700"
+                  className="px-2.5 py-1 rounded bg-zinc-800 hover:bg-zinc-700 text-xs font-bold text-red-400 border border-zinc-700"
                 >
                   + Labor
                 </button>
                 <button
                   type="button"
                   onClick={() => handleAddItem('Part')}
-                  className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-xs font-bold text-emerald-400 border border-slate-700"
+                  className="px-2.5 py-1 rounded bg-zinc-800 hover:bg-zinc-700 text-xs font-bold text-emerald-400 border border-zinc-700"
                 >
                   + Part
                 </button>
@@ -552,7 +552,7 @@ export default function InvoiceModal({
                   <button
                     type="button"
                     onClick={() => handleAddItem('Vehicle')}
-                    className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-xs font-bold text-blue-400 border border-slate-700"
+                    className="px-2.5 py-1 rounded bg-zinc-800 hover:bg-zinc-700 text-xs font-bold text-blue-400 border border-zinc-700"
                   >
                     + Vehicle
                   </button>
@@ -560,16 +560,16 @@ export default function InvoiceModal({
                 <button
                   type="button"
                   onClick={() => handleAddItem('Service')}
-                  className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-xs font-bold text-purple-400 border border-slate-700"
+                  className="px-2.5 py-1 rounded bg-zinc-800 hover:bg-zinc-700 text-xs font-bold text-purple-400 border border-zinc-700"
                 >
                   + Fee / Service
                 </button>
               </div>
             </div>
 
-            <div className="overflow-x-auto rounded-xl border border-slate-800">
-              <table className="w-full text-left text-xs text-slate-300">
-                <thead className="bg-slate-950 text-slate-400 uppercase text-[10px] tracking-wider font-bold">
+            <div className="overflow-x-auto rounded-xl border border-zinc-800">
+              <table className="w-full text-left text-xs text-zinc-300">
+                <thead className="bg-zinc-950 text-zinc-400 uppercase text-[10px] tracking-wider font-bold">
                   <tr>
                     <th className="py-2.5 px-3 w-28">Type</th>
                     <th className="py-2.5 px-3">Description / Part Details</th>
@@ -580,14 +580,14 @@ export default function InvoiceModal({
                     <th className="py-2.5 px-3 w-10 text-center"></th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/80 bg-slate-950/40">
+                <tbody className="divide-y divide-zinc-800/80 bg-zinc-950/40">
                   {formData.items.map((item, idx) => (
                     <tr key={item.id || idx}>
                       <td className="py-2 px-3">
                         <select
                           value={item.type}
                           onChange={e => handleUpdateItem(idx, 'type', e.target.value)}
-                          className="w-full px-2 py-1 rounded bg-slate-900 border border-slate-800 text-[11px] text-white"
+                          className="w-full px-2 py-1 rounded bg-zinc-900 border border-zinc-800 text-[11px] text-white"
                         >
                           <option value="Labor">Labor</option>
                           <option value="Part">Part</option>
@@ -603,7 +603,7 @@ export default function InvoiceModal({
                           required
                           value={item.description}
                           onChange={e => handleUpdateItem(idx, 'description', e.target.value)}
-                          className="w-full px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-xs text-white"
+                          className="w-full px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-xs text-white"
                         />
                       </td>
 
@@ -614,7 +614,7 @@ export default function InvoiceModal({
                           min="0.1"
                           value={item.qty}
                           onChange={e => handleUpdateItem(idx, 'qty', e.target.value)}
-                          className="w-full px-2 py-1 rounded bg-slate-900 border border-slate-800 text-xs text-white text-center font-mono"
+                          className="w-full px-2 py-1 rounded bg-zinc-900 border border-zinc-800 text-xs text-white text-center font-mono"
                         />
                       </td>
 
@@ -625,7 +625,7 @@ export default function InvoiceModal({
                           min="0"
                           value={item.unitPrice}
                           onChange={e => handleUpdateItem(idx, 'unitPrice', e.target.value)}
-                          className="w-full px-2 py-1 rounded bg-slate-900 border border-slate-800 text-xs text-white text-right font-mono"
+                          className="w-full px-2 py-1 rounded bg-zinc-900 border border-zinc-800 text-xs text-white text-right font-mono"
                         />
                       </td>
 
@@ -636,7 +636,7 @@ export default function InvoiceModal({
                           min="0"
                           value={item.taxPercent}
                           onChange={e => handleUpdateItem(idx, 'taxPercent', e.target.value)}
-                          className="w-full px-2 py-1 rounded bg-slate-900 border border-slate-800 text-xs text-white text-center font-mono"
+                          className="w-full px-2 py-1 rounded bg-zinc-900 border border-zinc-800 text-xs text-white text-center font-mono"
                         />
                       </td>
 
@@ -649,7 +649,7 @@ export default function InvoiceModal({
                           type="button"
                           onClick={() => handleRemoveItem(idx)}
                           disabled={formData.items.length <= 1}
-                          className="text-slate-500 hover:text-red-400 disabled:opacity-30 disabled:hover:text-slate-500"
+                          className="text-zinc-500 hover:text-red-400 disabled:opacity-30 disabled:hover:text-zinc-500"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -662,15 +662,15 @@ export default function InvoiceModal({
           </div>
 
           {/* Bottom Calculations & Remittance */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-800">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-zinc-800">
             {/* Notes & Payment Terms */}
             <div className="space-y-4">
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-300">Payment Terms</label>
+                <label className="text-xs font-bold text-zinc-300">Payment Terms</label>
                 <select
                   value={formData.paymentTerms}
                   onChange={e => setFormData({ ...formData, paymentTerms: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-xs text-white"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-950 border border-zinc-800 text-xs text-white"
                 >
                   <option value="Due on Receipt">Due on Receipt</option>
                   <option value="Net 15 Days">Net 15 Days (Standard Fleet Credit)</option>
@@ -680,11 +680,11 @@ export default function InvoiceModal({
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-300">Payment Method</label>
+                <label className="text-xs font-bold text-zinc-300">Payment Method</label>
                 <select
                   value={formData.paymentMethod}
                   onChange={e => setFormData({ ...formData, paymentMethod: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-xs text-white"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-950 border border-zinc-800 text-xs text-white"
                 >
                   <option value="Bank Transfer">Wire / Bank Transfer (ACH/SWIFT)</option>
                   <option value="Corporate Cheque">Corporate Cheque</option>
@@ -695,24 +695,24 @@ export default function InvoiceModal({
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-300">Invoice Remarks & Warranty</label>
+                <label className="text-xs font-bold text-zinc-300">Invoice Remarks & Warranty</label>
                 <textarea
                   rows="3"
                   value={formData.notes}
                   onChange={e => setFormData({ ...formData, notes: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-xs text-white placeholder-slate-600"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-950 border border-zinc-800 text-xs text-white placeholder-zinc-600"
                 />
               </div>
             </div>
 
             {/* Calculations Box */}
-            <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2.5">
-              <div className="flex items-center justify-between text-xs text-slate-300">
+            <div className="p-4 rounded-xl bg-zinc-950/80 border border-zinc-800 space-y-2.5">
+              <div className="flex items-center justify-between text-xs text-zinc-300">
                 <span>Subtotal:</span>
                 <span className="font-mono font-bold text-white">{formatCurrency(formData.subtotal, currency)}</span>
               </div>
 
-              <div className="flex items-center justify-between text-xs text-slate-300">
+              <div className="flex items-center justify-between text-xs text-zinc-300">
                 <div className="flex items-center space-x-1.5">
                   <span>Fleet Discount:</span>
                   <input
@@ -725,30 +725,30 @@ export default function InvoiceModal({
                       const disc = Number(e.target.value);
                       setFormData(prev => recalculateTotals({ ...prev, discountPercent: disc }));
                     }}
-                    className="w-14 px-1.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-xs text-center text-white"
+                    className="w-14 px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-700 text-xs text-center text-white"
                   />
                   <span>%</span>
                 </div>
                 <span className="font-mono text-red-400">-{formatCurrency(formData.discountAmount, currency)}</span>
               </div>
 
-              <div className="flex items-center justify-between text-xs text-slate-300">
+              <div className="flex items-center justify-between text-xs text-zinc-300">
                 <span>Estimated Sales Tax / VAT:</span>
                 <span className="font-mono text-white">{formatCurrency(formData.taxAmount, currency)}</span>
               </div>
 
-              <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-sm font-black text-white">
+              <div className="pt-2 border-t border-zinc-800 flex items-center justify-between text-sm font-black text-white">
                 <span>Grand Total:</span>
                 <span className="text-lg font-mono text-blue-400">{formatCurrency(formData.totalAmount, currency)}</span>
               </div>
 
               {/* Paid Amount */}
-              <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-xs text-slate-300">
+              <div className="pt-2 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-300">
                 <div className="flex items-center space-x-2">
                   <span>Amount Paid / Deposit:</span>
                 </div>
                 <div className="flex items-center space-x-1">
-                  <span className="text-slate-400">{currency}</span>
+                  <span className="text-zinc-400">{currency}</span>
                   <input
                     type="number"
                     step="0.01"
@@ -758,12 +758,12 @@ export default function InvoiceModal({
                       const paid = Number(e.target.value);
                       setFormData(prev => recalculateTotals({ ...prev, paidAmount: paid }));
                     }}
-                    className="w-28 px-2 py-1 rounded bg-slate-900 border border-slate-700 text-xs text-right font-mono text-emerald-400 font-bold"
+                    className="w-28 px-2 py-1 rounded bg-zinc-900 border border-zinc-700 text-xs text-right font-mono text-emerald-400 font-bold"
                   />
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-sm font-black">
+              <div className="pt-2 border-t border-zinc-800 flex items-center justify-between text-sm font-black">
                 <span className="text-amber-400">Balance Due:</span>
                 <span className="text-lg font-mono text-amber-400 font-black">
                   {formatCurrency(formData.balanceDue, currency)}
@@ -775,17 +775,17 @@ export default function InvoiceModal({
         </form>
 
         {/* Footer */}
-        <div className="px-6 py-4 bg-slate-950/90 border-t border-slate-800 flex items-center justify-end space-x-3">
+        <div className="px-6 py-4 bg-zinc-950/90 border-t border-zinc-800 flex items-center justify-end space-x-3">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs"
+            className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold text-xs"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
-            className="px-6 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs sm:text-sm shadow-lg shadow-blue-600/25 transition active:scale-95"
+            className="px-6 py-2 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black text-xs sm:text-sm shadow-lg shadow-red-600/25 transition active:scale-95"
           >
             {invoiceToEdit ? 'Save Invoice Changes' : 'Generate & Issue Invoice'}
           </button>

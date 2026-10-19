@@ -44,25 +44,25 @@ export default function TaskDetailsModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-zinc-950/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
         
         {/* Top Header */}
-        <div className="no-print px-6 py-4 bg-slate-950/90 border-b border-slate-800 flex items-center justify-between">
+        <div className="no-print px-6 py-4 bg-zinc-950/90 border-b border-zinc-800 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <span className="font-mono text-sm font-black text-red-400 bg-red-500/10 px-2.5 py-1 rounded border border-red-500/20">
               {task.id}
             </span>
             <div>
               <h3 className="text-base font-black text-white">Workshop Job Card & Work Order</h3>
-              <p className="text-xs text-slate-400">{profile.name} Technical Service Department</p>
+              <p className="text-xs text-zinc-400">{profile.name} Technical Service Department</p>
             </div>
           </div>
 
           <div className="flex items-center space-x-2">
             <button
               onClick={handlePrintJobCard}
-              className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition"
+              className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition"
               title="Print Work Order"
             >
               <Printer className="h-4 w-4" />
@@ -72,14 +72,14 @@ export default function TaskDetailsModal({
                 onClose();
                 onEdit(task);
               }}
-              className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition"
+              className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition"
               title="Edit Job Card"
             >
               <Edit3 className="h-4 w-4" />
             </button>
             <button
               onClick={onClose}
-              className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition"
+              className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition"
             >
               <X className="h-4 w-4" />
             </button>
@@ -87,18 +87,18 @@ export default function TaskDetailsModal({
         </div>
 
         {/* Printable & Visible Job Card Body */}
-        <div className="p-6 overflow-y-auto space-y-6 flex-1 printable-area text-slate-200">
+        <div className="p-6 overflow-y-auto space-y-6 flex-1 printable-area text-zinc-200">
           
           {/* Job Card Title & Badges */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-zinc-800">
             <div>
               <h2 className="text-xl font-black text-white">{task.title}</h2>
-              <div className="flex flex-wrap items-center gap-2 mt-1.5 text-xs text-slate-400">
-                <span className="font-semibold text-slate-300">Category: {task.category}</span>
+              <div className="flex flex-wrap items-center gap-2 mt-1.5 text-xs text-zinc-400">
+                <span className="font-semibold text-zinc-300">Category: {task.category}</span>
                 <span>•</span>
                 <span>Bay: <strong className="text-red-400">{task.bay}</strong></span>
                 <span>•</span>
-                <span>Lead Tech: <strong className="text-slate-200">{task.assignedTech}</strong></span>
+                <span>Lead Tech: <strong className="text-zinc-200">{task.assignedTech}</strong></span>
               </div>
             </div>
 
@@ -114,39 +114,39 @@ export default function TaskDetailsModal({
 
           {/* Truck & Customer Block */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2">
+            <div className="p-4 rounded-xl bg-zinc-950/70 border border-zinc-800 space-y-2">
               <div className="flex items-center space-x-2 text-xs font-bold text-red-500 uppercase tracking-wide">
                 <Truck className="h-4 w-4" />
                 <span>Vehicle Specifications</span>
               </div>
               <div className="text-sm font-bold text-white">{task.truckModel}</div>
-              <div className="grid grid-cols-2 gap-2 text-xs text-slate-300">
+              <div className="grid grid-cols-2 gap-2 text-xs text-zinc-300">
                 <div>
-                  <span className="text-slate-500 block text-[11px]">Plate / Registration:</span>
+                  <span className="text-zinc-500 block text-[11px]">Plate / Registration:</span>
                   <span className="font-mono text-red-300 font-semibold">{task.plate || "Unregistered"}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block text-[11px]">Odometer:</span>
+                  <span className="text-zinc-500 block text-[11px]">Odometer:</span>
                   <span>{task.currentMileage ? `${Number(task.currentMileage).toLocaleString()} KM` : '—'}</span>
                 </div>
                 <div className="col-span-2">
-                  <span className="text-slate-500 block text-[11px]">VIN / Chassis #:</span>
-                  <span className="font-mono text-xs text-slate-300">{task.vin || '—'}</span>
+                  <span className="text-zinc-500 block text-[11px]">VIN / Chassis #:</span>
+                  <span className="font-mono text-xs text-zinc-300">{task.vin || '—'}</span>
                 </div>
               </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2">
+            <div className="p-4 rounded-xl bg-zinc-950/70 border border-zinc-800 space-y-2">
               <div className="flex items-center space-x-2 text-xs font-bold text-blue-400 uppercase tracking-wide">
                 <User className="h-4 w-4" />
                 <span>Customer / Fleet Account</span>
               </div>
               <div className="text-sm font-bold text-white">{task.customerName || "Counter Client"}</div>
-              <div className="space-y-1 text-xs text-slate-300">
-                <p><span className="text-slate-500">Date Logged:</span> {formatDate(task.dateReceived)}</p>
-                <p><span className="text-slate-500">Target Delivery:</span> {formatDate(task.targetDate)}</p>
+              <div className="space-y-1 text-xs text-zinc-300">
+                <p><span className="text-zinc-500">Date Logged:</span> {formatDate(task.dateReceived)}</p>
+                <p><span className="text-zinc-500">Target Delivery:</span> {formatDate(task.targetDate)}</p>
                 <p>
-                  <span className="text-slate-500">Invoice Status:</span>{' '}
+                  <span className="text-zinc-500">Invoice Status:</span>{' '}
                   {task.invoiceId ? (
                     <span className="font-bold text-emerald-400">Linked to {task.invoiceId}</span>
                   ) : (
@@ -159,11 +159,11 @@ export default function TaskDetailsModal({
 
           {/* Diagnostic & Service Description */}
           {task.description && (
-            <div className="p-4 rounded-xl bg-slate-950/40 border border-slate-800 space-y-1.5">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+            <div className="p-4 rounded-xl bg-zinc-950/40 border border-zinc-800 space-y-1.5">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
                 Diagnostic Findings & Service Scope
               </h4>
-              <p className="text-xs text-slate-300 leading-relaxed whitespace-pre-line">
+              <p className="text-xs text-zinc-300 leading-relaxed whitespace-pre-line">
                 {task.description}
               </p>
             </div>
@@ -173,7 +173,7 @@ export default function TaskDetailsModal({
           {task.checklist && task.checklist.length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center space-x-2">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-400 flex items-center space-x-2">
                   <CheckCircle2 className="h-4 w-4 text-emerald-400" />
                   <span>Safety Inspection & Step Checklist ({completedChecks}/{totalChecks})</span>
                 </h4>
@@ -183,7 +183,7 @@ export default function TaskDetailsModal({
               </div>
 
               {/* Progress bar */}
-              <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+              <div className="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
                 <div 
                   className="bg-emerald-500 h-full transition-all duration-300"
                   style={{ width: `${checkProgress}%` }}
@@ -194,15 +194,15 @@ export default function TaskDetailsModal({
                 {task.checklist.map((item, idx) => (
                   <label 
                     key={item.id || idx}
-                    className="flex items-center space-x-3 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800 hover:border-slate-700 cursor-pointer text-xs"
+                    className="flex items-center space-x-3 p-2.5 rounded-lg bg-zinc-950/60 border border-zinc-800 hover:border-zinc-700 cursor-pointer text-xs"
                   >
                     <input
                       type="checkbox"
                       checked={item.completed}
                       onChange={() => onToggleChecklistItem(task.id, idx)}
-                      className="rounded border-slate-700 text-red-600 focus:ring-0 w-4 h-4 bg-slate-900 cursor-pointer"
+                      className="rounded border-zinc-700 text-red-600 focus:ring-0 w-4 h-4 bg-zinc-900 cursor-pointer"
                     />
-                    <span className={item.completed ? 'line-through text-slate-500' : 'text-slate-200 font-medium'}>
+                    <span className={item.completed ? 'line-through text-zinc-500' : 'text-zinc-200 font-medium'}>
                       {item.task}
                     </span>
                   </label>
@@ -214,14 +214,14 @@ export default function TaskDetailsModal({
           {/* Parts Used Table */}
           {task.parts && task.parts.length > 0 && (
             <div className="space-y-3">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center space-x-2">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-400 flex items-center space-x-2">
                 <Wrench className="h-4 w-4 text-red-500" />
                 <span>Commercial Spare Parts & Replaced Components</span>
               </h4>
 
-              <div className="overflow-x-auto rounded-xl border border-slate-800">
-                <table className="w-full text-left text-xs text-slate-300">
-                  <thead className="bg-slate-950 text-slate-400 uppercase text-[10px] tracking-wider font-bold">
+              <div className="overflow-x-auto rounded-xl border border-zinc-800">
+                <table className="w-full text-left text-xs text-zinc-300">
+                  <thead className="bg-zinc-950 text-zinc-400 uppercase text-[10px] tracking-wider font-bold">
                     <tr>
                       <th className="py-2.5 px-3">Part #</th>
                       <th className="py-2.5 px-3">Description</th>
@@ -230,7 +230,7 @@ export default function TaskDetailsModal({
                       <th className="py-2.5 px-3 text-right">Total</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/80 bg-slate-950/40">
+                  <tbody className="divide-y divide-zinc-800/80 bg-zinc-950/40">
                     {task.parts.map((p, idx) => (
                       <tr key={idx}>
                         <td className="py-2.5 px-3 font-mono text-red-400">{p.partNo}</td>
@@ -249,36 +249,36 @@ export default function TaskDetailsModal({
           )}
 
           {/* Workshop Financial & Hours Estimate Summary */}
-          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+          <div className="p-4 rounded-xl bg-zinc-950 border border-zinc-800 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
             <div>
-              <span className="text-[11px] text-slate-400 uppercase tracking-wider block">Labor Hours</span>
+              <span className="text-[11px] text-zinc-400 uppercase tracking-wider block">Labor Hours</span>
               <span className="text-lg font-black text-white font-mono">
                 {task.actualHours || 0} / {task.estimatedHours} hrs
               </span>
-              <span className="text-[11px] text-slate-500 block">@ {formatCurrency(hourlyRate, currency)}/hr</span>
+              <span className="text-[11px] text-zinc-500 block">@ {formatCurrency(hourlyRate, currency)}/hr</span>
             </div>
 
             <div>
-              <span className="text-[11px] text-slate-400 uppercase tracking-wider block">Parts Subtotal</span>
+              <span className="text-[11px] text-zinc-400 uppercase tracking-wider block">Parts Subtotal</span>
               <span className="text-lg font-black text-red-400 font-mono">
                 {formatCurrency(partsCost, currency)}
               </span>
-              <span className="text-[11px] text-slate-500 block">{task.parts?.length || 0} line items</span>
+              <span className="text-[11px] text-zinc-500 block">{task.parts?.length || 0} line items</span>
             </div>
 
             <div>
-              <span className="text-[11px] text-slate-400 uppercase tracking-wider block">Est. Job Total</span>
+              <span className="text-[11px] text-zinc-400 uppercase tracking-wider block">Est. Job Total</span>
               <span className="text-lg font-black text-emerald-400 font-mono">
                 {formatCurrency(estimatedTotal, currency)}
               </span>
-              <span className="text-[11px] text-slate-500 block">Excl. applicable sales tax</span>
+              <span className="text-[11px] text-zinc-500 block">Excl. applicable sales tax</span>
             </div>
           </div>
 
         </div>
 
         {/* Footer Actions */}
-        <div className="no-print px-6 py-4 bg-slate-950/90 border-t border-slate-800 flex items-center justify-between">
+        <div className="no-print px-6 py-4 bg-zinc-950/90 border-t border-zinc-800 flex items-center justify-between">
           <div>
             {!task.invoiceId ? (
               <button
@@ -286,7 +286,7 @@ export default function TaskDetailsModal({
                   onClose();
                   onGenerateInvoice(task);
                 }}
-                className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs sm:text-sm shadow-lg shadow-blue-600/25 transition active:scale-95"
+                className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black text-xs sm:text-sm shadow-lg shadow-red-600/25 transition active:scale-95"
               >
                 <FileText className="h-4 w-4" />
                 <span>Generate Workshop Invoice</span>
@@ -305,7 +305,7 @@ export default function TaskDetailsModal({
                 onClose();
                 onEdit(task);
               }}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs"
+              className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold text-xs"
             >
               Edit Details
             </button>

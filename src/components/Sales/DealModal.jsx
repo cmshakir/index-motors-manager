@@ -206,11 +206,11 @@ export default function DealModal({
                 <span>Buyer / Fleet Account</span>
               </span>
               <div className="flex items-center space-x-2">
-                <label className="text-slate-400">Select Existing Fleet:</label>
+                <label className="text-zinc-400">Select Existing Fleet:</label>
                 <select
                   value={formData.customerId || ''}
                   onChange={handleCustomerSelect}
-                  className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-white"
+                  className="px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-white"
                 >
                   <option value="">-- Choose Account --</option>
                   {customers.map(c => (
@@ -222,36 +222,36 @@ export default function DealModal({
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="space-y-1">
-                <label className="text-slate-400">Company / Fleet Name *</label>
+                <label className="text-zinc-400">Company / Fleet Name *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Nilgiris Inter-Valley Bus Lines"
                   value={formData.customerName}
                   onChange={e => setFormData({ ...formData, customerName: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-slate-400">Contact Person / Decision Maker</label>
+                <label className="text-zinc-400">Contact Person / Decision Maker</label>
                 <input
                   type="text"
                   placeholder="e.g. K. Mohanraj (Director)"
                   value={formData.contactPerson}
                   onChange={e => setFormData({ ...formData, contactPerson: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-slate-400">Phone Number</label>
+                <label className="text-zinc-400">Phone Number</label>
                 <input
                   type="text"
                   placeholder="+91 94432 00000"
                   value={formData.phone}
                   onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white font-mono"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white font-mono"
                 />
               </div>
             </div>
@@ -354,11 +354,11 @@ export default function DealModal({
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="space-y-1">
-                <label className="text-slate-400">Financing Bank / NBFC</label>
+                <label className="text-zinc-400">Financing Bank / NBFC</label>
                 <select
                   value={formData.financePartner}
                   onChange={e => setFormData({ ...formData, financePartner: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white"
                 >
                   <option value="Sundaram Finance Commercial Vehicle Loan">Sundaram Finance</option>
                   <option value="State Bank of India (Commercial Fleet Scheme)">State Bank of India (SBI)</option>
@@ -370,22 +370,22 @@ export default function DealModal({
               </div>
 
               <div className="space-y-1">
-                <label className="text-slate-400">Interest Rate (% p.a.)</label>
+                <label className="text-zinc-400">Interest Rate (% p.a.)</label>
                 <input
                   type="number"
                   step="0.1"
                   value={interestRate}
                   onChange={e => setInterestRate(Number(e.target.value))}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white font-mono"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white font-mono"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-slate-400">Tenure (Months)</label>
+                <label className="text-zinc-400">Tenure (Months)</label>
                 <select
                   value={tenureMonths}
                   onChange={e => setTenureMonths(Number(e.target.value))}
-                  className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white font-mono"
+                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white font-mono"
                 >
                   <option value="36">36 Months (3 Years)</option>
                   <option value="48">48 Months (4 Years)</option>
@@ -395,9 +395,9 @@ export default function DealModal({
             </div>
 
             {/* Calculated EMI Strip */}
-            <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-between">
+            <div className="p-3 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-between">
               <div>
-                <span className="text-[11px] text-slate-400 block">Finance Loan Principal:</span>
+                <span className="text-[11px] text-zinc-400 block">Finance Loan Principal:</span>
                 <span className="font-mono font-bold text-white text-xs">{formatCurrency(loanPrincipal, currency)}</span>
               </div>
               <div className="text-right">
@@ -412,21 +412,21 @@ export default function DealModal({
           {/* Delivery & Sales Executive */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1">
-              <label className="font-bold text-slate-300">Expected Delivery / Handover Date</label>
+              <label className="font-bold text-zinc-300">Expected Delivery / Handover Date</label>
               <input
                 type="date"
                 value={formData.expectedDelivery}
                 onChange={e => setFormData({ ...formData, expectedDelivery: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white"
+                className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="font-bold text-slate-300">Assigned Sales Executive</label>
+              <label className="font-bold text-zinc-300">Assigned Sales Executive</label>
               <select
                 value={formData.salesExecutive}
                 onChange={e => setFormData({ ...formData, salesExecutive: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white"
+                className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white"
               >
                 <option value="Arun Menon">Arun Menon (Sales Manager)</option>
                 <option value="Rajesh K.">Rajesh K. (Director)</option>
@@ -436,7 +436,7 @@ export default function DealModal({
 
           {/* Notes */}
           <div className="space-y-1">
-            <label className="font-bold text-slate-300">Sales Notes & Negotiation History</label>
+            <label className="font-bold text-zinc-300">Sales Notes & Negotiation History</label>
             <textarea
               rows="2"
               placeholder="Financing status, customized body building requirements, route permits, accessories..."

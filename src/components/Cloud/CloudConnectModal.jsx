@@ -178,11 +178,11 @@ export default function CloudConnectModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-fade-in">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-zinc-950/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-fade-in">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
         
         {/* Header */}
-        <div className="px-5 py-4 bg-slate-950/90 border-b border-slate-800 flex items-center justify-between">
+        <div className="px-5 py-4 bg-zinc-950/90 border-b border-zinc-800 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${
               isCloudConnected ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'
@@ -191,12 +191,12 @@ export default function CloudConnectModal({
             </div>
             <div>
               <h3 className="text-base font-black text-white">Multi-Device Cloud Sync (Supabase)</h3>
-              <p className="text-xs text-slate-400">Share workshop jobs, invoices & sales between PC and Mobile</p>
+              <p className="text-xs text-zinc-400">Share workshop jobs, invoices & sales between PC and Mobile</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white"
+            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white"
           >
             <X className="h-5 w-5" />
           </button>
@@ -220,7 +220,7 @@ export default function CloudConnectModal({
               <p className="font-bold text-sm">
                 {isCloudConnected ? 'Cloud Database Connected' : 'Local Storage Mode (Not Synced)'}
               </p>
-              <p className="text-xs text-slate-300 mt-0.5">
+              <p className="text-xs text-zinc-300 mt-0.5">
                 {isCloudConnected 
                   ? 'All devices connected to this database receive updates in real time via WebSockets.'
                   : 'Data entered on this phone is currently saved ONLY on this device. Connect to Supabase to access data from your computer.'}
@@ -229,16 +229,16 @@ export default function CloudConnectModal({
           </div>
 
           {/* Sync explanation card */}
-          <div className="grid grid-cols-2 gap-2 text-center p-3 rounded-xl bg-slate-950 border border-slate-800">
-            <div className="p-2 rounded-lg bg-slate-900 border border-slate-800 flex flex-col items-center">
+          <div className="grid grid-cols-2 gap-2 text-center p-3 rounded-xl bg-zinc-950 border border-zinc-800">
+            <div className="p-2 rounded-lg bg-zinc-900 border border-zinc-800 flex flex-col items-center">
               <Monitor className="h-5 w-5 text-red-400 mb-1" />
               <span className="font-bold text-white text-xs">Office PC</span>
-              <span className="text-[10px] text-slate-400">Admin & Billing</span>
+              <span className="text-[10px] text-zinc-400">Admin & Billing</span>
             </div>
-            <div className="p-2 rounded-lg bg-slate-900 border border-slate-800 flex flex-col items-center">
+            <div className="p-2 rounded-lg bg-zinc-900 border border-zinc-800 flex flex-col items-center">
               <Smartphone className="h-5 w-5 text-emerald-400 mb-1" />
               <span className="font-bold text-white text-xs">Mobile Phone</span>
-              <span className="text-[10px] text-slate-400">Workshop & Sales</span>
+              <span className="text-[10px] text-zinc-400">Workshop & Sales</span>
             </div>
           </div>
 
@@ -259,7 +259,7 @@ export default function CloudConnectModal({
           {/* Credentials Form */}
           <form onSubmit={handleTestAndSave} className="space-y-3">
             <div>
-              <label className="block font-bold text-slate-300 mb-1">
+              <label className="block font-bold text-zinc-300 mb-1">
                 Supabase Project URL
               </label>
               <input
@@ -268,13 +268,13 @@ export default function CloudConnectModal({
                 placeholder="https://xyzcompany.supabase.co"
                 value={url}
                 onChange={e => setUrl(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-red-500 transition text-xs font-mono"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-600 focus:outline-none focus:border-red-500 transition text-xs font-mono"
               />
-              <p className="text-[10px] text-slate-500 mt-1">Found in Supabase: Project Settings ➔ API ➔ Project URL</p>
+              <p className="text-[10px] text-zinc-500 mt-1">Found in Supabase: Project Settings ➔ API ➔ Project URL</p>
             </div>
 
             <div>
-              <label className="block font-bold text-slate-300 mb-1">
+              <label className="block font-bold text-zinc-300 mb-1">
                 Supabase Anon Public API Key
               </label>
               <textarea
@@ -283,9 +283,9 @@ export default function CloudConnectModal({
                 placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                 value={key}
                 onChange={e => setKey(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-red-500 transition text-xs font-mono break-all"
+                className="w-full px-3.5 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white placeholder-zinc-600 focus:outline-none focus:border-red-500 transition text-xs font-mono break-all"
               />
-              <p className="text-[10px] text-slate-500 mt-1">Found in Supabase: Project Settings ➔ API ➔ Project API Keys (anon public)</p>
+              <p className="text-[10px] text-zinc-500 mt-1">Found in Supabase: Project Settings ➔ API ➔ Project API Keys (anon public)</p>
             </div>
 
             <div className="pt-2 flex items-center space-x-2">
@@ -311,7 +311,7 @@ export default function CloudConnectModal({
                 <button
                   type="button"
                   onClick={handleDisconnect}
-                  className="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-red-500/20 text-slate-300 hover:text-red-400 text-xs font-semibold border border-slate-700 transition"
+                  className="py-2.5 px-3 rounded-xl bg-zinc-800 hover:bg-red-500/20 text-zinc-300 hover:text-red-400 text-xs font-semibold border border-zinc-700 transition"
                 >
                   Disconnect
                 </button>
@@ -320,9 +320,9 @@ export default function CloudConnectModal({
           </form>
 
           {/* SQL Setup Helper */}
-          <div className="mt-4 p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
+          <div className="mt-4 p-3.5 rounded-xl bg-zinc-950 border border-zinc-800 space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <span className="font-bold text-slate-200 text-xs">Supabase Database Setup Queries:</span>
+              <span className="font-bold text-zinc-200 text-xs">Supabase Database Setup Queries:</span>
               <div className="flex items-center gap-2">
                 <button
                   type="button"
@@ -346,7 +346,7 @@ export default function CloudConnectModal({
                 <button
                   type="button"
                   onClick={handleCopySql}
-                  className="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-red-400 text-xs font-semibold transition"
+                  className="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-red-400 text-xs font-semibold transition"
                   title="Copy complete 9-table schema"
                 >
                   {copiedSql ? (
@@ -363,7 +363,7 @@ export default function CloudConnectModal({
                 </button>
               </div>
             </div>
-            <p className="text-[11px] text-slate-400 leading-relaxed">
+            <p className="text-[11px] text-zinc-400 leading-relaxed">
               If saving income or expenses fails, click <strong>Copy Expenses Fix SQL</strong> and paste it into your <strong>Supabase Dashboard ➔ SQL Editor ➔ Run</strong>. All tables are created safely with <code className="text-red-400">IF NOT EXISTS</code> without affecting existing data.
             </p>
           </div>
@@ -371,7 +371,7 @@ export default function CloudConnectModal({
         </div>
 
         {/* Footer */}
-        <div className="px-5 py-3 bg-slate-950 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+        <div className="px-5 py-3 bg-zinc-950 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-400">
           <span>INDEX MOTORS • Gudallur Hub</span>
           <a
             href="https://supabase.com/dashboard"

@@ -703,7 +703,7 @@ export default function App() {
     .reduce((sum, i) => sum + (Number(i.paidAmount) || 0), 0);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans">
       
       {/* Top Main Navigation Header */}
       <Header
@@ -1101,7 +1101,7 @@ export default function App() {
               e.stopPropagation();
               setCloudNotice(null);
             }} 
-            className="text-slate-400 hover:text-white ml-1 flex-shrink-0"
+            className="text-zinc-400 hover:text-white ml-1 flex-shrink-0"
           >
             <X className="h-3.5 w-3.5" />
           </button>
