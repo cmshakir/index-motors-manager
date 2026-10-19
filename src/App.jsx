@@ -18,6 +18,7 @@ import SettingsModal from './components/Settings/SettingsModal';
 import SalesManager from './components/Sales/SalesManager';
 import DealModal from './components/Sales/DealModal';
 import LoginScreen from './components/Auth/LoginScreen';
+import CloudConnectModal from './components/Cloud/CloudConnectModal';
 
 import { 
   getInitialAppState, 
@@ -72,6 +73,7 @@ export default function App() {
   const [dealToEdit, setDealToEdit] = useState(null);
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isCloudModalOpen, setIsCloudModalOpen] = useState(false);
 
   // Sync to localStorage
   useEffect(() => {
@@ -586,6 +588,7 @@ export default function App() {
         activeTab={activeTab}
         isSyncing={isSyncing}
         onRefreshCloud={refreshFromCloud}
+        onOpenCloudModal={() => setIsCloudModalOpen(true)}
         stats={{
           activeTasksCount,
           pendingInvoicesAmount,
@@ -899,6 +902,8 @@ export default function App() {
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
         profile={appState.profile}
+        isCloudConnected={isSupabaseConfigured()}
+        onOpenCloudModal={() => setIsCloudModalOpen(true)}
         onSaveProfile={(updatedProfile) => {
           setAppState(prev => ({ ...prev, profile: updatedProfile }));
           upsertCloudRecord('profile', 'main', updatedProfile);
@@ -918,11 +923,20 @@ export default function App() {
         trucksCount={appState.trucks?.length || 0}
         customersCount={appState.customers?.length || 0}
         onOpenSettings={() => setIsSettingsOpen(true)}
+        onOpenCloudModal={() => setIsCloudModalOpen(true)}
         onLogout={handleLogout}
         currentUser={currentUser}
         isCloudConnected={isSupabaseConfigured()}
         isSyncing={isSyncing}
         onRefreshCloud={refreshFromCloud}
+      />
+
+      {/* 10. Multi-Device Cloud Database Setup Modal */}
+      <CloudConnectModal
+        isOpen={isCloudModalOpen}
+        onClose={() => setIsCloudModalOpen(false)}
+        isCloudConnected={isSupabaseConfigured()}
+        onConnected={refreshFromCloud}
       />
 
     </div>

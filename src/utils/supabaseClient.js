@@ -1,35 +1,111 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Retrieve credentials from Vite env or user-saved localStorage
+export const getCloudCredentials = () => {
+  const envUrl = import.meta.env.VITE_SUPABASE_URL;
+  const envKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  if (envUrl && envKey && envUrl.startsWith('https://') && !envUrl.includes('your-project-id')) {
+    return { url: envUrl, key: envKey, source: 'env' };
+  }
 
-export const isSupabaseConfigured = () => {
-  return Boolean(
-    supabaseUrl && 
-    supabaseAnonKey && 
-    supabaseUrl.startsWith('https://') &&
-    !supabaseUrl.includes('your-project-id')
-  );
+  try {
+    const localUrl = localStorage.getItem('index_motors_supabase_url');
+    const localKey = localStorage.getItem('index_motors_supabase_key');
+    if (localUrl && localKey && localUrl.startsWith('https://')) {
+      return { url: localUrl, key: localKey, source: 'local' };
+    }
+  } catch (e) {
+    // ignore
+  }
+
+  return { url: null, key: null, source: null };
 };
 
-export const supabase = isSupabaseConfigured()
-  ? createClient(supabaseUrl, supabaseAnonKey, {
+export const saveCloudCredentials = (url, key) => {
+  localStorage.setItem('index_motors_supabase_url', url.trim());
+  localStorage.setItem('index_motors_supabase_key', key.trim());
+  supabase = initSupabaseClient();
+  return supabase;
+};
+
+export const clearCloudCredentials = () => {
+  localStorage.removeItem('index_motors_supabase_url');
+  localStorage.removeItem('index_motors_supabase_key');
+  supabase = initSupabaseClient();
+};
+
+export const isSupabaseConfigured = () => {
+  const { url, key } = getCloudCredentials();
+  return Boolean(url && key);
+};
+
+export const initSupabaseClient = () => {
+  const { url, key } = getCloudCredentials();
+  if (!url || !key) return null;
+  try {
+    return createClient(url, key, {
       realtime: {
         params: {
           eventsPerSecond: 10,
         },
       },
-    })
-  : null;
+      auth: {
+        persistSession: false,
+      },
+    });
+  } catch (e) {
+    console.warn('Failed to initialize Supabase client:', e);
+    return null;
+  }
+};
+
+export let supabase = initSupabaseClient();
 
 /**
- * Fetch all records for a table from Supabase.
- * Returns null if Supabase is not configured or if query fails.
+ * Test connectivity and table existence with provided or active credentials.
+ */
+export const testCloudConnection = async (testUrl, testKey) => {
+  const url = testUrl || getCloudCredentials().url;
+  const key = testKey || getCloudCredentials().key;
+
+  if (!url || !key) {
+    return { success: false, error: 'Supabase URL and Anon Key are required.' };
+  }
+
+  try {
+    const client = createClient(url, key, { auth: { persistSession: false } });
+    const { data, error } = await client.from('tasks').select('id').limit(1);
+
+    if (error) {
+      if (error.code === '42P01' || error.message?.toLowerCase().includes('does not exist')) {
+        return { 
+          success: false, 
+          error: 'Connected to Supabase, but tables are missing! Please run the SQL query from supabase_schema.sql in Supabase SQL Editor.' 
+        };
+      }
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, count: data?.length || 0 };
+  } catch (err) {
+    return { success: false, error: err.message || 'Network connection failed' };
+  }
+};
+
+/**
+ * Fetch all records for a table from Supabase with a 7-second timeout.
  */
 export const fetchCloudTable = async (tableName) => {
   if (!supabase) return null;
   try {
-    const { data, error } = await supabase.from(tableName).select('*');
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error(`Timeout fetching ${tableName}`)), 7000)
+    );
+
+    const fetchPromise = supabase.from(tableName).select('*');
+    const response = await Promise.race([fetchPromise, timeoutPromise]);
+    const { data, error } = response;
+
     if (error) {
       console.warn(`Supabase fetch failed for ${tableName}:`, error.message);
       return null;
@@ -37,7 +113,7 @@ export const fetchCloudTable = async (tableName) => {
     // Unwrap JSON fields if stored as JSONB rows
     return data.map(row => (row.data ? { ...row.data, id: row.id } : row));
   } catch (err) {
-    console.warn(`Supabase network error on ${tableName}:`, err);
+    console.warn(`Supabase network error on ${tableName}:`, err.message || err);
     return null;
   }
 };
@@ -85,7 +161,6 @@ export const deleteCloudRecord = async (tableName, id) => {
 
 /**
  * Real-time listener: Subscribe to database changes across all other devices.
- * Calls onDataChange callback whenever any device inserts, updates, or deletes.
  */
 export const subscribeToCloudChanges = (onDataChange) => {
   if (!supabase) return () => {};
@@ -96,22 +171,23 @@ export const subscribeToCloudChanges = (onDataChange) => {
       'postgres_changes',
       { event: '*', schema: 'public' },
       (payload) => {
-        console.log(`[Realtime Sync] Change detected in ${payload.table} from another device:`, payload);
+        console.log(`[Realtime Sync] Change in ${payload.table}:`, payload);
         onDataChange(payload);
       }
     )
-    .subscribe((status) => {
-      console.log('[Realtime Sync Status]:', status);
-    });
+    .subscribe();
 
   return () => {
-    supabase.removeChannel(channel);
+    try {
+      supabase.removeChannel(channel);
+    } catch (e) {
+      // ignore
+    }
   };
 };
 
 /**
- * Automatically seeds the cloud database if tables are empty.
- * Ensures the first device to connect populates the database so any other device gets full data.
+ * Fast batch seeding: Populates cloud database in 1 single HTTP request per table.
  */
 export const seedCloudIfEmpty = async (state) => {
   if (!supabase) return;
@@ -123,29 +199,24 @@ export const seedCloudIfEmpty = async (state) => {
     }
 
     if (!existingTasks || existingTasks.length === 0) {
-      console.log('Cloud database is empty. Auto-seeding initial data to Supabase...');
-      if (state.tasks?.length) {
-        for (const t of state.tasks) await upsertCloudRecord('tasks', t.id, t);
-      }
-      if (state.invoices?.length) {
-        for (const i of state.invoices) await upsertCloudRecord('invoices', i.id, i);
-      }
-      if (state.sales?.length) {
-        for (const s of state.sales) await upsertCloudRecord('sales', s.id, s);
-      }
-      if (state.trucks?.length) {
-        for (const trk of state.trucks) await upsertCloudRecord('trucks', trk.id, trk);
-      }
-      if (state.customers?.length) {
-        for (const c of state.customers) await upsertCloudRecord('customers', c.id, c);
-      }
-      if (state.technicians?.length) {
-        for (const tech of state.technicians) await upsertCloudRecord('technicians', tech.id, tech);
-      }
-      if (state.profile) {
-        await upsertCloudRecord('profile', 'main', state.profile);
-      }
-      console.log('Cloud database auto-seed complete!');
+      console.log('Cloud database is empty. Fast batch-seeding initial data to Supabase...');
+      
+      const prepareBatch = (items) => (items || []).map(item => ({
+        id: String(item.id),
+        data: item,
+        updated_at: new Date().toISOString()
+      }));
+
+      await Promise.allSettled([
+        state.tasks?.length ? supabase.from('tasks').upsert(prepareBatch(state.tasks)) : null,
+        state.invoices?.length ? supabase.from('invoices').upsert(prepareBatch(state.invoices)) : null,
+        state.sales?.length ? supabase.from('sales').upsert(prepareBatch(state.sales)) : null,
+        state.trucks?.length ? supabase.from('trucks').upsert(prepareBatch(state.trucks)) : null,
+        state.customers?.length ? supabase.from('customers').upsert(prepareBatch(state.customers)) : null,
+        state.technicians?.length ? supabase.from('technicians').upsert(prepareBatch(state.technicians)) : null,
+        state.profile ? supabase.from('profile').upsert({ id: 'main', data: state.profile, updated_at: new Date().toISOString() }) : null,
+      ]);
+      console.log('Batch seeding complete!');
     }
   } catch (err) {
     console.warn('Auto-seed check failed:', err);

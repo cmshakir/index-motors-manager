@@ -24,6 +24,7 @@ export default function BottomNav({
   trucksCount = 0,
   customersCount = 0,
   onOpenSettings,
+  onOpenCloudModal,
   onLogout,
   currentUser,
   isCloudConnected = false,
@@ -132,17 +133,24 @@ export default function BottomNav({
 
             {/* Cloud Status Banner in Mobile Drawer */}
             <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
-              <div className="flex items-center space-x-2.5">
-                <div className={`w-2.5 h-2.5 rounded-full ${isCloudConnected ? 'bg-emerald-400 animate-pulse' : 'bg-blue-400'}`}></div>
+              <button
+                onClick={() => {
+                  setIsDrawerOpen(false);
+                  if (onOpenCloudModal) onOpenCloudModal();
+                }}
+                className="flex items-center space-x-2.5 text-left flex-1 hover:opacity-90 transition mr-2"
+              >
+                <div className={`w-2.5 h-2.5 rounded-full ${isCloudConnected ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`}></div>
                 <div>
-                  <p className="text-xs font-bold text-white">
-                    {isCloudConnected ? 'Cloud DB Active (Supabase)' : 'Local Storage Mode'}
+                  <p className="text-xs font-bold text-white flex items-center space-x-1">
+                    <span>{isCloudConnected ? 'Cloud DB Active (Supabase)' : 'Local Storage Mode'}</span>
+                    <span className="text-[10px] text-amber-400 font-medium underline">(Configure)</span>
                   </p>
                   <p className="text-[10px] text-slate-400">
-                    {isCloudConnected ? 'Changes sync live across all devices' : 'Data is saved on this device only'}
+                    {isCloudConnected ? 'Changes sync live across all devices' : 'Tap to connect & sync with computer'}
                   </p>
                 </div>
-              </div>
+              </button>
               {isCloudConnected && (
                 <button
                   onClick={onRefreshCloud}

@@ -21,6 +21,7 @@ export default function Header({
   onNewSale,
   onOpenSettings,
   onRefreshCloud,
+  onOpenCloudModal,
   isSyncing = false,
   activeTab,
   stats
@@ -43,22 +44,32 @@ export default function Header({
                 
                 {/* Status indicator on all screen sizes */}
                 {stats?.isCloudConnected ? (
-                  <button
-                    onClick={onRefreshCloud}
-                    className="flex items-center space-x-1 px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold hover:bg-emerald-500/25 transition"
-                    title="Supabase Cloud DB Connected - Click to Refresh"
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span>Cloud</span>
-                    <RefreshCw className={`h-2.5 w-2.5 ml-0.5 ${isSyncing ? 'animate-spin' : ''}`} />
-                  </button>
+                  <div className="flex items-center space-x-1">
+                    <button
+                      onClick={onOpenCloudModal}
+                      className="flex items-center space-x-1 px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold hover:bg-emerald-500/25 transition"
+                      title="Cloud Connected - Click to view status or settings"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                      <span>Cloud</span>
+                    </button>
+                    <button
+                      onClick={onRefreshCloud}
+                      className="p-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-emerald-400 transition"
+                      title="Sync now"
+                    >
+                      <RefreshCw className={`h-2.5 w-2.5 ${isSyncing ? 'animate-spin text-emerald-400' : ''}`} />
+                    </button>
+                  </div>
                 ) : (
-                  <span 
-                    className="px-2 py-0.5 rounded-full bg-blue-500/15 border border-blue-500/30 text-blue-400 text-[10px] font-bold"
-                    title="Running in local browser storage mode"
+                  <button 
+                    onClick={onOpenCloudModal}
+                    className="flex items-center space-x-1 px-2 py-0.5 rounded-full bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 text-[10px] font-bold transition animate-pulse"
+                    title="Running in local mode - Click to connect cloud database"
                   >
-                    Local
-                  </span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                    <span>Local (Sync)</span>
+                  </button>
                 )}
 
                 <span className="hidden md:inline px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded">
@@ -73,21 +84,25 @@ export default function Header({
 
           {/* Center Quick Stats Badge */}
           <div className="hidden lg:flex items-center space-x-4 bg-slate-950/60 px-4 py-2 rounded-xl border border-slate-800">
-            <div className="flex items-center space-x-2">
-              <div className={`w-2.5 h-2.5 rounded-full ${stats?.isCloudConnected ? 'bg-emerald-400 animate-pulse' : 'bg-blue-400'}`}></div>
+            <button
+              onClick={onOpenCloudModal}
+              className="flex items-center space-x-2 hover:opacity-80 transition cursor-pointer"
+              title="Click to manage cloud database connection"
+            >
+              <div className={`w-2.5 h-2.5 rounded-full ${stats?.isCloudConnected ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'}`}></div>
               <span className="text-[11px] font-semibold text-slate-300">
-                {stats?.isCloudConnected ? 'Cloud DB Connected (Supabase)' : 'Local Storage Mode'}
+                {stats?.isCloudConnected ? 'Cloud DB Connected (Supabase)' : 'Local Storage Mode (Click to Connect)'}
               </span>
-              {stats?.isCloudConnected && (
-                <button
-                  onClick={onRefreshCloud}
-                  className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-emerald-400 transition ml-1"
-                  title="Sync with cloud database"
-                >
-                  <RefreshCw className={`h-3 w-3 ${isSyncing ? 'animate-spin text-emerald-400' : ''}`} />
-                </button>
-              )}
-            </div>
+            </button>
+            {stats?.isCloudConnected && (
+              <button
+                onClick={onRefreshCloud}
+                className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-emerald-400 transition"
+                title="Sync with cloud database"
+              >
+                <RefreshCw className={`h-3 w-3 ${isSyncing ? 'animate-spin text-emerald-400' : ''}`} />
+              </button>
+            )}
             <div className="h-4 w-px bg-slate-800"></div>
             <div className="flex items-center space-x-2">
               <span className="text-xs text-slate-400">Workshop:</span>

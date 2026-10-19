@@ -9,7 +9,8 @@ import {
   Upload, 
   RotateCcw, 
   CheckCircle, 
-  AlertTriangle 
+  AlertTriangle,
+  Cloud 
 } from 'lucide-react';
 import { exportAllDataJSON, importAllDataJSON, resetToDefaults } from '../../utils/storage';
 
@@ -18,7 +19,9 @@ export default function SettingsModal({
   onClose,
   profile,
   onSaveProfile,
-  onResetData
+  onResetData,
+  onOpenCloudModal,
+  isCloudConnected
 }) {
   if (!isOpen) return null;
 
@@ -256,6 +259,39 @@ export default function SettingsModal({
                   className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono"
                 />
               </div>
+            </div>
+          </div>
+
+          {/* Cloud Database & Multi-Device Sync */}
+          <div className="space-y-3 pt-3 border-t border-slate-800">
+            <div className="flex items-center justify-between">
+              <h4 className="font-black text-white uppercase tracking-wider text-xs flex items-center space-x-1.5">
+                <Cloud className="h-4 w-4 text-amber-400" />
+                <span>Cloud Database & Multi-Device Sync</span>
+              </h4>
+              <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                isCloudConnected ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+              }`}>
+                {isCloudConnected ? 'Cloud Active' : 'Offline / Local'}
+              </span>
+            </div>
+
+            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="font-bold text-slate-200">Supabase Cloud PostgreSQL Connection</p>
+                <p className="text-slate-400 text-[11px]">Sync workshop jobs, invoices & truck deals across mobile and computer.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  if (onOpenCloudModal) onOpenCloudModal();
+                }}
+                className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition shadow-md shadow-amber-500/20"
+              >
+                <Cloud className="h-3.5 w-3.5" />
+                <span>Configure Cloud Sync</span>
+              </button>
             </div>
           </div>
 
