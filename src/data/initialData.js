@@ -43,10 +43,10 @@ export const initialTechnicians = [
 export const initialUsers = [
   {
     id: "USR-ADMIN",
-    username: "shakir",
+    username: "admin",
     name: "Shakir CM",
     email: "shakir@indexmotors.online",
-    password: "admin",
+    password: "Sha@2026",
     role: "Dealership Owner & Managing Director",
     permissions: ["all"],
     avatar: "SC",

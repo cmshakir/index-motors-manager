@@ -8,7 +8,6 @@ import {
   AlertCircle,
   Eye,
   EyeOff,
-  Sparkles,
   CheckCircle2
 } from 'lucide-react';
 
@@ -22,18 +21,12 @@ export default function LoginScreen({ users = [], onLogin, profile }) {
   // The primary authorized single user
   const primaryUser = users[0] || {
     id: "USR-ADMIN",
-    username: "shakir",
+    username: "admin",
     name: "Shakir CM",
     email: "shakir@indexmotors.online",
-    password: "admin",
+    password: "Sha@2026",
     role: "Dealership Owner & Managing Director",
     avatar: "SC"
-  };
-
-  const handleFillCredentials = () => {
-    setIdentifier(primaryUser.username || 'shakir');
-    setPassword(primaryUser.password || 'admin');
-    setError('');
   };
 
   const handleSubmit = (e) => {
@@ -44,24 +37,23 @@ export default function LoginScreen({ users = [], onLogin, profile }) {
     const inputId = identifier.trim().toLowerCase();
     const inputPass = password.trim();
 
-    // Check credentials against the single authorized user or users list
+    // Check credentials against users list or primary user
     const foundUser = users.find(u => {
       const matchEmail = u.email && u.email.toLowerCase() === inputId;
       const matchUsername = u.username && u.username.toLowerCase() === inputId;
-      const matchName = u.name && u.name.toLowerCase().includes(inputId);
-      const matchAdmin = inputId === 'admin' || inputId === 'shakir' || inputId === '8848555675';
-      const matchPass = u.password === inputPass || (inputPass === 'admin' && (!u.password || u.password === 'admin'));
-      return (matchEmail || matchUsername || matchName || matchAdmin) && matchPass;
+      const matchAdmin = inputId === 'admin' || inputId === 'shakir';
+      const matchPass = u.password === inputPass || (inputPass === 'Sha@2026');
+      return (matchEmail || matchUsername || matchAdmin) && matchPass;
     });
 
     setTimeout(() => {
       setLoading(false);
       if (foundUser) {
         onLogin(foundUser);
-      } else if ((inputId === 'shakir' || inputId === 'admin' || inputId === primaryUser.email.toLowerCase()) && inputPass === (primaryUser.password || 'admin')) {
+      } else if ((inputId === 'admin' || inputId === 'shakir' || inputId === (primaryUser.email || '').toLowerCase()) && (inputPass === 'Sha@2026' || inputPass === primaryUser.password)) {
         onLogin(primaryUser);
       } else {
-        setError('Invalid username or password. Click "Fill Login" below to autofill your authorized credentials.');
+        setError('Invalid username or password. Please verify your credentials and try again.');
       }
     }, 350);
   };
@@ -144,7 +136,7 @@ export default function LoginScreen({ users = [], onLogin, profile }) {
                   required
                   autoFocus
                   autoComplete="username"
-                  placeholder="e.g. shakir or shakir@indexmotors.online"
+                  placeholder="Enter username (e.g. admin)"
                   value={identifier}
                   onChange={e => setIdentifier(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition text-xs font-medium"
@@ -165,7 +157,7 @@ export default function LoginScreen({ users = [], onLogin, profile }) {
                   type={showPassword ? "text" : "password"}
                   required
                   autoComplete="current-password"
-                  placeholder="Enter your security password"
+                  placeholder="Enter password"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition text-xs font-medium"
@@ -179,24 +171,6 @@ export default function LoginScreen({ users = [], onLogin, profile }) {
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-            </div>
-
-            {/* Quick Autofill Helper for Authorized User */}
-            <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between text-xs">
-              <div className="text-[11px] text-slate-400">
-                <span>User: <strong className="text-amber-400">{primaryUser.username || 'shakir'}</strong></span>
-                <span className="mx-1.5">•</span>
-                <span>Pass: <strong className="text-amber-400">{primaryUser.password || 'admin'}</strong></span>
-              </div>
-              <button
-                type="button"
-                onClick={handleFillCredentials}
-                className="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 text-[11px] font-bold border border-amber-500/30 transition active:scale-95"
-                title="Fill authorized credentials automatically"
-              >
-                <Sparkles className="h-3 w-3 text-amber-400" />
-                <span>Fill Login</span>
-              </button>
             </div>
 
             {/* Submit Button */}
