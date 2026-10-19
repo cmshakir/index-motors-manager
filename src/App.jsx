@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
+import BottomNav from './components/BottomNav';
 import Dashboard from './components/Dashboard/Dashboard';
 import TaskManager from './components/Tasks/TaskManager';
 import TaskModal from './components/Tasks/TaskModal';
@@ -627,7 +628,7 @@ export default function App() {
         />
 
         {/* Dynamic Main Workspace Tab */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 pb-24 md:pb-8">
           <div className="max-w-7xl mx-auto">
             {activeTab === 'dashboard' && (
               <Dashboard
@@ -905,6 +906,23 @@ export default function App() {
         onResetData={(resetState) => {
           setAppState(resetState);
         }}
+      />
+
+      {/* 9. Mobile Bottom Navigation Bar & Drawer */}
+      <BottomNav
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        salesCount={appState.sales?.length || 0}
+        tasksCount={appState.tasks?.length || 0}
+        invoicesCount={appState.invoices?.length || 0}
+        trucksCount={appState.trucks?.length || 0}
+        customersCount={appState.customers?.length || 0}
+        onOpenSettings={() => setIsSettingsOpen(true)}
+        onLogout={handleLogout}
+        currentUser={currentUser}
+        isCloudConnected={isSupabaseConfigured()}
+        isSyncing={isSyncing}
+        onRefreshCloud={refreshFromCloud}
       />
 
     </div>
