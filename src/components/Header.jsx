@@ -7,7 +7,8 @@ import {
   LogOut,
   TrendingUp,
   User,
-  ShieldCheck
+  ShieldCheck,
+  RefreshCw
 } from 'lucide-react';
 import { formatCurrency } from '../utils/formatters';
 
@@ -19,6 +20,8 @@ export default function Header({
   onNewInvoice, 
   onNewSale,
   onOpenSettings,
+  onRefreshCloud,
+  isSyncing = false,
   activeTab,
   stats
 }) {
@@ -54,6 +57,15 @@ export default function Header({
               <span className="text-[11px] font-semibold text-slate-300">
                 {stats?.isCloudConnected ? 'Cloud DB Connected (Supabase)' : 'Local Storage Mode'}
               </span>
+              {stats?.isCloudConnected && (
+                <button
+                  onClick={onRefreshCloud}
+                  className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-emerald-400 transition ml-1"
+                  title="Sync with cloud database"
+                >
+                  <RefreshCw className={`h-3 w-3 ${isSyncing ? 'animate-spin text-emerald-400' : ''}`} />
+                </button>
+              )}
             </div>
             <div className="h-4 w-px bg-slate-800"></div>
             <div className="flex items-center space-x-2">

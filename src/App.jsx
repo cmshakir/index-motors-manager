@@ -27,7 +27,9 @@ import {
   isSupabaseConfigured, 
   fetchCloudTable, 
   upsertCloudRecord, 
-  deleteCloudRecord 
+  deleteCloudRecord,
+  subscribeToCloudChanges,
+  seedCloudIfEmpty
 } from './utils/supabaseClient';
 import { 
   LayoutDashboard, 
@@ -43,6 +45,7 @@ export default function App() {
   const [appState, setAppState] = useState(() => getInitialAppState());
   const [currentUser, setCurrentUser] = useState(() => appState.currentUser || appState.users[0]);
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [isSyncing, setIsSyncing] = useState(false);
 
   // Modal States
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
@@ -106,36 +109,89 @@ export default function App() {
     saveToStorage(STORAGE_KEYS.CURRENT_USER, currentUser);
   }, [currentUser]);
 
-  // Background Cloud Database Synchronization (Supabase)
+  // Manual & automatic cloud sync function
+  const refreshFromCloud = async () => {
+    if (!isSupabaseConfigured()) return;
+    setIsSyncing(true);
+    try {
+      // Auto-seed cloud database if tables are empty
+      await seedCloudIfEmpty(appState);
+
+      const [cloudTasks, cloudInvoices, cloudSales, cloudTrucks, cloudCustomers, cloudTechs, cloudUsers] = await Promise.all([
+        fetchCloudTable('tasks'),
+        fetchCloudTable('invoices'),
+        fetchCloudTable('sales'),
+        fetchCloudTable('trucks'),
+        fetchCloudTable('customers'),
+        fetchCloudTable('technicians'),
+        fetchCloudTable('users')
+      ]);
+
+      setAppState(prev => ({
+        ...prev,
+        tasks: (cloudTasks && cloudTasks.length > 0) ? cloudTasks : prev.tasks,
+        invoices: (cloudInvoices && cloudInvoices.length > 0) ? cloudInvoices : prev.invoices,
+        sales: (cloudSales && cloudSales.length > 0) ? cloudSales : prev.sales,
+        trucks: (cloudTrucks && cloudTrucks.length > 0) ? cloudTrucks : prev.trucks,
+        customers: (cloudCustomers && cloudCustomers.length > 0) ? cloudCustomers : prev.customers,
+        technicians: (cloudTechs && cloudTechs.length > 0) ? cloudTechs : prev.technicians,
+        users: (cloudUsers && cloudUsers.length > 0) ? cloudUsers : prev.users,
+      }));
+    } catch (e) {
+      console.warn('Cloud sync error:', e);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
+  // Background Cloud Database Synchronization + Realtime WebSocket listener
   useEffect(() => {
     if (!isSupabaseConfigured()) return;
 
-    const loadCloudData = async () => {
-      try {
-        const [cloudTasks, cloudInvoices, cloudSales, cloudTrucks, cloudCustomers, cloudTechs] = await Promise.all([
-          fetchCloudTable('tasks'),
-          fetchCloudTable('invoices'),
-          fetchCloudTable('sales'),
-          fetchCloudTable('trucks'),
-          fetchCloudTable('customers'),
-          fetchCloudTable('technicians')
-        ]);
+    // Initial fetch from cloud
+    refreshFromCloud();
 
-        setAppState(prev => ({
-          ...prev,
-          tasks: (cloudTasks && cloudTasks.length > 0) ? cloudTasks : prev.tasks,
-          invoices: (cloudInvoices && cloudInvoices.length > 0) ? cloudInvoices : prev.invoices,
-          sales: (cloudSales && cloudSales.length > 0) ? cloudSales : prev.sales,
-          trucks: (cloudTrucks && cloudTrucks.length > 0) ? cloudTrucks : prev.trucks,
-          customers: (cloudCustomers && cloudCustomers.length > 0) ? cloudCustomers : prev.customers,
-          technicians: (cloudTechs && cloudTechs.length > 0) ? cloudTechs : prev.technicians,
-        }));
-      } catch (e) {
-        console.warn('Cloud sync error:', e);
-      }
+    // Subscribe to realtime changes from any other device
+    const unsubscribe = subscribeToCloudChanges((payload) => {
+      const { table, eventType, new: newRecord, old: oldRecord } = payload;
+      const unwrapData = (r) => (r?.data ? { ...r.data, id: r.id } : r);
+
+      setAppState(prev => {
+        const tableKey = table;
+        if (!prev[tableKey] || !Array.isArray(prev[tableKey])) return prev;
+
+        const currentList = prev[tableKey];
+        if (eventType === 'INSERT') {
+          const item = unwrapData(newRecord);
+          if (currentList.some(i => i.id === item.id)) {
+            return {
+              ...prev,
+              [tableKey]: currentList.map(i => i.id === item.id ? item : i)
+            };
+          }
+          return {
+            ...prev,
+            [tableKey]: [item, ...currentList]
+          };
+        } else if (eventType === 'UPDATE') {
+          const item = unwrapData(newRecord);
+          return {
+            ...prev,
+            [tableKey]: currentList.map(i => i.id === item.id ? item : i)
+          };
+        } else if (eventType === 'DELETE') {
+          return {
+            ...prev,
+            [tableKey]: currentList.filter(i => i.id !== oldRecord?.id)
+          };
+        }
+        return prev;
+      });
+    });
+
+    return () => {
+      if (typeof unsubscribe === 'function') unsubscribe();
     };
-
-    loadCloudData();
   }, []);
 
   // Auth Handlers
@@ -178,13 +234,24 @@ export default function App() {
   };
 
   const handleUpdateTaskStatus = (taskId, newStatus) => {
-    setAppState(prev => ({
-      ...prev,
-      tasks: prev.tasks.map(t => t.id === taskId ? { ...t, status: newStatus } : t)
-    }));
+    let updated = null;
+    setAppState(prev => {
+      const updatedTasks = prev.tasks.map(t => {
+        if (t.id === taskId) {
+          updated = { ...t, status: newStatus };
+          return updated;
+        }
+        return t;
+      });
+      return { ...prev, tasks: updatedTasks };
+    });
+    if (updated) {
+      upsertCloudRecord('tasks', taskId, updated);
+    }
   };
 
   const handleToggleChecklistItem = (taskId, itemIdx) => {
+    let updatedTask = null;
     setAppState(prev => {
       const updatedTasks = prev.tasks.map(task => {
         if (task.id !== taskId || !task.checklist) return task;
@@ -195,7 +262,7 @@ export default function App() {
             completed: !newChecklist[itemIdx].completed
           };
         }
-        const updatedTask = { ...task, checklist: newChecklist };
+        updatedTask = { ...task, checklist: newChecklist };
         if (selectedTask && selectedTask.id === taskId) {
           setSelectedTask(updatedTask);
         }
@@ -203,6 +270,9 @@ export default function App() {
       });
       return { ...prev, tasks: updatedTasks };
     });
+    if (updatedTask) {
+      upsertCloudRecord('tasks', taskId, updatedTask);
+    }
   };
 
   // Convert Job Card to Invoice
@@ -235,10 +305,20 @@ export default function App() {
   };
 
   const handleUpdateDealStage = (dealId, newStage) => {
-    setAppState(prev => ({
-      ...prev,
-      sales: prev.sales.map(d => d.id === dealId ? { ...d, stage: newStage } : d)
-    }));
+    let updatedDeal = null;
+    setAppState(prev => {
+      const updatedSales = prev.sales.map(d => {
+        if (d.id === dealId) {
+          updatedDeal = { ...d, stage: newStage };
+          return updatedDeal;
+        }
+        return d;
+      });
+      return { ...prev, sales: updatedSales };
+    });
+    if (updatedDeal) {
+      upsertCloudRecord('sales', dealId, updatedDeal);
+    }
   };
 
   // Convert Sales Deal to Dealership Truck Sale Invoice!
@@ -462,6 +542,7 @@ export default function App() {
         : [techData, ...prev.technicians];
       return { ...prev, technicians: updated };
     });
+    upsertCloudRecord('technicians', techData.id, techData);
   };
 
   const handleDeleteTechnician = (techId) => {
@@ -470,6 +551,7 @@ export default function App() {
         ...prev,
         technicians: prev.technicians.filter(t => t.id !== techId)
       }));
+      deleteCloudRecord('technicians', techId);
     }
   };
 
@@ -501,6 +583,8 @@ export default function App() {
         currentUser={currentUser}
         onLogout={handleLogout}
         activeTab={activeTab}
+        isSyncing={isSyncing}
+        onRefreshCloud={refreshFromCloud}
         stats={{
           activeTasksCount,
           pendingInvoicesAmount,
@@ -816,6 +900,7 @@ export default function App() {
         profile={appState.profile}
         onSaveProfile={(updatedProfile) => {
           setAppState(prev => ({ ...prev, profile: updatedProfile }));
+          upsertCloudRecord('profile', 'main', updatedProfile);
         }}
         onResetData={(resetState) => {
           setAppState(resetState);

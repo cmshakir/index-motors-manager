@@ -13,7 +13,13 @@ export const isSupabaseConfigured = () => {
 };
 
 export const supabase = isSupabaseConfigured()
-  ? createClient(supabaseUrl, supabaseAnonKey)
+  ? createClient(supabaseUrl, supabaseAnonKey, {
+      realtime: {
+        params: {
+          eventsPerSecond: 10,
+        },
+      },
+    })
   : null;
 
 /**
@@ -74,5 +80,74 @@ export const deleteCloudRecord = async (tableName, id) => {
   } catch (err) {
     console.warn(`Supabase error deleting from ${tableName}:`, err);
     return false;
+  }
+};
+
+/**
+ * Real-time listener: Subscribe to database changes across all other devices.
+ * Calls onDataChange callback whenever any device inserts, updates, or deletes.
+ */
+export const subscribeToCloudChanges = (onDataChange) => {
+  if (!supabase) return () => {};
+
+  const channel = supabase
+    .channel('index-motors-realtime-channel')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public' },
+      (payload) => {
+        console.log(`[Realtime Sync] Change detected in ${payload.table} from another device:`, payload);
+        onDataChange(payload);
+      }
+    )
+    .subscribe((status) => {
+      console.log('[Realtime Sync Status]:', status);
+    });
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
+};
+
+/**
+ * Automatically seeds the cloud database if tables are empty.
+ * Ensures the first device to connect populates the database so any other device gets full data.
+ */
+export const seedCloudIfEmpty = async (state) => {
+  if (!supabase) return;
+  try {
+    const { data: existingTasks, error } = await supabase.from('tasks').select('id').limit(1);
+    if (error) {
+      console.warn('Could not query tasks table for auto-seed:', error.message);
+      return;
+    }
+
+    if (!existingTasks || existingTasks.length === 0) {
+      console.log('Cloud database is empty. Auto-seeding initial data to Supabase...');
+      if (state.tasks?.length) {
+        for (const t of state.tasks) await upsertCloudRecord('tasks', t.id, t);
+      }
+      if (state.invoices?.length) {
+        for (const i of state.invoices) await upsertCloudRecord('invoices', i.id, i);
+      }
+      if (state.sales?.length) {
+        for (const s of state.sales) await upsertCloudRecord('sales', s.id, s);
+      }
+      if (state.trucks?.length) {
+        for (const trk of state.trucks) await upsertCloudRecord('trucks', trk.id, trk);
+      }
+      if (state.customers?.length) {
+        for (const c of state.customers) await upsertCloudRecord('customers', c.id, c);
+      }
+      if (state.technicians?.length) {
+        for (const tech of state.technicians) await upsertCloudRecord('technicians', tech.id, tech);
+      }
+      if (state.profile) {
+        await upsertCloudRecord('profile', 'main', state.profile);
+      }
+      console.log('Cloud database auto-seed complete!');
+    }
+  } catch (err) {
+    console.warn('Auto-seed check failed:', err);
   }
 };
