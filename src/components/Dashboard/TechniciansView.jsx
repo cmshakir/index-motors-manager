@@ -70,80 +70,88 @@ export default function TechniciansView({
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {technicians.map((tech) => {
-          const assignedJobs = tasks.filter(t => t.assignedTech === tech.name && t.status !== 'Completed' && t.status !== 'Ready for Pickup');
-          return (
-            <div 
-              key={tech.id}
-              className="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 space-y-4 shadow-xl flex flex-col justify-between"
-            >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="h-10 w-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 font-bold text-sm">
-                      {tech.name.split(' ').map(n => n[0]).join('')}
-                    </div>
-                    <div>
-                      <h3 className="text-base font-black text-white">{tech.name}</h3>
-                      <p className="text-xs text-red-400 font-medium">{tech.role}</p>
-                    </div>
-                  </div>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-                    {tech.status}
-                  </span>
-                </div>
-
-                <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2 text-xs">
-                  <div>
-                    <span className="text-slate-500 block text-[10px] uppercase">Specialty:</span>
-                    <span className="text-slate-200 font-medium">{tech.specialty}</span>
-                  </div>
-                  {tech.phone && (
-                    <div className="flex items-center space-x-1.5 text-slate-300">
-                      <Phone className="h-3.5 w-3.5 text-slate-500" />
-                      <span>{tech.phone}</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Active Jobs for this tech */}
-                <div className="space-y-1.5">
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
-                    Active Assigned Jobs ({assignedJobs.length}):
-                  </span>
-                  {assignedJobs.length === 0 ? (
-                    <p className="text-xs text-slate-500 italic">No active job currently assigned</p>
-                  ) : (
-                    assignedJobs.map(j => (
-                      <div key={j.id} className="p-2 rounded-lg bg-slate-950/50 border border-slate-800 text-xs flex items-center justify-between">
-                        <span className="font-semibold text-white truncate max-w-[160px]">{j.truckModel}</span>
-                        <span className="font-mono text-red-400 text-[10px]">{j.bay}</span>
+      {technicians.length === 0 ? (
+        <div className="p-12 text-center rounded-2xl border border-dashed border-slate-800 bg-slate-900/40">
+          <Wrench className="h-10 w-10 text-slate-600 mx-auto mb-3" />
+          <p className="text-slate-300 font-bold text-sm">No workshop technicians registered yet</p>
+          <p className="text-xs text-slate-500 mt-1">Click "+ Add Technician" above to register mechanics and specialists.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {technicians.map((tech) => {
+            const assignedJobs = tasks.filter(t => t.assignedTech === tech.name && t.status !== 'Completed' && t.status !== 'Ready for Pickup');
+            return (
+              <div 
+                key={tech.id}
+                className="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 space-y-4 shadow-xl flex flex-col justify-between"
+              >
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="h-10 w-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 font-bold text-sm">
+                        {tech.name.split(' ').map(n => n[0]).join('')}
                       </div>
-                    ))
-                  )}
+                      <div>
+                        <h3 className="text-base font-black text-white">{tech.name}</h3>
+                        <p className="text-xs text-red-400 font-medium">{tech.role}</p>
+                      </div>
+                    </div>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                      {tech.status}
+                    </span>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 space-y-2 text-xs">
+                    <div>
+                      <span className="text-slate-500 block text-[10px] uppercase">Specialty:</span>
+                      <span className="text-slate-200 font-medium">{tech.specialty}</span>
+                    </div>
+                    {tech.phone && (
+                      <div className="flex items-center space-x-1.5 text-slate-300">
+                        <Phone className="h-3.5 w-3.5 text-slate-500" />
+                        <span>{tech.phone}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Active Jobs for this tech */}
+                  <div className="space-y-1.5">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+                      Active Assigned Jobs ({assignedJobs.length}):
+                    </span>
+                    {assignedJobs.length === 0 ? (
+                      <p className="text-xs text-slate-500 italic">No active job currently assigned</p>
+                    ) : (
+                      assignedJobs.map(j => (
+                        <div key={j.id} className="p-2 rounded-lg bg-slate-950/50 border border-slate-800 text-xs flex items-center justify-between">
+                          <span className="font-semibold text-white truncate max-w-[160px]">{j.truckModel}</span>
+                          <span className="font-mono text-red-400 text-[10px]">{j.bay}</span>
+                        </div>
+                      ))
+                    )}
+                  </div>
                 </div>
-              </div>
 
-              <div className="pt-3 border-t border-slate-800 flex items-center justify-end space-x-1">
-                <button
-                  onClick={() => handleOpenEdit(tech)}
-                  className="p-1.5 rounded hover:bg-slate-800 text-slate-400 hover:text-white transition"
-                >
-                  <Edit3 className="h-4 w-4" />
-                </button>
-                <button
-                  onClick={() => onDeleteTechnician(tech.id)}
-                  className="p-1.5 rounded hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              </div>
+                <div className="pt-3 border-t border-slate-800 flex items-center justify-end space-x-1">
+                  <button
+                    onClick={() => handleOpenEdit(tech)}
+                    className="p-1.5 rounded hover:bg-slate-800 text-slate-400 hover:text-white transition"
+                  >
+                    <Edit3 className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={() => onDeleteTechnician(tech.id)}
+                    className="p-1.5 rounded hover:bg-red-500/20 text-slate-400 hover:text-red-400 transition"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
 
-            </div>
-          );
-        })}
-      </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">

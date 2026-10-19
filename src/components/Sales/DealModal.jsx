@@ -41,7 +41,7 @@ export default function DealModal({
     financePartner: 'Sundaram Finance Commercial Vehicle Loan',
     downpaymentReceived: 0,
     expectedDelivery: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10),
-    salesExecutive: 'Arun Menon',
+    salesExecutive: profile?.name || 'Index Motor',
     probability: 50,
     notes: '',
     dateCreated: new Date().toISOString().slice(0, 10)
@@ -65,7 +65,7 @@ export default function DealModal({
       const defaultVeh = SWARAJ_MAZDA_CATALOG[0];
       setFormData({
         id: `DEAL-${new Date().getFullYear()}-${Math.floor(100 + Math.random() * 900)}`,
-        title: `1x ${defaultVeh.model} Deal`,
+        title: `${defaultVeh.model} Deal`,
         customerName: '',
         customerId: '',
         contactPerson: '',
@@ -81,7 +81,7 @@ export default function DealModal({
         financePartner: 'Sundaram Finance Commercial Vehicle Loan',
         downpaymentReceived: 0,
         expectedDelivery: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10),
-        salesExecutive: 'Arun Menon',
+        salesExecutive: profile?.name || 'Index Motor',
         probability: 50,
         notes: '',
         dateCreated: new Date().toISOString().slice(0, 10)

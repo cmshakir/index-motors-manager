@@ -36,7 +36,7 @@ export default function TaskModal({
     category: 'Preventive Maintenance',
     priority: 'Medium',
     status: 'Pending',
-    assignedTech: technicians[0]?.name || 'Marcus Vance',
+    assignedTech: technicians[0]?.name || '',
     bay: profile?.workshopBays?.[0] || 'Bay 1 - Heavy Lift',
     currentMileage: '',
     dateReceived: new Date().toISOString().slice(0, 10),
@@ -70,7 +70,7 @@ export default function TaskModal({
         category: 'Preventive Maintenance',
         priority: 'Medium',
         status: 'Pending',
-        assignedTech: technicians[0]?.name || 'Marcus Vance',
+        assignedTech: technicians[0]?.name || '',
         bay: profile?.workshopBays?.[0] || 'Bay 1 - Heavy Lift',
         currentMileage: '',
         dateReceived: new Date().toISOString().slice(0, 10),
@@ -391,6 +391,7 @@ export default function TaskModal({
                 onChange={e => setFormData({ ...formData, assignedTech: e.target.value })}
                 className="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white text-xs"
               >
+                <option value="">-- Select or Add Technician --</option>
                 {technicians.map(t => (
                   <option key={t.id} value={t.name}>{t.name} ({t.role.split(' ')[0]})</option>
                 ))}

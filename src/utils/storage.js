@@ -11,16 +11,16 @@ import {
 } from '../data/initialData';
 
 const STORAGE_KEYS = {
-  PROFILE: 'index_motors_online_v3_profile',
-  TECHNICIANS: 'index_motors_online_v3_technicians',
-  CUSTOMERS: 'index_motors_online_v3_customers',
-  TRUCKS: 'index_motors_online_v3_trucks',
-  TASKS: 'index_motors_online_v3_tasks',
-  INVOICES: 'index_motors_online_v3_invoices',
-  SALES: 'index_motors_online_v3_sales',
-  EXPENSES: 'index_motors_online_v3_expenses',
-  USERS: 'index_motors_online_v3_users',
-  CURRENT_USER: 'index_motors_online_v3_current_user',
+  PROFILE: 'index_motors_online_v4_profile',
+  TECHNICIANS: 'index_motors_online_v4_technicians',
+  CUSTOMERS: 'index_motors_online_v4_customers',
+  TRUCKS: 'index_motors_online_v4_trucks',
+  TASKS: 'index_motors_online_v4_tasks',
+  INVOICES: 'index_motors_online_v4_invoices',
+  SALES: 'index_motors_online_v4_sales',
+  EXPENSES: 'index_motors_online_v4_expenses',
+  USERS: 'index_motors_online_v4_users',
+  CURRENT_USER: 'index_motors_online_v4_current_user',
 };
 
 export const loadFromStorage = (key, fallback) => {

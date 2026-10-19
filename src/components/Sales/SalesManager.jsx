@@ -114,53 +114,20 @@ export default function SalesManager({
     setIsModalOpen(true);
   };
 
-  // Mock fleet service reminders
-  const serviceReminders = [
-    {
-      id: "REM-01",
-      customer: "Nilgiris Highland Agro & Produce",
-      vehicle: "Tata 407 Gold SFC (KL-72-B-4412)",
-      make: "Tata Motors",
-      type: "Periodic Lube Service",
-      dueKm: "50,000 km (Current: 48,500 km)",
-      dueDate: "Within 10 Days",
-      urgency: "High",
-      phone: "+91 94432 18920"
-    },
-    {
-      id: "REM-02",
-      customer: "St. Mary's Higher Secondary School",
-      vehicle: "SML Isuzu S7 School Bus (TN-43-J-3304)",
-      make: "Swaraj Mazda",
-      type: "Nilgiris RTO Fitness Certificate (FC) Renewal",
-      dueKm: "Pre-Monsoon Inspection",
-      dueDate: "Expiring in 14 Days",
-      urgency: "Critical",
-      phone: "+91 94420 77312"
-    },
-    {
-      id: "REM-03",
-      customer: "Gudalur Express Freight Lines",
-      vehicle: "Tata 709g LPT BS6 (TN-43-E-8834)",
-      make: "Tata Motors",
-      type: "Differential & Gearbox Oil Flushing",
-      dueKm: "85,000 km (Current: 82,400 km)",
-      dueDate: "Within 3 Weeks",
-      urgency: "Medium",
-      phone: "+91 98471 62901"
-    },
-    {
-      id: "REM-04",
-      customer: "Nilgiris Blue Mountain Travels",
-      vehicle: "SML Isuzu Hiroi Luxury Coach (KL-07-BW-9922)",
-      make: "Swaraj Mazda",
-      type: "Air Suspension Bellow Calibration & AC Gas Refill",
-      dueKm: "Seasonal Hill Station Prep",
-      dueDate: "Within 5 Days",
-      urgency: "High",
-      phone: "+91 98485 55675"
-    }
-  ];
+  // Fleet service reminders dynamically derived from registered customer vehicles
+  const serviceReminders = (trucks || [])
+    .filter(t => t.type === 'Customer Truck' || t.status === 'In Workshop')
+    .map((t, idx) => ({
+      id: `REM-${idx + 1}`,
+      customer: t.customerName || 'Fleet Account',
+      vehicle: `${t.model} ${t.plate ? `(${t.plate})` : ''}`,
+      make: t.make || 'Commercial',
+      type: t.status === 'In Workshop' ? 'Workshop Active Job' : 'Periodic Maintenance Due',
+      dueKm: t.mileage ? `${Number(t.mileage).toLocaleString()} km` : 'Scheduled Check',
+      dueDate: 'Scheduled Inspection',
+      urgency: t.status === 'In Workshop' ? 'High' : 'Normal',
+      phone: profile?.phone || '+91 8848555675'
+    }));
 
   return (
     <div className="space-y-6 pb-12">
@@ -227,7 +194,7 @@ export default function SalesManager({
           }`}
         >
           <Truck className="h-4 w-4 text-red-500" />
-          <span>Swaraj Mazda Commercial Catalog ({SWARAJ_MAZDA_CATALOG.length} Models)</span>
+          <span>Swaraj Mazda Commercial Catalog</span>
         </button>
 
         <button
@@ -240,9 +207,11 @@ export default function SalesManager({
         >
           <Wrench className="h-4 w-4 text-red-500" />
           <span>Fleet Service CRM & Reminders</span>
-          <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-red-600 text-white font-bold">
-            {serviceReminders.length}
-          </span>
+          {serviceReminders.length > 0 && (
+            <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-red-600 text-white font-bold">
+              {serviceReminders.length}
+            </span>
+          )}
         </button>
       </div>
 
@@ -911,73 +880,81 @@ export default function SalesManager({
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {serviceReminders.map((rem) => (
-              <div
-                key={rem.id}
-                className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 hover:border-red-600/50 transition shadow-lg space-y-3"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase ${
-                      rem.make === 'Tata Motors' ? 'bg-blue-600 text-white' : 'bg-red-600 text-white'
+          {serviceReminders.length === 0 ? (
+            <div className="p-12 text-center text-zinc-500 bg-zinc-900/60 rounded-2xl border border-dashed border-zinc-800">
+              <Wrench className="h-10 w-10 text-zinc-600 mx-auto mb-3" />
+              <p className="text-zinc-300 font-bold text-sm">No Fleet Service Reminders</p>
+              <p className="text-xs text-zinc-500 mt-1">Service reminders and maintenance schedules will appear here as customer vehicles are registered.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {serviceReminders.map((rem) => (
+                <div
+                  key={rem.id}
+                  className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 hover:border-red-600/50 transition shadow-lg space-y-3"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase ${
+                        rem.make === 'Tata Motors' ? 'bg-blue-600 text-white' : 'bg-red-600 text-white'
+                      }`}>
+                        {rem.make}
+                      </span>
+                      <span className="font-mono text-xs font-bold text-white">{rem.vehicle.split('(')[1]?.replace(')', '') || rem.vehicle}</span>
+                    </div>
+
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                      rem.urgency === 'Critical' 
+                        ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40 animate-pulse'
+                        : 'bg-red-500/15 text-red-400 border border-red-500/30'
                     }`}>
-                      {rem.make}
+                      {rem.urgency} Action
                     </span>
-                    <span className="font-mono text-xs font-bold text-white">{rem.vehicle.split('(')[1]?.replace(')', '') || rem.vehicle}</span>
                   </div>
 
-                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                    rem.urgency === 'Critical' 
-                      ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40 animate-pulse'
-                      : 'bg-red-500/15 text-red-400 border border-red-500/30'
-                  }`}>
-                    {rem.urgency} Action
-                  </span>
-                </div>
-
-                <div>
-                  <h3 className="font-bold text-white text-sm">{rem.type}</h3>
-                  <p className="text-xs font-semibold text-zinc-300 mt-0.5">{rem.vehicle}</p>
-                  <p className="text-xs text-zinc-400 mt-0.5 flex items-center space-x-1">
-                    <Building2 className="h-3 w-3 text-zinc-500" />
-                    <span>{rem.customer}</span>
-                  </p>
-                </div>
-
-                <div className="pt-2 border-t border-zinc-800 flex items-center justify-between text-xs">
                   <div>
-                    <span className="text-[10px] text-zinc-500 block">Milestone / Interval:</span>
-                    <span className="font-mono font-bold text-zinc-300">{rem.dueKm}</span>
+                    <h3 className="font-bold text-white text-sm">{rem.type}</h3>
+                    <p className="text-xs font-semibold text-zinc-300 mt-0.5">{rem.vehicle}</p>
+                    <p className="text-xs text-zinc-400 mt-0.5 flex items-center space-x-1">
+                      <Building2 className="h-3 w-3 text-zinc-500" />
+                      <span>{rem.customer}</span>
+                    </p>
                   </div>
-                  <div className="text-right">
-                    <span className="text-[10px] text-zinc-500 block">Target Schedule:</span>
-                    <span className="font-bold text-red-400">{rem.dueDate}</span>
+
+                  <div className="pt-2 border-t border-zinc-800 flex items-center justify-between text-xs">
+                    <div>
+                      <span className="text-[10px] text-zinc-500 block">Milestone / Interval:</span>
+                      <span className="font-mono font-bold text-zinc-300">{rem.dueKm}</span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-[10px] text-zinc-500 block">Target Schedule:</span>
+                      <span className="font-bold text-red-400">{rem.dueDate}</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-zinc-800/80 flex items-center justify-between">
+                    <a
+                      href={`tel:${rem.phone.replace(/[^0-9+]/g, '')}`}
+                      className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-zinc-300 hover:text-white text-xs border border-zinc-800 transition"
+                    >
+                      <Phone className="h-3 w-3 text-emerald-400" />
+                      <span>Call Fleet Owner</span>
+                    </a>
+
+                    <button
+                      onClick={() => {
+                        if (onNewTask) onNewTask();
+                      }}
+                      className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-bold text-xs shadow-md transition cursor-pointer"
+                    >
+                      <Wrench className="h-3.5 w-3.5" />
+                      <span>Open Workshop Job Card</span>
+                    </button>
                   </div>
                 </div>
-
-                <div className="pt-2 border-t border-zinc-800/80 flex items-center justify-between">
-                  <a
-                    href={`tel:${rem.phone.replace(/[^0-9+]/g, '')}`}
-                    className="flex items-center space-x-1 px-3 py-1.5 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-zinc-300 hover:text-white text-xs border border-zinc-800 transition"
-                  >
-                    <Phone className="h-3 w-3 text-emerald-400" />
-                    <span>Call Fleet Owner</span>
-                  </a>
-
-                  <button
-                    onClick={() => {
-                      if (onNewTask) onNewTask();
-                    }}
-                    className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-bold text-xs shadow-md transition cursor-pointer"
-                  >
-                    <Wrench className="h-3.5 w-3.5" />
-                    <span>Open Workshop Job Card</span>
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

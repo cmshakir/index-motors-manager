@@ -138,8 +138,15 @@ export default function CustomerManager({
       </div>
 
       {/* Customer Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {filteredCustomers.map((cust) => {
+      {filteredCustomers.length === 0 ? (
+        <div className="p-12 text-center rounded-2xl border border-dashed border-zinc-800 bg-zinc-900/40">
+          <Building2 className="h-10 w-10 text-zinc-600 mx-auto mb-3" />
+          <p className="text-zinc-300 font-bold text-sm">No fleet accounts registered yet</p>
+          <p className="text-xs text-zinc-500 mt-1">Click "+ Add Fleet Account" above to register commercial customers or transport companies.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredCustomers.map((cust) => {
           const outstanding = getCustomerOutstanding(cust.id);
           const registeredTrucks = getCustomerTrucksCount(cust.id);
 
@@ -253,6 +260,7 @@ export default function CustomerManager({
           );
         })}
       </div>
+      )}
 
       {/* Add / Edit Customer Modal */}
       {isModalOpen && (

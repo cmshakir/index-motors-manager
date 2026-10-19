@@ -373,49 +373,55 @@ export default function Dashboard({
             </div>
 
             <div className="space-y-3">
-              {tasks.slice(0, 4).map((task) => (
-                <div
-                  key={task.id}
-                  onClick={() => onSelectTask(task)}
-                  className="group p-3.5 rounded-xl bg-zinc-950 border border-zinc-800 hover:border-red-600/40 cursor-pointer transition flex items-start justify-between gap-3"
-                >
-                  <div className="space-y-1 min-w-0">
-                    <div className="flex items-center space-x-2">
-                      <span className="font-mono text-xs font-bold text-red-400">{task.id}</span>
-                      <span className={`text-[10px] px-2 py-0.5 rounded font-bold ${getPriorityBadgeClass(task.priority)}`}>
-                        {task.priority}
-                      </span>
-                      <span className={`text-[10px] px-2 py-0.5 rounded font-bold ${getStatusBadgeClass(task.status)}`}>
-                        {task.status}
-                      </span>
-                    </div>
-                    <p className="text-sm font-semibold text-white group-hover:text-red-400 transition truncate">
-                      {task.title}
-                    </p>
-                    <p className="text-xs text-zinc-400 truncate">
-                      {task.truckModel} • {task.plate} • <span className="text-zinc-300">{task.customerName}</span>
-                    </p>
-                  </div>
-
-                  <div className="text-right flex-shrink-0 space-y-1">
-                    <span className="text-xs text-slate-400 block font-mono">
-                      {task.actualHours || 0}/{task.estimatedHours} hrs
-                    </span>
-                    {!task.invoiceId && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onGenerateInvoiceFromTask(task);
-                        }}
-                        className="text-[11px] font-bold px-2 py-1 rounded bg-blue-600/20 text-blue-400 hover:bg-blue-600 hover:text-white border border-blue-500/30 transition"
-                        title="Generate Invoice for this Job"
-                      >
-                        + Bill
-                      </button>
-                    )}
-                  </div>
+              {tasks.length === 0 ? (
+                <div className="py-8 text-center text-xs text-zinc-500 italic">
+                  No active workshop job cards yet. Click below to add a new job card.
                 </div>
-              ))}
+              ) : (
+                tasks.slice(0, 4).map((task) => (
+                  <div
+                    key={task.id}
+                    onClick={() => onSelectTask(task)}
+                    className="group p-3.5 rounded-xl bg-zinc-950 border border-zinc-800 hover:border-red-600/40 cursor-pointer transition flex items-start justify-between gap-3"
+                  >
+                    <div className="space-y-1 min-w-0">
+                      <div className="flex items-center space-x-2">
+                        <span className="font-mono text-xs font-bold text-red-400">{task.id}</span>
+                        <span className={`text-[10px] px-2 py-0.5 rounded font-bold ${getPriorityBadgeClass(task.priority)}`}>
+                          {task.priority}
+                        </span>
+                        <span className={`text-[10px] px-2 py-0.5 rounded font-bold ${getStatusBadgeClass(task.status)}`}>
+                          {task.status}
+                        </span>
+                      </div>
+                      <p className="text-sm font-semibold text-white group-hover:text-red-400 transition truncate">
+                        {task.title}
+                      </p>
+                      <p className="text-xs text-zinc-400 truncate">
+                        {task.truckModel} • {task.plate} • <span className="text-zinc-300">{task.customerName}</span>
+                      </p>
+                    </div>
+
+                    <div className="text-right flex-shrink-0 space-y-1">
+                      <span className="text-xs text-slate-400 block font-mono">
+                        {task.actualHours || 0}/{task.estimatedHours} hrs
+                      </span>
+                      {!task.invoiceId && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onGenerateInvoiceFromTask(task);
+                          }}
+                          className="text-[11px] font-bold px-2 py-1 rounded bg-blue-600/20 text-blue-400 hover:bg-blue-600 hover:text-white border border-blue-500/30 transition"
+                          title="Generate Invoice for this Job"
+                        >
+                          + Bill
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 
@@ -447,46 +453,52 @@ export default function Dashboard({
             </div>
 
             <div className="space-y-3">
-              {invoices.slice(0, 4).map((inv) => (
-                <div
-                  key={inv.id}
-                  onClick={() => onSelectInvoice(inv)}
-                  className="group p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 hover:border-blue-500/40 cursor-pointer transition flex items-center justify-between gap-3"
-                >
-                  <div className="space-y-1 min-w-0">
-                    <div className="flex items-center space-x-2">
-                      <span className="font-mono text-xs font-bold text-blue-400">{inv.invoiceNumber}</span>
-                      <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
-                        {inv.type}
-                      </span>
-                      <span className={`text-[10px] px-2 py-0.5 rounded font-bold ${getStatusBadgeClass(inv.status)}`}>
-                        {inv.status}
-                      </span>
-                    </div>
-                    <p className="text-sm font-semibold text-white group-hover:text-blue-400 transition truncate">
-                      {inv.customerName}
-                    </p>
-                    <p className="text-xs text-slate-400 truncate">
-                      Issued: {formatDate(inv.issueDate)} • Due: {formatDate(inv.dueDate)}
-                    </p>
-                  </div>
-
-                  <div className="text-right flex-shrink-0">
-                    <div className="text-sm font-black text-white">
-                      {formatCurrency(inv.totalAmount, currency)}
-                    </div>
-                    {inv.balanceDue > 0 ? (
-                      <span className="text-[11px] font-semibold text-amber-400 block">
-                        Due: {formatCurrency(inv.balanceDue, currency)}
-                      </span>
-                    ) : (
-                      <span className="text-[11px] font-semibold text-emerald-400 block">
-                        Settled in Full
-                      </span>
-                    )}
-                  </div>
+              {invoices.length === 0 ? (
+                <div className="py-8 text-center text-xs text-slate-500 italic">
+                  No commercial invoices created yet. Click below to create your first invoice.
                 </div>
-              ))}
+              ) : (
+                invoices.slice(0, 4).map((inv) => (
+                  <div
+                    key={inv.id}
+                    onClick={() => onSelectInvoice(inv)}
+                    className="group p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 hover:border-blue-500/40 cursor-pointer transition flex items-center justify-between gap-3"
+                  >
+                    <div className="space-y-1 min-w-0">
+                      <div className="flex items-center space-x-2">
+                        <span className="font-mono text-xs font-bold text-blue-400">{inv.invoiceNumber}</span>
+                        <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                          {inv.type}
+                        </span>
+                        <span className={`text-[10px] px-2 py-0.5 rounded font-bold ${getStatusBadgeClass(inv.status)}`}>
+                          {inv.status}
+                        </span>
+                      </div>
+                      <p className="text-sm font-semibold text-white group-hover:text-blue-400 transition truncate">
+                        {inv.customerName}
+                      </p>
+                      <p className="text-xs text-slate-400 truncate">
+                        Issued: {formatDate(inv.issueDate)} • Due: {formatDate(inv.dueDate)}
+                      </p>
+                    </div>
+
+                    <div className="text-right flex-shrink-0">
+                      <div className="text-sm font-black text-white">
+                        {formatCurrency(inv.totalAmount, currency)}
+                      </div>
+                      {inv.balanceDue > 0 ? (
+                        <span className="text-[11px] font-semibold text-amber-400 block">
+                          Due: {formatCurrency(inv.balanceDue, currency)}
+                        </span>
+                      ) : (
+                        <span className="text-[11px] font-semibold text-emerald-400 block">
+                          Settled in Full
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 

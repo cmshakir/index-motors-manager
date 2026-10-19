@@ -149,8 +149,15 @@ export default function TruckManager({
       </div>
 
       {/* Trucks Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {filteredTrucks.map((truck) => (
+      {filteredTrucks.length === 0 ? (
+        <div className="p-12 text-center rounded-2xl border border-dashed border-zinc-800 bg-zinc-900/40">
+          <Truck className="h-10 w-10 text-zinc-600 mx-auto mb-3" />
+          <p className="text-zinc-300 font-bold text-sm">No commercial vehicles found</p>
+          <p className="text-xs text-zinc-500 mt-1">Click "+ Add Vehicle" above to register a showroom stock unit or customer fleet vehicle.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filteredTrucks.map((truck) => (
           <div 
             key={truck.id}
             className="group bg-zinc-900 border border-zinc-800 hover:border-red-600/50 p-5 space-y-4 rounded-2xl shadow-xl transition flex flex-col justify-between"
@@ -281,6 +288,7 @@ export default function TruckManager({
           </div>
         ))}
       </div>
+      )}
 
     </div>
   );
