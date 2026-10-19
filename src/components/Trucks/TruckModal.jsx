@@ -19,8 +19,6 @@ export default function TruckModal({
   truckToEdit,
   customers = []
 }) {
-  if (!isOpen) return null;
-
   const [formData, setFormData] = useState({
     id: `TRK-${Math.floor(100 + Math.random() * 900)}`,
     type: 'Dealership Stock',
@@ -122,6 +120,8 @@ export default function TruckModal({
     onSave(formData);
     onClose();
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">

@@ -101,7 +101,7 @@ export default function SalesManager({
         rtoAndInsurance: prefillVehicle.rtoEstimate,
         totalDealValue: prefillVehicle.basePrice + prefillVehicle.rtoEstimate,
         unitCount: 1,
-        title: `1x ${prefillVehicle.model} Deal`
+        title: `${prefillVehicle.model} Deal`
       });
     } else {
       setDealToEdit(null);
@@ -823,7 +823,7 @@ export default function SalesManager({
               </p>
             </div>
             <span className="px-3 py-1 rounded-full text-xs font-bold bg-red-600/20 text-red-400 border border-red-600/30">
-              {SWARAJ_MAZDA_CATALOG.length} Commercial Models Available
+              Commercial Lineup Available
             </span>
           </div>
 
@@ -982,14 +982,16 @@ export default function SalesManager({
       )}
 
       {/* Sales Deal Creation / Edit Modal */}
-      <DealModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={onSaveDeal}
-        dealToEdit={dealToEdit}
-        customers={customers}
-        profile={profile}
-      />
+      {isModalOpen && (
+        <DealModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSave={onSaveDeal}
+          dealToEdit={dealToEdit}
+          customers={customers}
+          profile={profile}
+        />
+      )}
 
     </div>
   );

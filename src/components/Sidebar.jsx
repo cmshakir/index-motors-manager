@@ -30,11 +30,11 @@ export default function Sidebar({
 }) {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, badge: null },
-    { id: 'sales', label: 'Sales & Vehicle CRM', icon: TrendingUp, badge: salesCount },
+    { id: 'sales', label: 'Sales & Vehicle CRM', icon: TrendingUp, badge: null },
     { id: 'tasks', label: 'Workshop Job Cards', icon: Wrench, badge: tasksCount },
     { id: 'invoices', label: 'Invoices & Billing', icon: FileText, badge: invoicesCount },
     { id: 'expenses', label: 'Income & Expenses', icon: Receipt, badge: expensesCount },
-    { id: 'trucks', label: 'Trucks & Inventory', icon: Truck, badge: trucksCount },
+    { id: 'trucks', label: 'Trucks & Inventory', icon: Truck, badge: null },
     { id: 'customers', label: 'Fleet Customers', icon: Users, badge: customersCount },
     { id: 'technicians', label: 'Technicians & Bays', icon: UserCheck, badge: null },
   ];

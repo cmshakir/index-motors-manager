@@ -21,8 +21,6 @@ export default function DealModal({
   customers = [],
   profile
 }) {
-  if (!isOpen) return null;
-
   const currency = profile?.currency || '₹';
 
   const [formData, setFormData] = useState({
@@ -141,6 +139,8 @@ export default function DealModal({
     onSave(formData);
     onClose();
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">

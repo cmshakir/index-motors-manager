@@ -62,7 +62,7 @@ export default function TruckManager({
               Commercial Trucks & Fleet Inventory
             </h1>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-600/15 text-red-400 border border-red-600/30">
-              {trucks.length} Commercial Units
+              Commercial Fleet & Showroom
             </span>
           </div>
           <p className="text-xs text-zinc-400 mt-1">
@@ -87,7 +87,7 @@ export default function TruckManager({
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
             <input
               type="text"
-              placeholder="Search by Make (Swaraj Mazda / Tata), Model, Plate (TN-43 / KL-72), VIN, or Owner..."
+              placeholder="Search by Make (Swaraj Mazda / Tata), Model, VIN, or Owner..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-red-500 transition"
@@ -101,9 +101,9 @@ export default function TruckManager({
               onChange={(e) => setMakeFilter(e.target.value)}
               className="px-3 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-xs text-zinc-300 font-bold focus:outline-none focus:border-red-500"
             >
-              <option value="All">All Makes ({trucks.length})</option>
-              <option value="Swaraj Mazda">Swaraj Mazda ({smlCount})</option>
-              <option value="Tata Motors">Tata Motors ({tataCount})</option>
+              <option value="All">All Makes</option>
+              <option value="Swaraj Mazda">Swaraj Mazda</option>
+              <option value="Tata Motors">Tata Motors</option>
             </select>
 
             {/* Classification Filter */}
@@ -113,8 +113,8 @@ export default function TruckManager({
               className="px-3 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-xs text-zinc-300 font-medium focus:outline-none focus:border-red-500"
             >
               <option value="All">All Classifications</option>
-              <option value="Dealership Stock">Dealership Sales Stock ({dealershipCount})</option>
-              <option value="Customer Truck">Customer Workshop Fleet ({workshopCount})</option>
+              <option value="Dealership Stock">Dealership Sales Stock</option>
+              <option value="Customer Truck">Customer Workshop Fleet</option>
             </select>
 
             {/* Status Filter */}
@@ -191,16 +191,16 @@ export default function TruckManager({
               <div className="p-3 rounded-xl bg-zinc-950 border border-zinc-800 space-y-2 text-xs">
                 <div className="grid grid-cols-2 gap-2 text-zinc-300">
                   <div>
-                    <span className="text-[10px] text-zinc-500 block uppercase">Registration Plate:</span>
+                    <span className="text-[10px] text-zinc-500 block uppercase">Registration / Category:</span>
                     <span className="font-mono font-bold text-red-400 text-xs">
-                      {truck.plate || "Unregistered (Temp)"}
+                      {truck.type === 'Dealership Stock' ? 'Brand New Showroom' : (truck.plate ? truck.plate : 'Customer Vehicle')}
                     </span>
                   </div>
 
                   <div>
-                    <span className="text-[10px] text-zinc-500 block uppercase">Odometer / Year:</span>
+                    <span className="text-[10px] text-zinc-500 block uppercase">Year / Condition:</span>
                     <span className="font-mono text-zinc-200">
-                      {truck.mileage ? `${Number(truck.mileage).toLocaleString()} KM` : 'Brand New'} • {truck.year}
+                      {truck.year} • {truck.type === 'Dealership Stock' ? 'Brand New' : (truck.mileage ? `${Number(truck.mileage).toLocaleString()} KM` : 'Active Fleet')}
                     </span>
                   </div>
                 </div>

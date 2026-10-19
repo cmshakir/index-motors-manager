@@ -427,6 +427,11 @@ export default function App() {
     setIsExpenseModalOpen(true);
   };
 
+  const handleOpenNewTask = (initialTask = null) => {
+    setTaskToEdit(initialTask);
+    setIsTaskModalOpen(true);
+  };
+
   const handleUpdateDealStage = (dealId, newStage) => {
     let updatedDeal = null;
     setAppState(prev => {
@@ -907,153 +912,116 @@ export default function App() {
         </main>
       </div>
 
-      {/* Mobile Bottom Navigation Bar */}
-      <nav className="no-print md:hidden bg-slate-900 border-t border-slate-800 sticky bottom-0 z-40 px-2 py-2 flex items-center justify-around">
-        <button
-          onClick={() => setActiveTab('dashboard')}
-          className={`flex flex-col items-center p-1.5 rounded-lg text-[10px] font-bold ${
-            activeTab === 'dashboard' ? 'text-amber-400' : 'text-slate-400'
-          }`}
-        >
-          <LayoutDashboard className="h-5 w-5 mb-0.5" />
-          <span>Home</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('sales')}
-          className={`flex flex-col items-center p-1.5 rounded-lg text-[10px] font-bold ${
-            activeTab === 'sales' ? 'text-amber-400' : 'text-slate-400'
-          }`}
-        >
-          <TrendingUp className="h-5 w-5 mb-0.5" />
-          <span>Sales</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('tasks')}
-          className={`flex flex-col items-center p-1.5 rounded-lg text-[10px] font-bold ${
-            activeTab === 'tasks' ? 'text-amber-400' : 'text-slate-400'
-          }`}
-        >
-          <Wrench className="h-5 w-5 mb-0.5" />
-          <span>Jobs</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('invoices')}
-          className={`flex flex-col items-center p-1.5 rounded-lg text-[10px] font-bold ${
-            activeTab === 'invoices' ? 'text-amber-400' : 'text-slate-400'
-          }`}
-        >
-          <FileText className="h-5 w-5 mb-0.5" />
-          <span>Invoices</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('trucks')}
-          className={`flex flex-col items-center p-1.5 rounded-lg text-[10px] font-bold ${
-            activeTab === 'trucks' ? 'text-amber-400' : 'text-slate-400'
-          }`}
-        >
-          <Truck className="h-5 w-5 mb-0.5" />
-          <span>Trucks</span>
-        </button>
-      </nav>
-
       {/* MODALS */}
       {/* 1. Sales Deal Modal */}
-      <DealModal
-        isOpen={isDealModalOpen}
-        onClose={() => setIsDealModalOpen(false)}
-        onSave={handleSaveDeal}
-        dealToEdit={dealToEdit}
-        customers={appState.customers}
-        profile={appState.profile}
-      />
+      {isDealModalOpen && (
+        <DealModal
+          isOpen={isDealModalOpen}
+          onClose={() => setIsDealModalOpen(false)}
+          onSave={handleSaveDeal}
+          dealToEdit={dealToEdit}
+          customers={appState.customers}
+          profile={appState.profile}
+        />
+      )}
 
       {/* 2. Create / Edit Task Modal */}
-      <TaskModal
-        isOpen={isTaskModalOpen}
-        onClose={() => setIsTaskModalOpen(false)}
-        onSave={handleSaveTask}
-        taskToEdit={taskToEdit}
-        trucks={appState.trucks}
-        customers={appState.customers}
-        technicians={appState.technicians}
-        profile={appState.profile}
-      />
+      {isTaskModalOpen && (
+        <TaskModal
+          isOpen={isTaskModalOpen}
+          onClose={() => setIsTaskModalOpen(false)}
+          onSave={handleSaveTask}
+          taskToEdit={taskToEdit}
+          trucks={appState.trucks}
+          customers={appState.customers}
+          technicians={appState.technicians}
+          profile={appState.profile}
+        />
+      )}
 
       {/* 3. Detailed Job Card Modal */}
-      <TaskDetailsModal
-        isOpen={isTaskDetailsOpen}
-        onClose={() => setIsTaskDetailsOpen(false)}
-        task={selectedTask}
-        profile={appState.profile}
-        onEdit={(task) => {
-          setTaskToEdit(task);
-          setIsTaskModalOpen(true);
-        }}
-        onToggleChecklistItem={handleToggleChecklistItem}
-        onGenerateInvoice={handleGenerateInvoiceFromTask}
-      />
+      {isTaskDetailsOpen && (
+        <TaskDetailsModal
+          isOpen={isTaskDetailsOpen}
+          onClose={() => setIsTaskDetailsOpen(false)}
+          task={selectedTask}
+          profile={appState.profile}
+          onEdit={(task) => {
+            setTaskToEdit(task);
+            setIsTaskModalOpen(true);
+          }}
+          onToggleChecklistItem={handleToggleChecklistItem}
+          onGenerateInvoice={handleGenerateInvoiceFromTask}
+        />
+      )}
 
       {/* 4. Create / Edit Invoice Modal */}
-      <InvoiceModal
-        isOpen={isInvoiceModalOpen}
-        onClose={() => setIsInvoiceModalOpen(false)}
-        onSave={handleSaveInvoice}
-        invoiceToEdit={invoiceToEdit}
-        prefilledTask={prefilledTaskForInvoice}
-        trucks={appState.trucks}
-        customers={appState.customers}
-        profile={appState.profile}
-      />
+      {isInvoiceModalOpen && (
+        <InvoiceModal
+          isOpen={isInvoiceModalOpen}
+          onClose={() => setIsInvoiceModalOpen(false)}
+          onSave={handleSaveInvoice}
+          invoiceToEdit={invoiceToEdit}
+          prefilledTask={prefilledTaskForInvoice}
+          trucks={appState.trucks}
+          customers={appState.customers}
+          profile={appState.profile}
+        />
+      )}
 
       {/* 5. Official Printable & PDF Invoice Modal */}
-      <InvoicePrintModal
-        isOpen={isInvoicePrintOpen}
-        onClose={() => setIsInvoicePrintOpen(false)}
-        invoice={selectedInvoice}
-        profile={appState.profile}
-        onRecordPayment={(inv) => {
-          setInvoiceForPayment(inv);
-          setIsRecordPaymentOpen(true);
-        }}
-      />
+      {isInvoicePrintOpen && (
+        <InvoicePrintModal
+          isOpen={isInvoicePrintOpen}
+          onClose={() => setIsInvoicePrintOpen(false)}
+          invoice={selectedInvoice}
+          profile={appState.profile}
+          onRecordPayment={(inv) => {
+            setInvoiceForPayment(inv);
+            setIsRecordPaymentOpen(true);
+          }}
+        />
+      )}
 
       {/* 6. Record Payment Modal */}
-      <RecordPaymentModal
-        isOpen={isRecordPaymentOpen}
-        onClose={() => setIsRecordPaymentOpen(false)}
-        invoice={invoiceForPayment}
-        profile={appState.profile}
-        onSavePayment={handleRecordPayment}
-      />
+      {isRecordPaymentOpen && (
+        <RecordPaymentModal
+          isOpen={isRecordPaymentOpen}
+          onClose={() => setIsRecordPaymentOpen(false)}
+          invoice={invoiceForPayment}
+          profile={appState.profile}
+          onSavePayment={handleRecordPayment}
+        />
+      )}
 
       {/* 7. Register / Edit Truck Modal */}
-      <TruckModal
-        isOpen={isTruckModalOpen}
-        onClose={() => setIsTruckModalOpen(false)}
-        onSave={handleSaveTruck}
-        truckToEdit={truckToEdit}
-        customers={appState.customers}
-      />
+      {isTruckModalOpen && (
+        <TruckModal
+          isOpen={isTruckModalOpen}
+          onClose={() => setIsTruckModalOpen(false)}
+          onSave={handleSaveTruck}
+          truckToEdit={truckToEdit}
+          customers={appState.customers}
+        />
+      )}
 
       {/* 8. Settings & Backup Modal */}
-      <SettingsModal
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        profile={appState.profile}
-        isCloudConnected={isSupabaseConfigured()}
-        onOpenCloudModal={() => setIsCloudModalOpen(true)}
-        onSaveProfile={(updatedProfile) => {
-          setAppState(prev => ({ ...prev, profile: updatedProfile }));
-          syncRecordToCloud('profile', 'main', updatedProfile);
-        }}
-        onResetData={(resetState) => {
-          setAppState(resetState);
-        }}
-      />
+      {isSettingsOpen && (
+        <SettingsModal
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          profile={appState.profile}
+          isCloudConnected={isSupabaseConfigured()}
+          onOpenCloudModal={() => setIsCloudModalOpen(true)}
+          onSaveProfile={(updatedProfile) => {
+            setAppState(prev => ({ ...prev, profile: updatedProfile }));
+            syncRecordToCloud('profile', 'main', updatedProfile);
+          }}
+          onResetData={(resetState) => {
+            setAppState(resetState);
+          }}
+        />
+      )}
 
       {/* 9. Mobile Bottom Navigation Bar & Drawer */}
       <BottomNav
@@ -1075,24 +1043,28 @@ export default function App() {
       />
 
       {/* 10. Multi-Device Cloud Database Setup Modal */}
-      <CloudConnectModal
-        isOpen={isCloudModalOpen}
-        onClose={() => setIsCloudModalOpen(false)}
-        isCloudConnected={isSupabaseConfigured()}
-        onConnected={refreshFromCloud}
-      />
+      {isCloudModalOpen && (
+        <CloudConnectModal
+          isOpen={isCloudModalOpen}
+          onClose={() => setIsCloudModalOpen(false)}
+          isCloudConnected={isSupabaseConfigured()}
+          onConnected={refreshFromCloud}
+        />
+      )}
 
       {/* 11. Record / Edit Expenditure Modal */}
-      <ExpenseModal
-        isOpen={isExpenseModalOpen}
-        onClose={() => setIsExpenseModalOpen(false)}
-        onSave={handleSaveExpense}
-        expenseToEdit={expenseToEdit}
-        defaultType={expenseModalType}
-        currency={appState.profile.currency}
-        currentUser={currentUser}
-        tasks={appState.tasks}
-      />
+      {isExpenseModalOpen && (
+        <ExpenseModal
+          isOpen={isExpenseModalOpen}
+          onClose={() => setIsExpenseModalOpen(false)}
+          onSave={handleSaveExpense}
+          expenseToEdit={expenseToEdit}
+          defaultType={expenseModalType}
+          currency={appState.profile.currency}
+          currentUser={currentUser}
+          tasks={appState.tasks}
+        />
+      )}
 
       {/* Floating Cloud Sync Notification Toast */}
       {cloudNotice && (

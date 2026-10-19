@@ -38,13 +38,13 @@ export default function BottomNav({
   const mainTabs = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'tasks', label: 'Jobs', icon: Wrench, badge: tasksCount },
-    { id: 'sales', label: 'Sales', icon: TrendingUp, badge: salesCount },
+    { id: 'sales', label: 'Sales', icon: TrendingUp, badge: null },
     { id: 'invoices', label: 'Billing', icon: FileText, badge: invoicesCount },
   ];
 
   const moreTabs = [
     { id: 'expenses', label: 'Income & Expenses', icon: Receipt, badge: expensesCount, desc: 'Add income, direct expenses & live P&L' },
-    { id: 'trucks', label: 'Trucks & Catalog', icon: Truck, badge: trucksCount, desc: 'Swaraj Mazda commercial models & fleet' },
+    { id: 'trucks', label: 'Trucks & Catalog', icon: Truck, badge: null, desc: 'Swaraj Mazda commercial models & fleet' },
     { id: 'customers', label: 'Fleet Customers', icon: Users, badge: customersCount, desc: 'Transport operators & accounts' },
     { id: 'technicians', label: 'Technicians & Bays', icon: UserCheck, desc: 'Service team & workshop capacity' },
   ];
