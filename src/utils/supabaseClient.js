@@ -1,6 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Retrieve credentials from Vite env or user-saved localStorage
+// Default Index Motors Supabase Cloud Project (Auto-connects on mobile, PC, and all devices)
+const DEFAULT_SUPABASE_URL = 'https://peatgecyrwuylgatjcdj.supabase.co';
+const DEFAULT_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBlYXRnZWN5cnd1eWxnYXRqY2RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyMzk0NzcsImV4cCI6MjEwNzgxNTQ3N30.CNMdgYcEm5lGrP2PMO60t47mePK9TnHLLo2Zhu2lW4w';
+
+// Retrieve credentials from Vite env, user-saved localStorage, or default project
 export const getCloudCredentials = () => {
   const envUrl = import.meta.env.VITE_SUPABASE_URL;
   const envKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -16,6 +20,10 @@ export const getCloudCredentials = () => {
     }
   } catch (e) {
     // ignore
+  }
+
+  if (DEFAULT_SUPABASE_URL && DEFAULT_SUPABASE_ANON_KEY) {
+    return { url: DEFAULT_SUPABASE_URL, key: DEFAULT_SUPABASE_ANON_KEY, source: 'default' };
   }
 
   return { url: null, key: null, source: null };
