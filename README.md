@@ -6,10 +6,10 @@ A high-performance management platform designed for commercial vehicle dealershi
 
 ---
 
-## 📖 Complete Documentation
+## 📖 Documentation & User Manuals
 
-Detailed technical and operational manual is available at:
-👉 **[Read the Full System Documentation (DOCUMENTATION.md)](DOCUMENTATION.md)**
+* 📘 **[End-User Instruction Manual (USER_MANUAL.md)](USER_MANUAL.md)** — Step-by-step operating guide for sales executives, workshop foremen, and billing staff.
+* 🛠️ **[Technical & Architectural Documentation (DOCUMENTATION.md)](DOCUMENTATION.md)** — In-depth system architecture, multi-platform build instructions, IPC bridges, and schema.
 
 ---
 
