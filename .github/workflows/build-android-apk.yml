@@ -52,9 +52,8 @@ jobs:
           cd android
           set -o pipefail
           ./gradlew assembleDebug --stacktrace 2>&1 | tee ../gradle.log || {
-            echo "::error::Gradle build failed!"
-            echo "==== LAST 50 LINES OF GRADLE LOG ===="
-            tail -n 50 ../gradle.log
+            ERR=$(grep -i -E "error:|failure:|exception:|caused by:" ../gradle.log | head -n 3 | tr '\n' ' ')
+            echo "::error::Gradle Error: $ERR"
             exit 1
           }
 
