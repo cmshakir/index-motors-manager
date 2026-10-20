@@ -1,89 +1,60 @@
-# Index Motors — Commercial Trucks Dealer & Workshop Management System
+# Index Motors — Commercial Dealership & Workshop Management System (v3.0.0)
 
-A specialized, high-performance web application designed for commercial truck dealerships and heavy-duty vehicle repair workshops.
+[![Build Android APK](https://github.com/cmshakir/index-motors-manager/actions/workflows/build-android-apk.yml/badge.svg)](https://github.com/cmshakir/index-motors-manager/actions/workflows/build-android-apk.yml)
 
----
-
-## 🚚 Key Features & Modules
-
-### 🔐 1. Staff Authentication & Role-Based Login
-- **Dedicated Staff Portal**: Secure login system with remember-me session persistence.
-- **Role-Based Profiles**:
-  - 👤 **Rajesh K.** — Dealership Director & General Manager (Full Access)
-  - 🚚 **Arun Menon** — Commercial Sales Manager (Vehicle Sales & CRM, Invoices)
-  - 🔧 **Ramesh Chandran** — Workshop Foreman (Job Cards, Bay Management, Mechanics)
-  - 💼 **Deepa Nair** — Accounts & Billing Executive (Billing, GST Invoices, Payments)
-- **1-Click Fast Demo Login**: Quick-switch buttons to instantly test and operate across different staff roles without typing.
-
-### 📈 2. Commercial Vehicle Sales & CRM Module
-- **Swaraj Mazda Sales Pipeline**: Track deals across 5 pipeline stages:
-  - `New Enquiry / Lead`
-  - `Quotation & Proposal Sent`
-  - `Financing / Loan Sanction`
-  - `Booking Confirmed (Advance Token Paid)`
-  - `Delivered / Handover (Closed Won)`
-- **Swaraj Mazda Product Lineup Catalog**:
-  - *Swaraj Mazda BH Series 32-Seater Passenger Bus* (₹22,80,000)
-  - *Swaraj Mazda Super GS Commercial Lorry* (₹16,50,000)
-  - *Swaraj Mazda Mini Bus 20-Seater School Bus* (₹18,20,000)
-  - *Swaraj Mazda Samrat HD Tipper Lorry* (₹17,80,000)
-  - *Swaraj Mazda Sartaj 5252 XM Cargo Truck* (₹13,50,000)
-- **Built-in Commercial Vehicle Loan EMI Calculator**: Computes monthly installments across tenure (36, 48, 60 months) with finance partners like Sundaram Finance, SBI, Cholamandalam, and HDFC.
-- **1-Click "Convert Deal to Invoice"**: Automatically generates a formal Dealership Truck/Bus Sale Invoice from any confirmed booking or quotation!
-
-### 3. Operations Dashboard & Workshop Bays Monitor
-
-### 2. Workshop Job Cards & Task Manager
-- **Dual Visual Modes**: Toggle between an interactive **Kanban Board** (Pending → In Progress → Awaiting Parts → Ready for Pickup) and a **Searchable Data Table**.
-- **Commercial Truck Specifications**: Track VIN / Chassis number, license plate, odometer reading, and customer fleet accounts.
-- **Safety & Inspection Checklists**: Multi-point interactive inspection checklists with real-time completion progress tracking.
-- **Spare Parts & Materials Tracking**: Allocate OEM and aftermarket parts with part numbers, quantities, and pricing.
-- **Direct Invoice Generation**: 1-click conversion from completed or active Job Cards into an itemized commercial invoice (transfers parts and labor automatically).
-
-### 3. Commercial Invoices & Billing
-- **Multiple Invoice Types**:
-  - Workshop Service & Repairs
-  - Commercial Truck Sales (Dealership Showroom)
-  - Parts Counter Sales
-- **Automatic Accounting Engine**: Dynamic line-item calculation (Labor, Parts, Vehicles, Surcharges), fleet discounts, sales tax / VAT, and balance due tracking.
-- **Printable & PDF-Ready Layout**: Official dealership invoice format complete with Index Motors header, vehicle specifications banner, payment remittance bank details, warranty clauses, and signature/stamp boxes.
-- **Payment Settlements**: Record partial or full payments with wire transfer, cheque, credit card, and cash tracking.
-
-### 4. Trucks & Fleet Inventory
-- **Dual Registry**: Track both **Dealership Sales Stock** (For Sale, Reserved, Sold) and **Customer Fleet Vehicles** (Active in Workshop).
-- Complete technical specifications: Engine horsepower, transmission, axle configurations (6x4, 6x2, 8x4), VIN, and mileage.
-
-### 5. Fleet Customers & Accounts
-- Track corporate logistics fleets, freight carriers, and bulk haulers.
-- View credit limits, total spent, registered fleet sizes, and live receivable balances.
-
-### 6. Workshop Technicians & Mechanics
-- Lead diesel mechanics, electrical specialists, and PDI foremen with contact details and active bay assignments.
-
-### 7. Settings, Configuration & Data Portability
-- Customize dealership profile, hourly labor rate ($110/hr default), tax rate, currency symbol, and remittance bank details.
-- **1-Click JSON Backup & Restore**: Export complete database or restore anytime.
-- **Reset Demo Data**: Restore initial authentic dataset anytime.
+A high-performance management platform designed for commercial vehicle dealerships and heavy-duty repair workshops (specialized for **Swaraj Mazda** and **Tata** trucks, lorries, tippers, and buses).
 
 ---
 
-## 🚀 How to Run
+## 📖 Complete Documentation
 
-1. Open PowerShell or Terminal in the project directory:
-   ```bash
-   cd C:\Users\user\.gemini\antigravity\scratch\index-motors-manager
-   ```
-2. Start the development server:
-   ```bash
-   npm run dev
-   ```
-   Or double-click `start.bat` on Windows.
-3. Open [http://localhost:5173](http://localhost:5173) in your web browser.
+Detailed technical and operational manual is available at:
+👉 **[Read the Full System Documentation (DOCUMENTATION.md)](DOCUMENTATION.md)**
 
 ---
 
-## 🛠 Tech Stack
-- **Framework**: React 19 + Vite
-- **Styling**: Tailwind CSS
-- **Icons**: Lucide React
-- **Storage**: LocalStorage with automatic fallback and schema migration
+## 🚀 Key Highlights & Platforms
+
+* **💻 Windows PC Desktop App (`.exe`)**:
+  - Offline-first JSON storage in `%APPDATA%`.
+  - Native Windows Shell integration for WhatsApp Desktop.
+  - Setup Installer: `release/Index Motors-Setup-3.0.0.exe`
+  - Portable Binary: `release/Index Motors-Portable-3.0.0.exe`
+
+* **📱 Android Mobile App (`.apk`)**:
+  - Built with Capacitor 8 and Java 21 on Android Platform 36.
+  - Custom native `WhatsAppLauncherPlugin.java` bypassing Android 11+ package restrictions.
+  - Direct download via [GitHub Actions CI](https://github.com/cmshakir/index-motors-manager/actions).
+
+* **💬 Native WhatsApp Dispatch Engine**:
+  - 1-Click invoice and job card dispatch with customer phone auto-formatting (+91 Indian standard).
+  - Dual-tier routing: launches native WhatsApp Desktop / Mobile App with automated fallback to WhatsApp Web.
+
+* **🚛 Commercial Dealership CRM & Workshop**:
+  - Swaraj Mazda & Tata vehicle sales pipeline with commercial loan EMI calculator.
+  - Workshop Job Cards with Kanban board, inspection checklists, and technician bay allocation.
+  - Commercial billing with GST tax computation, partial payment settlements, and print engine.
+
+* **☁️ Cloud & Local Hybrid Storage**:
+  - Offline persistence with Supabase Realtime synchronization.
+
+---
+
+## 🛠 Quick Start
+
+### Web Development
+```bash
+npm install
+npm run dev
+```
+
+### Windows Desktop Package
+```bash
+npm run electron:build
+```
+
+### Android Synchronization
+```bash
+npm run build
+npx cap sync android
+```
