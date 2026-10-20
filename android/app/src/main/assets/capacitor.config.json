@@ -1,0 +1,14 @@
+{
+	"appId": "online.indexmotors.manager",
+	"appName": "Index Motors",
+	"webDir": "dist",
+	"bundledWebRuntime": false,
+	"server": {
+		"androidScheme": "https",
+		"cleartext": true
+	},
+	"android": {
+		"backgroundColor": "#09090b",
+		"allowMixedContent": true
+	}
+}
