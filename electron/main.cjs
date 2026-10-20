@@ -124,9 +124,15 @@ if (!gotTheLock) {
       mainWindow.show();
     });
 
-    // Open external links in default browser
+    // Open external links in default browser or associated desktop apps
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-      if (url.startsWith('https:') || url.startsWith('http:')) {
+      if (
+        url.startsWith('https:') ||
+        url.startsWith('http:') ||
+        url.startsWith('whatsapp:') ||
+        url.startsWith('mailto:') ||
+        url.startsWith('tel:')
+      ) {
         shell.openExternal(url);
       }
       return { action: 'deny' };
@@ -178,6 +184,24 @@ if (!gotTheLock) {
     ipcMain.handle('open-data-folder', async () => {
       shell.openPath(app.getPath('userData'));
       return true;
+    });
+
+    ipcMain.handle('open-external', async (event, url) => {
+      try {
+        if (!url || typeof url !== 'string') {
+          return { success: false, error: 'Invalid URL string' };
+        }
+        const allowedPrefixes = ['https://', 'http://', 'whatsapp://', 'mailto:', 'tel:'];
+        const isAllowed = allowedPrefixes.some(prefix => url.startsWith(prefix));
+        if (isAllowed) {
+          await shell.openExternal(url);
+          return { success: true };
+        }
+        return { success: false, error: 'URL scheme not permitted' };
+      } catch (err) {
+        console.error('Error opening external URL via Electron shell:', err);
+        return { success: false, error: err.message };
+      }
     });
 
     createWindow();

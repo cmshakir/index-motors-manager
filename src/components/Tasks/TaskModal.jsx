@@ -33,6 +33,7 @@ export default function TaskModal({
     vin: '',
     customerId: '',
     customerName: '',
+    customerPhone: '',
     category: 'Preventive Maintenance',
     priority: 'Medium',
     status: 'Pending',
@@ -67,6 +68,7 @@ export default function TaskModal({
         vin: '',
         customerId: '',
         customerName: '',
+        customerPhone: '',
         category: 'Preventive Maintenance',
         priority: 'Medium',
         status: 'Pending',
@@ -96,6 +98,7 @@ export default function TaskModal({
     }
     const truck = trucks.find(t => t.id === selectedTruckId);
     if (truck) {
+      const associatedCust = customers.find(c => c.id === truck.customerId || c.name === truck.customerName);
       setFormData(prev => ({
         ...prev,
         truckId: truck.id,
@@ -105,6 +108,7 @@ export default function TaskModal({
         currentMileage: truck.mileage || prev.currentMileage,
         customerId: truck.customerId || prev.customerId,
         customerName: truck.customerName || prev.customerName,
+        customerPhone: truck.customerPhone || associatedCust?.phone || prev.customerPhone || ''
       }));
     }
   };
@@ -118,7 +122,8 @@ export default function TaskModal({
       setFormData(prev => ({
         ...prev,
         customerId: cust.id,
-        customerName: cust.name
+        customerName: cust.name,
+        customerPhone: cust.phone || prev.customerPhone || ''
       }));
     }
   };

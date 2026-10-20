@@ -6,5 +6,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   saveLocalStore: (data) => ipcRenderer.invoke('save-local-store', data),
   loadLocalStore: () => ipcRenderer.invoke('load-local-store'),
   getAppInfo: () => ipcRenderer.invoke('get-app-info'),
-  openDataFolder: () => ipcRenderer.invoke('open-data-folder')
+  openDataFolder: () => ipcRenderer.invoke('open-data-folder'),
+  openExternal: (url) => ipcRenderer.invoke('open-external', url)
 });

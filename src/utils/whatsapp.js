@@ -1,4 +1,8 @@
+import { Capacitor, registerPlugin } from '@capacitor/core';
 import { formatCurrency, formatDate } from './formatters';
+
+// Register native plugin for Android (implemented in WhatsAppLauncherPlugin.java)
+const WhatsAppLauncher = registerPlugin('WhatsAppLauncher');
 
 /**
  * Clean and format phone number for WhatsApp international format (E.164).
@@ -9,6 +13,8 @@ export const cleanPhoneNumber = (phone) => {
   let cleaned = String(phone).replace(/[^\d+]/g, '');
   if (cleaned.startsWith('+')) {
     cleaned = cleaned.substring(1);
+  } else if (cleaned.startsWith('0') && cleaned.length === 11) {
+    cleaned = '91' + cleaned.substring(1);
   } else if (cleaned.length === 10) {
     cleaned = '91' + cleaned;
   }
@@ -118,18 +124,78 @@ We will keep you updated on the repair progress and road-test readiness.
 };
 
 /**
- * Trigger WhatsApp opening via WhatsApp Web (Desktop) or WhatsApp App (Mobile/Android).
+ * Trigger WhatsApp opening across all environments:
+ * 1. Android Native App (via WhatsAppLauncher Capacitor Plugin + Intent)
+ * 2. Windows PC (.exe Desktop App via Electron shell.openExternal)
+ * 3. Web Browser (Direct web / WhatsApp Web link)
  */
-export const openWhatsApp = (phone, text) => {
+export const openWhatsApp = async (phone, text) => {
   const cleanPhone = cleanPhoneNumber(phone);
-  const encodedText = encodeURIComponent(text);
+  const encodedText = encodeURIComponent(text || '');
 
-  let url = '';
-  if (cleanPhone) {
-    url = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodedText}`;
-  } else {
-    url = `https://api.whatsapp.com/send?text=${encodedText}`;
+  // 1. Android Native App via Capacitor
+  if (Capacitor.isNativePlatform()) {
+    try {
+      const res = await WhatsAppLauncher.openWhatsApp({
+        phone: cleanPhone,
+        text: text || ''
+      });
+      if (res && res.success) {
+        return { success: true, platform: 'android-native' };
+      }
+    } catch (nativeErr) {
+      console.warn('Native WhatsAppLauncher plugin failed, trying scheme fallback:', nativeErr);
+    }
+
+    // Direct scheme navigation fallback for Android WebView
+    try {
+      const schemeUrl = cleanPhone
+        ? `whatsapp://send?phone=${cleanPhone}&text=${encodedText}`
+        : `whatsapp://send?text=${encodedText}`;
+      window.location.href = schemeUrl;
+      return { success: true, platform: 'android-scheme-fallback' };
+    } catch (e) {
+      console.warn('Android scheme navigation failed:', e);
+    }
   }
 
-  window.open(url, '_blank', 'noopener,noreferrer');
+  // 2. Windows PC Desktop (.exe via Electron)
+  if (window.electronAPI && typeof window.electronAPI.openExternal === 'function') {
+    try {
+      // api.whatsapp.com prompts Windows to open WhatsApp Desktop if installed, or WhatsApp Web in default browser
+      const desktopUrl = cleanPhone
+        ? `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodedText}`
+        : `https://api.whatsapp.com/send?text=${encodedText}`;
+
+      const res = await window.electronAPI.openExternal(desktopUrl);
+      if (res && res.success !== false) {
+        return { success: true, platform: 'electron-desktop' };
+      }
+    } catch (electronErr) {
+      console.warn('Electron openExternal failed:', electronErr);
+    }
+  }
+
+  // 3. Universal Web Browser (Chrome, Edge, Safari, Firefox)
+  const webUrl = cleanPhone
+    ? `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodedText}`
+    : `https://api.whatsapp.com/send?text=${encodedText}`;
+
+  try {
+    const anchor = document.createElement('a');
+    anchor.href = webUrl;
+    anchor.target = '_blank';
+    anchor.rel = 'noopener noreferrer';
+    document.body.appendChild(anchor);
+    anchor.click();
+    setTimeout(() => {
+      if (anchor.parentNode) {
+        anchor.parentNode.removeChild(anchor);
+      }
+    }, 500);
+    return { success: true, platform: 'web-browser' };
+  } catch (webErr) {
+    window.open(webUrl, '_blank', 'noopener,noreferrer');
+    return { success: true, platform: 'window-open' };
+  }
 };

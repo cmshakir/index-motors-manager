@@ -25,11 +25,13 @@ export default function WhatsAppShareModal({
   const [message, setMessage] = useState(initialMessage);
   const [copied, setCopied] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   useEffect(() => {
     setPhone(defaultPhone);
     setMessage(initialMessage);
     setIsEditing(false);
+    setIsSending(false);
   }, [defaultPhone, initialMessage, isOpen]);
 
   const handleCopy = () => {
@@ -38,9 +40,16 @@ export default function WhatsAppShareModal({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleSend = () => {
-    openWhatsApp(phone, message);
-    onClose();
+  const handleSend = async () => {
+    setIsSending(true);
+    try {
+      await openWhatsApp(phone, message);
+    } catch (err) {
+      console.error('Error opening WhatsApp:', err);
+    } finally {
+      setIsSending(false);
+      onClose();
+    }
   };
 
   return (
@@ -168,10 +177,11 @@ export default function WhatsAppShareModal({
             <button
               type="button"
               onClick={handleSend}
-              className="w-1/2 sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs shadow-lg shadow-emerald-600/30 flex items-center justify-center space-x-2 transition transform active:scale-95 cursor-pointer"
+              disabled={isSending}
+              className="w-1/2 sm:w-auto px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-black text-xs shadow-lg shadow-emerald-600/30 flex items-center justify-center space-x-2 transition transform active:scale-95 cursor-pointer"
             >
               <Send className="h-3.5 w-3.5" />
-              <span>Send via WhatsApp</span>
+              <span>{isSending ? "Opening..." : "Send via WhatsApp"}</span>
             </button>
           </div>
         </div>
