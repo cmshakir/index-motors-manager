@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   X, 
   Printer, 
@@ -9,9 +9,12 @@ import {
   Mail, 
   Globe, 
   CheckCircle2, 
-  DollarSign
+  DollarSign,
+  MessageCircle
 } from 'lucide-react';
 import { formatCurrency, formatDate, getStatusBadgeClass } from '../../utils/formatters';
+import { generateInvoiceWhatsAppMessage } from '../../utils/whatsapp';
+import WhatsAppShareModal from '../Common/WhatsAppShareModal';
 
 export default function InvoicePrintModal({
   isOpen,
@@ -22,6 +25,7 @@ export default function InvoicePrintModal({
 }) {
   if (!isOpen || !invoice) return null;
 
+  const [isWhatsAppOpen, setIsWhatsAppOpen] = useState(false);
   const currency = profile?.currency || '$';
 
   const handlePrint = () => {
@@ -58,8 +62,17 @@ export default function InvoicePrintModal({
             )}
 
             <button
+              onClick={() => setIsWhatsAppOpen(true)}
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition"
+              title="Share Invoice on WhatsApp"
+            >
+              <MessageCircle className="h-3.5 w-3.5" />
+              <span>Send WhatsApp</span>
+            </button>
+
+            <button
               onClick={handlePrint}
-              className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md transition"
+              className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs shadow-md transition border border-zinc-700"
             >
               <Printer className="h-3.5 w-3.5" />
               <span>Print / Save as PDF</span>
@@ -312,6 +325,19 @@ export default function InvoicePrintModal({
         </div>
 
       </div>
+
+      {/* WhatsApp Share Modal */}
+      {isWhatsAppOpen && (
+        <WhatsAppShareModal
+          isOpen={isWhatsAppOpen}
+          onClose={() => setIsWhatsAppOpen(false)}
+          title={`Send Invoice #${invoice.invoiceNumber} via WhatsApp`}
+          defaultPhone={invoice.customerPhone || ''}
+          customerName={invoice.customerName}
+          initialMessage={generateInvoiceWhatsAppMessage(invoice, profile)}
+        />
+      )}
+
     </div>
   );
 }

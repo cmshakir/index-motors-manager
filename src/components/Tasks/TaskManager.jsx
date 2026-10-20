@@ -19,8 +19,11 @@ import {
   Truck,
   User,
   ArrowRight,
-  ShieldAlert
+  ShieldAlert,
+  MessageCircle
 } from 'lucide-react';
+import { generateJobCardWhatsAppMessage } from '../../utils/whatsapp';
+import WhatsAppShareModal from '../Common/WhatsAppShareModal';
 import { formatCurrency, formatDate, getPriorityBadgeClass, getStatusBadgeClass } from '../../utils/formatters';
 
 const KANBAN_COLUMNS = [
@@ -45,6 +48,17 @@ export default function TaskManager({
   const [statusFilter, setStatusFilter] = useState('All');
   const [priorityFilter, setPriorityFilter] = useState('All');
   const [categoryFilter, setCategoryFilter] = useState('All');
+  const [whatsAppModalData, setWhatsAppModalData] = useState(null);
+
+  const handleShareWhatsApp = (task) => {
+    const msg = generateJobCardWhatsAppMessage(task, profile);
+    setWhatsAppModalData({
+      title: `Send Job Card #${task.id} via WhatsApp`,
+      phone: task.customerPhone || '',
+      customerName: task.customerName,
+      message: msg
+    });
+  };
 
   // Filter tasks
   const filteredTasks = tasks.filter(task => {
@@ -238,6 +252,7 @@ export default function TaskManager({
                         onDelete={() => onDeleteTask(task.id)}
                         onStatusChange={(newStatus) => onUpdateTaskStatus(task.id, newStatus)}
                         onGenerateInvoice={() => onGenerateInvoiceFromTask(task)}
+                        onWhatsApp={() => handleShareWhatsApp(task)}
                       />
                     ))
                   )}
@@ -321,6 +336,13 @@ export default function TaskManager({
                             </button>
                           )}
                           <button
+                            onClick={() => handleShareWhatsApp(task)}
+                            className="p-1.5 rounded hover:bg-emerald-500/20 text-emerald-400 hover:text-emerald-300 transition"
+                            title="Share Job Card on WhatsApp"
+                          >
+                            <MessageCircle className="h-4 w-4" />
+                          </button>
+                          <button
                             onClick={() => onEditTask(task)}
                             className="p-1.5 rounded hover:bg-zinc-800 text-zinc-400 hover:text-white transition"
                             title="Edit Job Card"
@@ -345,12 +367,24 @@ export default function TaskManager({
         </div>
       )}
 
+      {/* WhatsApp Share Modal */}
+      {whatsAppModalData && (
+        <WhatsAppShareModal
+          isOpen={Boolean(whatsAppModalData)}
+          onClose={() => setWhatsAppModalData(null)}
+          title={whatsAppModalData.title}
+          defaultPhone={whatsAppModalData.phone}
+          customerName={whatsAppModalData.customerName}
+          initialMessage={whatsAppModalData.message}
+        />
+      )}
+
     </div>
   );
 }
 
 // Subcomponent: Kanban Task Card
-function TaskCard({ task, currency, onView, onEdit, onDelete, onStatusChange, onGenerateInvoice }) {
+function TaskCard({ task, currency, onView, onEdit, onDelete, onStatusChange, onGenerateInvoice, onWhatsApp }) {
   const completedChecklist = task.checklist ? task.checklist.filter(c => c.completed).length : 0;
   const totalChecklist = task.checklist ? task.checklist.length : 0;
   const partsCount = task.parts ? task.parts.length : 0;
@@ -470,6 +504,13 @@ function TaskCard({ task, currency, onView, onEdit, onDelete, onStatusChange, on
             </span>
           )}
 
+          <button
+            onClick={onWhatsApp}
+            className="p-1 rounded hover:bg-emerald-500/20 text-emerald-400 hover:text-emerald-300 transition"
+            title="Share Job Card on WhatsApp"
+          >
+            <MessageCircle className="h-3.5 w-3.5" />
+          </button>
           <button
             onClick={onEdit}
             className="p-1 rounded hover:bg-zinc-800 text-zinc-400 hover:text-white transition"

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   X, 
   Wrench, 
@@ -12,9 +12,12 @@ import {
   Clock, 
   ShieldAlert, 
   DollarSign, 
-  Layers
+  Layers,
+  MessageCircle
 } from 'lucide-react';
 import { formatCurrency, formatDate, getPriorityBadgeClass, getStatusBadgeClass } from '../../utils/formatters';
+import { generateJobCardWhatsAppMessage } from '../../utils/whatsapp';
+import WhatsAppShareModal from '../Common/WhatsAppShareModal';
 
 export default function TaskDetailsModal({
   isOpen,
@@ -27,6 +30,7 @@ export default function TaskDetailsModal({
 }) {
   if (!isOpen || !task) return null;
 
+  const [isWhatsAppOpen, setIsWhatsAppOpen] = useState(false);
   const currency = profile?.currency || '$';
   const hourlyRate = profile?.hourlyLaborRate || 110;
   
@@ -60,6 +64,14 @@ export default function TaskDetailsModal({
           </div>
 
           <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setIsWhatsAppOpen(true)}
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600 hover:text-white border border-emerald-500/30 text-xs font-bold transition"
+              title="Share Job Card on WhatsApp"
+            >
+              <MessageCircle className="h-4 w-4" />
+              <span className="hidden sm:inline">WhatsApp Job Card</span>
+            </button>
             <button
               onClick={handlePrintJobCard}
               className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition"
@@ -319,6 +331,19 @@ export default function TaskDetailsModal({
         </div>
 
       </div>
+
+      {/* WhatsApp Share Modal */}
+      {isWhatsAppOpen && (
+        <WhatsAppShareModal
+          isOpen={isWhatsAppOpen}
+          onClose={() => setIsWhatsAppOpen(false)}
+          title={`Send Job Card #${task.id} via WhatsApp`}
+          defaultPhone={task.customerPhone || ''}
+          customerName={task.customerName}
+          initialMessage={generateJobCardWhatsAppMessage(task, profile)}
+        />
+      )}
+
     </div>
   );
 }

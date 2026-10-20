@@ -14,9 +14,12 @@ import {
   Eye, 
   ChevronRight, 
   Truck,
-  ArrowDownCircle
+  ArrowDownCircle,
+  MessageCircle
 } from 'lucide-react';
 import { formatCurrency, formatDate, getStatusBadgeClass } from '../../utils/formatters';
+import { generateInvoiceWhatsAppMessage } from '../../utils/whatsapp';
+import WhatsAppShareModal from '../Common/WhatsAppShareModal';
 
 export default function InvoiceManager({
   profile,
@@ -31,6 +34,7 @@ export default function InvoiceManager({
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [typeFilter, setTypeFilter] = useState('All');
+  const [whatsAppModalData, setWhatsAppModalData] = useState(null);
 
   // Stats
   const totalInvoiced = invoices.reduce((sum, inv) => sum + (Number(inv.totalAmount) || 0), 0);
@@ -261,6 +265,21 @@ export default function InvoiceManager({
                           </button>
                         )}
                         <button
+                          onClick={() => {
+                            const msg = generateInvoiceWhatsAppMessage(inv, profile);
+                            setWhatsAppModalData({
+                              title: `Send Invoice #${inv.invoiceNumber} via WhatsApp`,
+                              phone: inv.customerPhone || '',
+                              customerName: inv.customerName,
+                              message: msg
+                            });
+                          }}
+                          className="p-1.5 rounded hover:bg-emerald-500/20 text-emerald-400 hover:text-emerald-300 transition"
+                          title="Share on WhatsApp"
+                        >
+                          <MessageCircle className="h-4 w-4" />
+                        </button>
+                        <button
                           onClick={() => onViewInvoice(inv)}
                           className="p-1.5 rounded hover:bg-zinc-800 text-zinc-400 hover:text-white transition"
                           title="Print / View Invoice"
@@ -290,6 +309,18 @@ export default function InvoiceManager({
           </table>
         </div>
       </div>
+
+      {/* WhatsApp Share Modal */}
+      {whatsAppModalData && (
+        <WhatsAppShareModal
+          isOpen={Boolean(whatsAppModalData)}
+          onClose={() => setWhatsAppModalData(null)}
+          title={whatsAppModalData.title}
+          defaultPhone={whatsAppModalData.phone}
+          customerName={whatsAppModalData.customerName}
+          initialMessage={whatsAppModalData.message}
+        />
+      )}
 
     </div>
   );
