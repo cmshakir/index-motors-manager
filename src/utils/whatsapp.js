@@ -161,18 +161,43 @@ export const openWhatsApp = async (phone, text) => {
 
   // 2. Windows PC Desktop (.exe via Electron)
   if (window.electronAPI && typeof window.electronAPI.openExternal === 'function') {
+    // Attempt 1: Try native WhatsApp Desktop app protocol first
     try {
-      // api.whatsapp.com prompts Windows to open WhatsApp Desktop if installed, or WhatsApp Web in default browser
-      const desktopUrl = cleanPhone
+      const desktopProtocolUrl = cleanPhone
+        ? `whatsapp://send?phone=${cleanPhone}&text=${encodedText}`
+        : `whatsapp://send?text=${encodedText}`;
+
+      const res = await window.electronAPI.openExternal(desktopProtocolUrl);
+      if (res && res.success) {
+        return { success: true, platform: 'electron-desktop-app' };
+      }
+    } catch (e1) {
+      console.warn('WhatsApp Desktop protocol attempt:', e1);
+    }
+
+    // Attempt 2: Open WhatsApp Web directly in default browser (Chrome / Edge)
+    try {
+      const webUrl = cleanPhone
+        ? `https://web.whatsapp.com/send?phone=${cleanPhone}&text=${encodedText}`
+        : `https://web.whatsapp.com/send?text=${encodedText}`;
+
+      const res = await window.electronAPI.openExternal(webUrl);
+      if (res && res.success !== false) {
+        return { success: true, platform: 'electron-whatsapp-web' };
+      }
+    } catch (e2) {
+      console.warn('WhatsApp Web openExternal attempt:', e2);
+    }
+
+    // Attempt 3: api.whatsapp.com universal gateway
+    try {
+      const gatewayUrl = cleanPhone
         ? `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodedText}`
         : `https://api.whatsapp.com/send?text=${encodedText}`;
-
-      const res = await window.electronAPI.openExternal(desktopUrl);
-      if (res && res.success !== false) {
-        return { success: true, platform: 'electron-desktop' };
-      }
-    } catch (electronErr) {
-      console.warn('Electron openExternal failed:', electronErr);
+      await window.electronAPI.openExternal(gatewayUrl);
+      return { success: true, platform: 'electron-gateway' };
+    } catch (e3) {
+      console.warn('Electron gateway attempt failed:', e3);
     }
   }
 
